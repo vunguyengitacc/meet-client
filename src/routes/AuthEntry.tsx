@@ -5,7 +5,7 @@ import { Navigate, Outlet } from "react-router-dom";
 const AuthEntry = () => {
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
 
-  return !isAuth ? <Outlet /> : <Navigate to="/home" />;
+  return !isAuth ? <Outlet /> : <Navigate to="/app" />;
 };
 
 export default AuthEntry;

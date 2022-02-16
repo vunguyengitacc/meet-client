@@ -3,15 +3,11 @@ import { IResponse } from "model/Common";
 import { IUser } from "model/User";
 import axiosClient from "./axiosClient";
 
-export interface IAuth {
-  access_token: string;
-}
-
 const authApi = {
-  register(payload: Partial<IUser>): Promise<IResponse<IAuth>> {
+  register(payload: Partial<IUser>): Promise<IResponse<string>> {
     return axiosClient.post("/auth/register", payload);
   },
-  login(payload: ILoginParams): Promise<IResponse<IAuth>> {
+  login(payload: ILoginParams): Promise<IResponse<string>> {
     return axiosClient.post("/auth/login", payload);
   },
 };

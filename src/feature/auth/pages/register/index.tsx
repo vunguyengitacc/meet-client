@@ -37,7 +37,7 @@ const RegisterPage = () => {
       await dispatch(register(data)).then(unwrapResult);
       await dispatch(getMe()).then(unwrapResult);
       toast.success("Success");
-      navigator("/home");
+      navigator("/app");
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);

@@ -37,7 +37,7 @@ const LoginPage = () => {
       await dispatch(login(data)).then(unwrapResult);
       await dispatch(getMe()).then(unwrapResult);
       toast.success("Success");
-      navigator("/home");
+      navigator("/app");
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import authApi, { IAuth } from "api/authApi";
+import authApi from "api/authApi";
 import userApi from "api/userApi";
 import { IUser } from "model/User";
 import { ILoginParams } from "./pages/login/form";
@@ -8,7 +8,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async (payload: ILoginParams) => {
     const res = await authApi.login(payload);
-    return res.data;
+    return res.data.access_token;
   }
 );
 
@@ -16,13 +16,13 @@ export const register = createAsyncThunk(
   "auth/register",
   async (payload: Partial<IUser>) => {
     const res = await authApi.register(payload);
-    return res.data;
+    return res.data.access_token;
   }
 );
 
 export const getMe = createAsyncThunk("auth/getMe", async () => {
   const res = await userApi.getMe();
-  return res.data;
+  return res.data.currentUser;
 });
 
 interface AuthState {
@@ -53,8 +53,8 @@ const authSlice = createSlice({
     });
     builder.addCase(
       login.fulfilled,
-      (state, { payload }: PayloadAction<IAuth>) => {
-        localStorage.setItem("access_token", payload.access_token);
+      (state, { payload }: PayloadAction<string>) => {
+        localStorage.setItem("access_token", payload);
       }
     );
     builder.addCase(register.rejected, (state) => {
@@ -66,8 +66,8 @@ const authSlice = createSlice({
     });
     builder.addCase(
       register.fulfilled,
-      (state, { payload }: PayloadAction<IAuth>) => {
-        localStorage.setItem("access_token", payload.access_token);
+      (state, { payload }: PayloadAction<string>) => {
+        localStorage.setItem("access_token", payload);
       }
     );
     builder.addCase(getMe.rejected, (state) => {

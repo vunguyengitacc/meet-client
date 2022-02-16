@@ -1,7 +1,7 @@
 import AuthFeature from "feature/auth";
 import LoginPage from "feature/auth/pages/login";
 import RegisterPage from "feature/auth/pages/register";
-import HomeFeature from "feature/home";
+import AppFeature from "feature/app";
 import LandingFeature from "feature/landing";
 import MeetFeature from "feature/meet";
 import NotFoundPage from "feature/not-found";
@@ -22,8 +22,8 @@ const MasterRoute = () => {
             <Route path="register" element={<RegisterPage />} />
           </Route>
         </Route>
-        <Route path="/home" element={<PrivateEntry />}>
-          <Route path="/home" element={<HomeFeature />} />
+        <Route path="/app" element={<PrivateEntry />}>
+          <Route path="/app" element={<AppFeature />} />
         </Route>
         <Route path="/meet" element={<PrivateEntry />}>
           <Route path="/meet" element={<MeetFeature />} />
