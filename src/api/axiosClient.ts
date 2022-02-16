@@ -6,7 +6,7 @@ const axiosClient = axios.create({
   baseURL:
     process.env.NODE_ENV === "production"
       ? process.env.REACT_APP_API
-      : `http://localhost:8000/`,
+      : `http://localhost:8000/api`,
   headers: {
     "content-type": "application/json",
   },
@@ -30,7 +30,7 @@ axiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    return Promise.reject(error.response.data.message ?? error.response);
+    return Promise.reject(error.response.data.error.message ?? error.message);
   }
 );
 

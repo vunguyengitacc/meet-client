@@ -31,7 +31,6 @@ const MasterRoute = () => {
         <Route path="/user" element={<PrivateEntry />}>
           <Route path="/user" element={<UserFeature />} />
         </Route>
-
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

@@ -2,10 +2,11 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import authApi, { IAuth } from "api/authApi";
 import userApi from "api/userApi";
 import { IUser } from "model/User";
+import { ILoginParams } from "./pages/login/form";
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (payload: Pick<IUser, "username" | "password">) => {
+  async (payload: ILoginParams) => {
     const res = await authApi.login(payload);
     return res.data;
   }
