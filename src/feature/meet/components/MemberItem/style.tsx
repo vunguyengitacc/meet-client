@@ -29,6 +29,9 @@ const useMemberItemStyle = makeStyles({
     position: "absolute",
     transform: "translate(20px, -40px)",
   },
+  floatingGroup: {
+    position: "absolute",
+  },
 });
 
 export default useMemberItemStyle;

@@ -9,6 +9,10 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import roomApi from "api/roomApi";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "app/reduxStore";
+import { createRoom } from "feature/meet/meetSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const RoomCreator = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -16,6 +20,7 @@ const RoomCreator = () => {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const navigator = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const inputCodeEl = React.useRef<HTMLInputElement>(null);
 
@@ -30,8 +35,8 @@ const RoomCreator = () => {
 
   const createRoomHandler = async () => {
     try {
-      const res = await roomApi.create();
-      const code = res.data.data._id;
+      const data = await dispatch(createRoom()).then(unwrapResult);
+      const code = data.room.accessCode;
       navigator(`/meet/${code}`);
     } catch (error: any) {
       toast.error(error.message);

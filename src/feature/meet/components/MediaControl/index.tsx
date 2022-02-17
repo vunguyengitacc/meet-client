@@ -6,15 +6,24 @@ import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import PhoneEnabledIcon from "@mui/icons-material/PhoneEnabled";
 import useMediaControlStyle from "./style";
 import useMedia from "hooks/useMedia";
-import { useSelector } from "react-redux";
-import { RootState } from "app/reduxStore";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "app/reduxStore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { exitRoom } from "feature/meet/meetSlice";
+import { IMember } from "model/Member";
 
 const MediaControl = () => {
+  const me = useSelector((state: RootState) => state.meet.me) as IMember;
+  const dispatch = useDispatch<AppDispatch>();
+
   const style = useMediaControlStyle();
   const { getLocalCamStream, stopCam, stopScreen, getLocalScreenStream } =
     useMedia();
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
+
+  const handleExit = () => {
+    dispatch(exitRoom(me));
+  };
   return (
     <Box className={style.surface}>
       <Button className={style.roundBtn} color="disable" variant="contained">
@@ -39,7 +48,12 @@ const MediaControl = () => {
       <Button className={style.roundBtn} color="disable" variant="contained">
         <MoreVertIcon />
       </Button>
-      <Button className={style.roundBtn} color="error" variant="contained">
+      <Button
+        onClick={handleExit}
+        className={style.roundBtn}
+        color="error"
+        variant="contained"
+      >
         <PhoneEnabledIcon />
       </Button>
     </Box>

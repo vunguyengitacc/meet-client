@@ -6,11 +6,11 @@ interface IProps {
   isShowTask: boolean;
 }
 
-const getRow = (input: number, onPin: boolean) => {
+const getRow = (input: number, onPin: boolean, isShowTask: boolean) => {
   let i = 0;
-  if (onPin) return 5;
+  if (onPin) return isShowTask ? 6 : 5;
   while (true) {
-    if (i <= input && i ** 2 >= input) return i;
+    if (i <= input && i ** 2 >= input) return isShowTask && i >= 3 ? i - 1 : i;
     i++;
   }
 };
@@ -23,13 +23,17 @@ const useMemberDisplayerStyle = makeStyles({
   },
   membersList: (props: IProps) => ({
     display: "grid",
-    gridTemplateColumns: `repeat(${getRow(props.counter, props.onPin)}, 1fr)`,
+    gridTemplateColumns: `repeat(${getRow(
+      props.counter,
+      props.onPin,
+      props.isShowTask
+    )}, 1fr)`,
     gridTemplateRows: "auto",
     height: "100%",
     gridGap: "5px",
     padding: "5px",
     width: `${props.isShowTask ? "65%" : "100%"}`,
-    transition: " width .15s",
+    transition: "width .15s",
   }),
   item: {
     height: "100%",
@@ -37,7 +41,7 @@ const useMemberDisplayerStyle = makeStyles({
   },
   pinItem: {
     gridColumn: "1 / end",
-    gridRow: "1 /span 3",
+    gridRow: "1 /span 4",
   },
   break: {
     height: 0,

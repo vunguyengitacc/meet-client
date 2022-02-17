@@ -8,10 +8,15 @@ const memberApi = {
   getAllInRoom(payload: IRoom): Promise<IResponse<IMember[]>> {
     return axiosClient.get(`/rooms/${payload._id}/members`);
   },
-  getMeInRoom(payload: string): Promise<IResponse<IMember>> {
-    return axiosClient.get(`/rooms/${payload}/members/me`);
+  getMeInRoom(payload: {
+    roomId: string;
+    joinCode: string;
+  }): Promise<IResponse<IMember>> {
+    return axiosClient.get(
+      `/rooms/${payload.roomId}/members/${payload.joinCode}`
+    );
   },
-  join(payload: IRoom): Promise<IResponse<IMember>> {
+  join(payload: IRoom): Promise<IResponse<string>> {
     return axiosClient.post(`/rooms/${payload._id}/members`, payload);
   },
   accept(payload: {

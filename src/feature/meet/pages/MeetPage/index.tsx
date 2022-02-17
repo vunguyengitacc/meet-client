@@ -11,13 +11,14 @@ import LoadingPage from "feature/loading";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
+  const joinCode = useSelector((state: RootState) => state.meet.joinCode);
   const [load, setLoad] = useState<boolean>(false);
   const [isShowTask, setIsShowTask] = useState<boolean>(false);
   const style = useMeetPageStyle();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(getMyMember(room)).then(() => setLoad(true));
+    dispatch(getMyMember({ room, joinCode })).then(() => setLoad(true));
   }, [room]);
 
   return (
