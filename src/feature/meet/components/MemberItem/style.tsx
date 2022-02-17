@@ -5,9 +5,6 @@ const useMemberItemStyle = makeStyles({
     width: "100%",
     height: "100%",
     boxSizing: "border-box",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
     border: "solid 0.5px #525252",
     borderRadius: "5px",
   },
@@ -26,6 +23,11 @@ const useMemberItemStyle = makeStyles({
   video: {
     maxWidth: "95%",
     maxHeight: "100%",
+    width: "95%",
+  },
+  floatingTitle: {
+    position: "absolute",
+    transform: "translate(20px, -40px)",
   },
 });
 

@@ -12,6 +12,7 @@ import LoadingPage from "feature/loading";
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const [load, setLoad] = useState<boolean>(false);
+  const [isShowTask, setIsShowTask] = useState<boolean>(false);
   const style = useMeetPageStyle();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -24,10 +25,10 @@ const MeetPage = () => {
       {load ? (
         <Box className={style.surface}>
           <Box className={style.app}>
-            <MemberDisplayer />
+            <MemberDisplayer isShowTask={isShowTask} />
           </Box>
           <Box className={style.task}>
-            <TaskBar />
+            <TaskBar isShowTask={isShowTask} setIsShowTask={setIsShowTask} />
           </Box>
         </Box>
       ) : (

@@ -8,6 +8,7 @@ import useMediaControlStyle from "./style";
 import useMedia from "hooks/useMedia";
 import { useSelector } from "react-redux";
 import { RootState } from "app/reduxStore";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const MediaControl = () => {
   const style = useMediaControlStyle();
@@ -34,6 +35,9 @@ const MediaControl = () => {
         variant="contained"
       >
         <PresentToAllIcon />
+      </Button>
+      <Button className={style.roundBtn} color="disable" variant="contained">
+        <MoreVertIcon />
       </Button>
       <Button className={style.roundBtn} color="error" variant="contained">
         <PhoneEnabledIcon />
