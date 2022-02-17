@@ -26,7 +26,7 @@ const MasterRoute = () => {
           <Route path="/app" element={<AppFeature />} />
         </Route>
         <Route path="/meet" element={<PrivateEntry />}>
-          <Route path="/meet" element={<MeetFeature />} />
+          <Route path="/meet/:code" element={<MeetFeature />} />
         </Route>
         <Route path="/user" element={<PrivateEntry />}>
           <Route path="/user" element={<UserFeature />} />

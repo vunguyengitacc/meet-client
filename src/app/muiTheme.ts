@@ -1,6 +1,21 @@
 import { purple } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
+declare module "@mui/material/styles" {
+  interface Palette {
+    disable: Palette["primary"];
+  }
+  interface PaletteOptions {
+    disable?: PaletteOptions["primary"];
+  }
+}
+
+declare module "@mui/material/Button" {
+  interface ButtonPropsColorOverrides {
+    disable: true;
+  }
+}
+
 const theme = createTheme({
   typography: {
     subtitle1: {
@@ -13,6 +28,9 @@ const theme = createTheme({
     },
     secondary: {
       main: "#b3b3b3",
+    },
+    disable: {
+      main: "#5a5656",
     },
   },
   components: {

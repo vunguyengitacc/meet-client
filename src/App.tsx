@@ -8,6 +8,7 @@ import theme from "app/muiTheme";
 import { ThemeProvider } from "@mui/material/styles";
 import { Button } from "@mui/material";
 import { Toaster } from "react-hot-toast";
+import LoadingPage from "feature/loading";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {isTryLoad ? <MasterRoute /> : "loading"}
+      {isTryLoad ? <MasterRoute /> : <LoadingPage />}
       <Toaster
         position="bottom-left"
         reverseOrder={false}

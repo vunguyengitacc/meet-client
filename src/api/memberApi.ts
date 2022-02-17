@@ -8,6 +8,9 @@ const memberApi = {
   getAllInRoom(payload: IRoom): Promise<IResponse<IMember[]>> {
     return axiosClient.get(`/rooms/${payload._id}/members`);
   },
+  getMeInRoom(payload: string): Promise<IResponse<IMember>> {
+    return axiosClient.get(`/rooms/${payload}/members/me`);
+  },
   join(payload: IRoom): Promise<IResponse<IMember>> {
     return axiosClient.post(`/rooms/${payload._id}/members`, payload);
   },

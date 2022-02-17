@@ -1,26 +1,23 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Menu,
-  MenuItem,
-  Modal,
-  OutlinedInput,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Divider, Menu } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
+import { MenuItem, Modal, OutlinedInput } from "@mui/material";
 import React from "react";
 import useRoomCreatorStyle from "./style";
 import AddIcon from "@mui/icons-material/Add";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import BoltIcon from "@mui/icons-material/Bolt";
 import roomApi from "api/roomApi";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const RoomCreator = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const navigator = useNavigate();
+
+  const inputCodeEl = React.useRef<HTMLInputElement>(null);
 
   const style = useRoomCreatorStyle();
   const open = Boolean(anchorEl);
@@ -34,9 +31,20 @@ const RoomCreator = () => {
   const createRoomHandler = async () => {
     try {
       const res = await roomApi.create();
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
+      const code = res.data.data._id;
+      navigator(`/meet/${code}`);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleJoinRoom = async () => {
+    try {
+      const code = inputCodeEl.current?.value;
+      if (!code) throw new Error("Please type a code");
+      navigator(`/meet/${code}`);
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -93,8 +101,11 @@ const RoomCreator = () => {
           </MenuItem>
         </Menu>
         <Box display="flex" gap={1}>
-          <OutlinedInput placeholder="Pass a room code here" />
-          <Button color="secondary" disableElevation>
+          <OutlinedInput
+            placeholder="Pass a room code here"
+            inputRef={inputCodeEl}
+          />
+          <Button color="secondary" disableElevation onClick={handleJoinRoom}>
             Join
           </Button>
         </Box>
