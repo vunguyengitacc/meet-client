@@ -6,13 +6,14 @@ import { AppDispatch } from "app/reduxStore";
 import { getMe } from "feature/auth/authSlice";
 import theme from "app/muiTheme";
 import { ThemeProvider } from "@mui/material/styles";
-import { Button } from "@mui/material";
 import { Toaster } from "react-hot-toast";
 import LoadingPage from "feature/loading";
+import useSocket from "hooks/useSocket";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const [isTryLoad, setIsTryLoad] = useState<boolean>(false);
+  useSocket();
 
   useEffect(() => {
     dispatch(getMe()).then(() => setIsTryLoad(true));

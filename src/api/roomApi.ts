@@ -18,8 +18,8 @@ const roomApi = {
   update(payload: Partial<IRoom>): Promise<IResponse<IRoom>> {
     return axiosClient.put(`/rooms/${payload._id}`, payload);
   },
-  delete(payload: Partial<IRoom>): Promise<IResponse<any>> {
-    return axiosClient.delete(`/rooms/${payload._id}`);
+  delete(payload: string): Promise<IResponse<any>> {
+    return axiosClient.delete(`/rooms/${payload}`);
   },
 };
 

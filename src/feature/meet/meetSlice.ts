@@ -10,18 +10,23 @@ import roomApi, { ICreateRoomResponse } from "api/roomApi";
 import { RootState } from "app/reduxStore";
 import { IMember } from "model/Member";
 import { IRoom } from "model/Room";
+import toast from "react-hot-toast";
 export const membersAdapter = createEntityAdapter({
   selectId: (member: IMember) => member._id,
 });
 
-export const getMyMember = createAsyncThunk(
-  "meet/getMyMember",
+export const getMember = createAsyncThunk(
+  "meet/getMember",
   async (payload: { room: IRoom; joinCode: string }) => {
-    const res = await memberApi.getMeInRoom({
+    const meRes = await memberApi.getMeInRoom({
       roomId: payload.room._id,
       joinCode: payload.joinCode,
     });
-    return res.data.data;
+    const otherRes = await memberApi.getAllInRoom(payload.room);
+    let members = otherRes.data.members.filter(
+      (i) => i.joinSession != payload.joinCode
+    );
+    return { me: meRes.data.data, members };
   }
 );
 
@@ -41,8 +46,10 @@ export const createRoom = createAsyncThunk("room/create", async () => {
 export const exitRoom = createAsyncThunk(
   "room/exit",
   async (payload: IMember) => {
-    const { data } = await memberApi.delete(payload);
-    return data.data;
+    let res;
+    if (payload.isAdmin) res = await roomApi.delete(payload.roomId);
+    else res = await memberApi.delete(payload);
+    return res.data.rs;
   }
 );
 
@@ -71,6 +78,24 @@ const meetSlice = createSlice({
     setJoinCode: (state, { payload }: PayloadAction<string>) => {
       state.joinCode = payload;
     },
+    addMember: (state, { payload }: PayloadAction<IMember>) => {
+      membersAdapter.addOne(state.members, payload);
+      toast(`${payload.user?.fullname} join the meet`);
+    },
+    removeMember: (state, { payload }: PayloadAction<IMember>) => {
+      let temp = membersAdapter
+        .getSelectors()
+        .selectById(state.members, payload._id);
+      if (temp === undefined) return;
+      membersAdapter.removeOne(state.members, payload._id);
+      toast(`${temp.user?.fullname} quit the meet`);
+    },
+    quitRoom: (state) => {
+      state.me = undefined;
+      state.joinCode = "";
+      state.members = membersAdapter.getInitialState();
+      toast(`The meet is finished`);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getOneRoom.rejected, (state) => {});
@@ -81,12 +106,17 @@ const meetSlice = createSlice({
         state.room = payload;
       }
     );
-    builder.addCase(getMyMember.rejected, (state) => {});
-    builder.addCase(getMyMember.pending, (state) => {});
+    builder.addCase(getMember.rejected, (state) => {});
+    builder.addCase(getMember.pending, (state) => {});
     builder.addCase(
-      getMyMember.fulfilled,
-      (state, { payload }: PayloadAction<IMember>) => {
-        state.me = payload;
+      getMember.fulfilled,
+      (
+        state,
+        { payload }: PayloadAction<{ me: IMember; members: IMember[] }>
+      ) => {
+        state.me = payload.me;
+        membersAdapter.removeAll(state.members);
+        membersAdapter.addMany(state.members, payload.members);
       }
     );
     builder.addCase(createRoom.rejected, (state) => {});
@@ -101,15 +131,15 @@ const meetSlice = createSlice({
     builder.addCase(exitRoom.rejected, (state) => {});
     builder.addCase(exitRoom.pending, (state) => {});
     builder.addCase(exitRoom.fulfilled, (state) => {
-      state.room = undefined;
       state.me = undefined;
       state.joinCode = "";
       state.members = membersAdapter.getInitialState();
+      toast(`The meet is finished`);
     });
   },
 });
 
 const { reducer: meetReducer, actions } = meetSlice;
 
-export const { setJoinCode } = actions;
+export const { setJoinCode, addMember, removeMember, quitRoom } = actions;
 export default meetReducer;

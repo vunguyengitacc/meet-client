@@ -10,7 +10,7 @@ const AppContent = () => {
       <Box className={style.app}>
         <RoomCreator />
       </Box>
-      <Box className={style.desc}>Some Tip</Box>
+      <Box className={style.desc}></Box>
     </Box>
   );
 };

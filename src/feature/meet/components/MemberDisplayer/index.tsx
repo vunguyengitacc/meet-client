@@ -1,5 +1,6 @@
 import { Box, Grid, Paper } from "@mui/material";
 import { RootState } from "app/reduxStore";
+import { membersSelector } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -11,9 +12,12 @@ interface IProps {
 }
 
 const MemberDisplayer: React.FC<IProps> = ({ isShowTask }) => {
-  const [counter, setCounter] = useState<number>(1);
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
+  const members = useSelector((state: RootState) =>
+    membersSelector.selectAll(state)
+  );
+  const [counter, setCounter] = useState<number>(members.length + 1);
 
   const style = useMemberDisplayerStyle({
     counter: myScreen !== undefined ? counter + 1 : counter,
@@ -22,8 +26,8 @@ const MemberDisplayer: React.FC<IProps> = ({ isShowTask }) => {
   });
 
   useEffect(() => {
-    console.log(isShowTask);
-  }, [isShowTask]);
+    setCounter(members.length + 1);
+  }, [members]);
 
   return (
     <Box className={style.surface}>
@@ -40,6 +44,11 @@ const MemberDisplayer: React.FC<IProps> = ({ isShowTask }) => {
             <MemberItem member={me} media={myCam} />
           )}
         </Box>
+        {members.map((i) => (
+          <Box className={style.item} key={i._id}>
+            <MemberItem member={i} />
+          </Box>
+        ))}
       </Box>
       <Paper className={style.taskField}>hello</Paper>
     </Box>

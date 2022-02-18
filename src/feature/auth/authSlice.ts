@@ -79,7 +79,6 @@ const authSlice = createSlice({
       getMe.fulfilled,
       (state, { payload }: PayloadAction<IUser>) => {
         state.currentUser = payload;
-        console.log(payload);
         state.isAuth = true;
       }
     );

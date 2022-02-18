@@ -2,12 +2,14 @@ import { Box, Button } from "@mui/material";
 import { AppDispatch, RootState } from "app/reduxStore";
 import MemberDisplayer from "feature/meet/components/MemberDisplayer";
 import TaskBar from "feature/meet/components/TaskBar";
-import { getMyMember } from "feature/meet/meetSlice";
+import { getMember } from "feature/meet/meetSlice";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useMeetPageStyle from "./style";
 import LoadingPage from "feature/loading";
+import useSocket from "hooks/useSocket";
+import { socketClient } from "app/socketClient";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -18,7 +20,18 @@ const MeetPage = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(getMyMember({ room, joinCode })).then(() => setLoad(true));
+    socketClient.emit(
+      "meet:join",
+      { roomId: room._id, joinCode },
+      (res: any) => {
+        dispatch(getMember({ room, joinCode })).then(() => {
+          setLoad(true);
+        });
+      }
+    );
+    return () => {
+      socketClient.emit("meet:exit", { roomId: room._id });
+    };
   }, [room]);
 
   return (

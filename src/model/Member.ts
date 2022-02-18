@@ -8,4 +8,5 @@ export interface IMember {
   user?: IUser;
   room?: IRoom;
   isAdmin?: boolean;
+  joinSession: string;
 }
