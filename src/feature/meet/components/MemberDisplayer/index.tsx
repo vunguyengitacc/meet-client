@@ -34,19 +34,19 @@ const MemberDisplayer: React.FC<IProps> = ({ isShowTask }) => {
       <Box className={style.membersList}>
         {myScreen && (
           <Box className={`${style.item} ${style.pinItem}`}>
-            <MemberItem member={me} media={myScreen} />
+            <MemberItem member={me} media={myScreen.getTracks()[0]} />
           </Box>
         )}
         <Box className={style.item}>
           {myCam === undefined ? (
             <MemberItem member={me} />
           ) : (
-            <MemberItem member={me} media={myCam} />
+            <MemberItem member={me} media={myCam.getTracks()[0]} />
           )}
         </Box>
         {members.map((i) => (
           <Box className={style.item} key={i._id}>
-            <MemberItem member={i} />
+            <MemberItem member={i} media={i.streamMedia} />
           </Box>
         ))}
       </Box>

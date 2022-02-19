@@ -1,7 +1,7 @@
 import { useEffect, useRef, VideoHTMLAttributes } from "react";
 
 type PropsType = VideoHTMLAttributes<HTMLVideoElement> & {
-  srcObject: MediaStream;
+  srcObject: MediaStreamTrack;
 };
 
 export default function Video({ srcObject, ...props }: PropsType) {
@@ -9,7 +9,7 @@ export default function Video({ srcObject, ...props }: PropsType) {
 
   useEffect(() => {
     if (!refVideo.current) return;
-    refVideo.current.srcObject = srcObject;
+    refVideo.current.srcObject = new MediaStream([srcObject]);
   }, [srcObject]);
 
   return <video muted autoPlay id="my-video" ref={refVideo} {...props} />;

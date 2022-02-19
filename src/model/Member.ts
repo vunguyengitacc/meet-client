@@ -9,4 +9,5 @@ export interface IMember {
   room?: IRoom;
   isAdmin?: boolean;
   joinSession: string;
+  streamMedia?: MediaStreamTrack;
 }

@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import PresentToAllIcon from "@mui/icons-material/PresentToAll";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "app/reduxStore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { exitRoom } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
+import { createSendTransport } from "hooks/useMeet";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
@@ -24,6 +25,11 @@ const MediaControl = () => {
   const handleExit = () => {
     dispatch(exitRoom(me));
   };
+
+  useEffect(() => {
+    myCam && createSendTransport(myCam);
+  }, [myCam]);
+
   return (
     <Box className={style.surface}>
       <Button className={style.roundBtn} color="disable" variant="contained">

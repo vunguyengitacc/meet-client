@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import authRedecer from "feature/auth/authSlice";
 import meetReducer from "feature/meet/meetSlice";
 import mediaReducer from "hooks/mediaSlice";
@@ -11,6 +11,13 @@ const rootReducer = {
 
 const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ["meetSlice/setMemberStream"],
+      },
+    }),
 });
 
 export type AppDispatch = typeof store.dispatch;

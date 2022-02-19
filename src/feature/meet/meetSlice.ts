@@ -96,6 +96,21 @@ const meetSlice = createSlice({
       state.members = membersAdapter.getInitialState();
       toast(`The meet is finished`);
     },
+    setMemberStream: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ joinCode: string; stream?: MediaStreamTrack }>
+    ) => {
+      let member = membersAdapter
+        .getSelectors((state: MeetState) => state.members)
+        .selectAll(state)
+        .filter((i) => i.joinSession === payload.joinCode)[0];
+      membersAdapter.updateOne(state.members, {
+        id: member._id,
+        changes: { streamMedia: payload.stream },
+      });
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getOneRoom.rejected, (state) => {});
@@ -141,5 +156,11 @@ const meetSlice = createSlice({
 
 const { reducer: meetReducer, actions } = meetSlice;
 
-export const { setJoinCode, addMember, removeMember, quitRoom } = actions;
+export const {
+  setJoinCode,
+  addMember,
+  removeMember,
+  quitRoom,
+  setMemberStream,
+} = actions;
 export default meetReducer;

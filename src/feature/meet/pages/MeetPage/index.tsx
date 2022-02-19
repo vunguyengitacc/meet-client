@@ -10,6 +10,8 @@ import useMeetPageStyle from "./style";
 import LoadingPage from "feature/loading";
 import useSocket from "hooks/useSocket";
 import { socketClient } from "app/socketClient";
+import * as mediasoupClient from "mediasoup-client";
+import { createDevice } from "hooks/useMeet";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -23,7 +25,8 @@ const MeetPage = () => {
     socketClient.emit(
       "meet:join",
       { roomId: room._id, joinCode },
-      (res: any) => {
+      (res: { rtpCapabilities: mediasoupClient.types.RtpCapabilities }) => {
+        createDevice(res.rtpCapabilities);
         dispatch(getMember({ room, joinCode })).then(() => {
           setLoad(true);
         });

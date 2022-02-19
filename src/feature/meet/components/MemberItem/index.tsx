@@ -6,7 +6,7 @@ import useMemberItemStyle from "./style";
 
 interface IProps {
   member: IMember;
-  media?: MediaStream;
+  media?: MediaStreamTrack;
 }
 
 const MemberItem: React.FC<IProps> = (props) => {

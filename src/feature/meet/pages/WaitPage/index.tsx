@@ -38,7 +38,7 @@ const WaitPage = () => {
       <Box className={style.surface}>
         <Box className={style.mediaCheckerField}>
           {myCam ? (
-            <Video className={style.video} srcObject={myCam} />
+            <Video className={style.video} srcObject={myCam.getTracks()[0]} />
           ) : (
             <video className={style.video} />
           )}
