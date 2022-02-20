@@ -11,11 +11,12 @@ import { AppDispatch, RootState } from "app/reduxStore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { exitRoom } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
-import { createSendTransport } from "hooks/useMeet";
+import useMeeting from "hooks/useMeeting";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const dispatch = useDispatch<AppDispatch>();
+  const { createSendTransport } = useMeeting();
 
   const style = useMediaControlStyle();
   const { getLocalCamStream, stopCam, stopScreen, getLocalScreenStream } =

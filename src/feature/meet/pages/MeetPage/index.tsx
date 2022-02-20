@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import { AppDispatch, RootState } from "app/reduxStore";
 import MemberDisplayer from "feature/meet/components/MemberDisplayer";
 import TaskBar from "feature/meet/components/TaskBar";
-import { getMember } from "feature/meet/meetSlice";
+import { getMember, setMemberStream } from "feature/meet/meetSlice";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,8 @@ import LoadingPage from "feature/loading";
 import useSocket from "hooks/useSocket";
 import { socketClient } from "app/socketClient";
 import * as mediasoupClient from "mediasoup-client";
-import { createDevice } from "hooks/useMeet";
+import useMeeting from "hooks/useMeeting";
+import { seConsummerTransports } from "hooks/meetMediaSlice";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -20,13 +21,52 @@ const MeetPage = () => {
   const [isShowTask, setIsShowTask] = useState<boolean>(false);
   const style = useMeetPageStyle();
   const dispatch = useDispatch<AppDispatch>();
+  const { createDevice, signalNewConsumerTransport } = useMeeting();
+  const consumerTransports = useSelector(
+    (state: RootState) => state.mediasoup.consumerTransports
+  );
 
   useEffect(() => {
     socketClient.emit(
       "meet:join",
       { roomId: room._id, joinCode },
       (res: { rtpCapabilities: mediasoupClient.types.RtpCapabilities }) => {
-        createDevice(res.rtpCapabilities);
+        createDevice(res.rtpCapabilities).then(
+          (device: mediasoupClient.types.Device | undefined) => {
+            console.log(device);
+            if (device === undefined) return;
+            socketClient.on(
+              "new-producer",
+              (data: { producerId: string; spec: string }) => {
+                signalNewConsumerTransport(data.producerId, data.spec, device);
+              }
+            );
+            socketClient.on(
+              "producer-closed",
+              (data: { remoteProducerId: string; spec: string }) => {
+                console.log(data);
+                const producerToClose = consumerTransports.find(
+                  (transportData) =>
+                    transportData.producerId === data.remoteProducerId
+                );
+                producerToClose.consumerTransport.close();
+                producerToClose.consumer.close();
+
+                dispatch(
+                  seConsummerTransports(
+                    consumerTransports.filter(
+                      (transportData) =>
+                        transportData.producerId !== data.remoteProducerId
+                    )
+                  )
+                );
+                dispatch(
+                  setMemberStream({ joinCode: data.spec, stream: undefined })
+                );
+              }
+            );
+          }
+        );
         dispatch(getMember({ room, joinCode })).then(() => {
           setLoad(true);
         });

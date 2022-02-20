@@ -6,7 +6,7 @@ import Video from "components/Video";
 import { setJoinCode } from "feature/meet/meetSlice";
 import useMedia from "hooks/useMedia";
 import { IRoom } from "model/Room";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useWaitPageStyle from "./style";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
