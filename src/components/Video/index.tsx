@@ -12,5 +12,15 @@ export default function Video({ srcObject, ...props }: PropsType) {
     refVideo.current.srcObject = new MediaStream([srcObject]);
   }, [srcObject]);
 
-  return <video muted autoPlay id="my-video" ref={refVideo} {...props} />;
+  return (
+    <video
+      onLoadedMetadata={() => {
+        refVideo.current?.play();
+      }}
+      autoPlay
+      id="my-video"
+      ref={refVideo}
+      {...props}
+    />
+  );
 }

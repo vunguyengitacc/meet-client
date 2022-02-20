@@ -27,7 +27,7 @@ const MediaControl = () => {
   };
 
   useEffect(() => {
-    myCam && createSendTransport(myCam);
+    myCam && createSendTransport(myCam.getVideoTracks()[0]);
   }, [myCam]);
 
   return (

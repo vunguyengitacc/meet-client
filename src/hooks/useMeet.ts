@@ -2,7 +2,6 @@ import store from "app/reduxStore";
 import { socketClient } from "app/socketClient";
 import { setMemberStream } from "feature/meet/meetSlice";
 import * as mediasoupClient from "mediasoup-client";
-import { setCamStream } from "./mediaSlice";
 
 let device: mediasoupClient.Device;
 let producerTransport: mediasoupClient.types.Transport;
@@ -51,7 +50,7 @@ const createDevice = async (
   }
 };
 
-const createSendTransport = (stream: MediaStream) => {
+const createSendTransport = (stream: MediaStreamTrack) => {
   socketClient.emit(
     "createWebRtcTransport",
     { consumer: false },
@@ -100,7 +99,7 @@ const createSendTransport = (stream: MediaStream) => {
         }
       });
 
-      connectSendTransport({ track: stream.getVideoTracks()[0], ...params });
+      connectSendTransport({ track: stream, ...params });
     }
   );
 };
@@ -145,8 +144,7 @@ const connectRecvTransport = async (data: {
           consumer,
         },
       ];
-
-      let { track } = consumer;
+      const { track } = consumer;
 
       socketClient.emit(
         "consumer-resume",
@@ -165,7 +163,11 @@ const connectSendTransport = async (poducerParams: any) => {
   try {
     if (producerTransport === undefined) return;
 
-    producer = await producerTransport.produce(poducerParams);
+    producer = await producerTransport.produce({
+      ...poducerParams,
+      stopTracks: false,
+    });
+
     if (producer === undefined) return;
 
     producer.on("trackended", () => {
@@ -195,13 +197,21 @@ const signalNewConsumerTransport = async (
         return;
       }
       if (device === undefined) return;
-      let consumerTransport;
+      let consumerTransport: mediasoupClient.types.Transport;
       try {
         consumerTransport = device.createRecvTransport(transportParams);
       } catch (error) {
         console.log(error);
         return;
       }
+
+      let args = {
+        consumerTransport,
+        remoteProducerId,
+        serverConsumerTransportId: transportParams.id,
+        spec,
+      };
+      connectRecvTransport(args);
 
       consumerTransport.on(
         "connect",
@@ -219,19 +229,15 @@ const signalNewConsumerTransport = async (
           }
         }
       );
-      let args = {
-        consumerTransport,
-        remoteProducerId,
-        serverConsumerTransportId: transportParams.id,
-        spec,
-      };
-      connectRecvTransport(args);
     }
   );
 };
 
-socketClient.on("new-producer", (data: { producerId: string; spec: string }) =>
-  signalNewConsumerTransport(data.producerId, data.spec)
+socketClient.on(
+  "new-producer",
+  (data: { producerId: string; spec: string }) => {
+    signalNewConsumerTransport(data.producerId, data.spec);
+  }
 );
 socketClient.on(
   "producer-closed",
