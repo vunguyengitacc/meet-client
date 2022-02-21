@@ -102,6 +102,11 @@ const meetSlice = createSlice({
         payload,
       }: PayloadAction<{ joinCode: string; stream?: MediaStreamTrack }>
     ) => {
+      console.log(
+        membersAdapter
+          .getSelectors((state: MeetState) => state.members)
+          .selectAll(state)
+      );
       let member = membersAdapter
         .getSelectors((state: MeetState) => state.members)
         .selectAll(state)

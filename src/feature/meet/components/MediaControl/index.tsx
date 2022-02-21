@@ -15,20 +15,21 @@ import useMeeting from "hooks/useMeeting";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
-  const dispatch = useDispatch<AppDispatch>();
-  const { createSendTransport } = useMeeting();
+  const { createSendTransport, closeTransport } = useMeeting();
+  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
 
+  const dispatch = useDispatch<AppDispatch>();
   const style = useMediaControlStyle();
   const { getLocalCamStream, stopCam, stopScreen, getLocalScreenStream } =
     useMedia();
-  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
 
   const handleExit = () => {
     dispatch(exitRoom(me));
   };
 
   useEffect(() => {
-    myCam && createSendTransport(myCam.getVideoTracks()[0]);
+    if (myCam) createSendTransport(myCam.getVideoTracks()[0]);
+    else closeTransport();
   }, [myCam]);
 
   return (

@@ -45,7 +45,7 @@ const mediasoupSlice = createSlice({
     },
     setProducerTransport: (
       state,
-      { payload }: PayloadAction<mediasoupClient.types.Transport>
+      { payload }: PayloadAction<mediasoupClient.types.Transport | undefined>
     ) => {
       state.producerTransport = payload;
     },

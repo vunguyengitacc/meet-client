@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import Video from "components/Video";
 import { IMember } from "model/Member";
-import React from "react";
+import React, { useEffect } from "react";
 import useMemberItemStyle from "./style";
 
 interface IProps {
@@ -11,6 +11,7 @@ interface IProps {
 
 const MemberItem: React.FC<IProps> = (props) => {
   const style = useMemberItemStyle();
+
   return (
     <Box className={style.surface}>
       {props.media ? (

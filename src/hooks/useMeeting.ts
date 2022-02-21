@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
 import * as mediasoupClient from "mediasoup-client";
 import { socketClient } from "app/socketClient";
 import { AppDispatch, RootState } from "app/reduxStore";
 import { setMemberStream } from "feature/meet/meetSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setDevice,
-  setProducer,
-  setProducerTransport,
-  seConsummerTransports,
-} from "./meetMediaSlice";
+import { setProducerTransport } from "./meetMediaSlice";
+import { useEffect } from "react";
+
+let device: mediasoupClient.types.Device;
+let producerTransport: mediasoupClient.types.Transport | undefined;
+let consumerTransports: any[] = [];
+let producer: mediasoupClient.types.Producer | undefined;
 
 const useMeeting = () => {
-  const { producer, producerTransport, device, consumerTransports, params } =
-    useSelector((state: RootState) => state.mediasoup);
+  const { params } = useSelector((state: RootState) => state.mediasoup);
   const dispatch = useDispatch<AppDispatch>();
 
   const createDevice = async (
     rtpCapabilities: mediasoupClient.types.RtpCapabilities
   ) => {
     try {
-      let temp = new mediasoupClient.Device();
+      device = new mediasoupClient.Device();
 
-      await temp?.load({
+      await device?.load({
         routerRtpCapabilities: rtpCapabilities,
       });
-      dispatch(setDevice(temp));
-      return temp;
+      return device;
     } catch (error: any) {
       console.log(error);
     }
@@ -34,37 +32,27 @@ const useMeeting = () => {
 
   const connectSendTransport = async (poducerParams: any) => {
     try {
-      console.log(producerTransport);
       if (producerTransport === undefined) return;
-      let temp = await producerTransport.produce({
+      producer = await producerTransport.produce({
         ...poducerParams,
         stopTracks: false,
       });
 
-      if (temp === undefined) return;
+      if (producer === undefined) return;
 
-      temp.on("trackended", () => {
+      producer.on("trackended", () => {
         console.log("track ended");
       });
 
-      temp.on("transportclose", () => {
+      producer.on("transportclose", () => {
         console.log("transport ended");
       });
-      dispatch(setProducer(temp));
     } catch (error) {
       console.log(error);
     }
   };
-  const [stream, setStream] = useState<MediaStreamTrack>();
-
-  useEffect(() => {
-    if (producerTransport === undefined || stream === undefined) return;
-
-    connectSendTransport({ track: stream, ...params });
-  }, [producerTransport, stream]);
 
   const createSendTransport = (stream: MediaStreamTrack) => {
-    setStream(stream);
     socketClient.emit(
       "createWebRtcTransport",
       { consumer: false },
@@ -75,37 +63,42 @@ const useMeeting = () => {
           return;
         }
         if (device === undefined) return;
-        let temp = device.createSendTransport(transportParams);
-        temp.on("connect", async ({ dtlsParameters }, callback, errback) => {
-          try {
-            await socketClient.emit("transport-connect", {
-              dtlsParameters,
-            });
-            callback();
-          } catch (error) {
-            errback(error);
+        producerTransport = device.createSendTransport(transportParams);
+        producerTransport.on(
+          "connect",
+          async ({ dtlsParameters }, callback, errback) => {
+            try {
+              await socketClient.emit("transport-connect", {
+                dtlsParameters,
+              });
+              callback();
+            } catch (error) {
+              errback(error);
+            }
           }
-        });
-        temp.on("produce", async (parameters, callback, errback) => {
-          try {
-            await socketClient.emit(
-              "transport-produce",
-              {
-                kind: parameters.kind,
-                rtpParameters: parameters.rtpParameters,
-                appData: parameters.appData,
-              },
-              (data: { id: string; producersExist: any }) => {
-                callback({ id: data.id });
-              }
-            );
-          } catch (error) {
-            console.log(error);
-            errback(error);
+        );
+        producerTransport.on(
+          "produce",
+          async (parameters, callback, errback) => {
+            try {
+              await socketClient.emit(
+                "transport-produce",
+                {
+                  kind: parameters.kind,
+                  rtpParameters: parameters.rtpParameters,
+                  appData: parameters.appData,
+                },
+                (data: { id: string; producersExist: any }) => {
+                  callback({ id: data.id });
+                }
+              );
+            } catch (error) {
+              console.log(error);
+              errback(error);
+            }
           }
-        });
-
-        dispatch(setProducerTransport(temp));
+        );
+        connectSendTransport({ track: stream, ...params });
       }
     );
   };
@@ -115,20 +108,18 @@ const useMeeting = () => {
     remoteProducerId: string;
     serverConsumerTransportId: any;
     spec: string;
-    deviceCnt: mediasoupClient.types.Device;
   }) => {
     const {
       consumerTransport,
       remoteProducerId,
       serverConsumerTransportId,
       spec,
-      deviceCnt,
     } = data;
-    if (deviceCnt === undefined) return;
+    if (device === undefined) return;
     await socketClient.emit(
       "consume",
       {
-        rtpCapabilities: deviceCnt.rtpCapabilities,
+        rtpCapabilities: device.rtpCapabilities,
         remoteProducerId,
         serverConsumerTransportId,
       },
@@ -143,17 +134,16 @@ const useMeeting = () => {
           kind: data.params.kind,
           rtpParameters: data.params.rtpParameters,
         });
-        dispatch(
-          seConsummerTransports([
-            ...consumerTransports,
-            {
-              consumerTransport,
-              serverConsumerTransportId: data.params.id,
-              producerId: remoteProducerId,
-              consumer,
-            },
-          ])
-        );
+        consumerTransports = [
+          ...consumerTransports,
+          {
+            consumerTransport,
+            serverConsumerTransportId: data.params.id,
+            producerId: remoteProducerId,
+            consumer,
+          },
+        ];
+
         const { track } = consumer;
 
         socketClient.emit(
@@ -171,8 +161,7 @@ const useMeeting = () => {
 
   const signalNewConsumerTransport = async (
     remoteProducerId: string,
-    spec: string,
-    deviceCnt: mediasoupClient.types.Device
+    spec: string
   ) => {
     await socketClient.emit(
       "createWebRtcTransport",
@@ -181,17 +170,15 @@ const useMeeting = () => {
         const { transportParams } = data;
 
         if (transportParams.error) return;
-        console.log(deviceCnt);
-        if (deviceCnt === undefined) return;
+
+        if (device === undefined) return;
         let consumerTransport: mediasoupClient.types.Transport;
         try {
-          consumerTransport = deviceCnt.createRecvTransport(transportParams);
+          consumerTransport = device.createRecvTransport(transportParams);
         } catch (error) {
           console.log(error);
           return;
         }
-
-        console.log(consumerTransport);
 
         consumerTransport.on(
           "connect",
@@ -215,7 +202,6 @@ const useMeeting = () => {
           remoteProducerId,
           serverConsumerTransportId: transportParams.id,
           spec,
-          deviceCnt,
         };
         connectRecvTransport(args);
       }
@@ -224,6 +210,17 @@ const useMeeting = () => {
 
   const closeTransport = () => {
     producerTransport?.close();
+    producer?.close();
+    producerTransport = undefined;
+    producer = undefined;
+  };
+
+  const setConsumerTransports = (data: any[]) => {
+    consumerTransports = data;
+  };
+
+  const getConsumerTransport = () => {
+    return consumerTransports;
   };
 
   return {
@@ -231,6 +228,8 @@ const useMeeting = () => {
     createSendTransport,
     closeTransport,
     signalNewConsumerTransport,
+    getConsumerTransport,
+    setConsumerTransports,
   };
 };
 
