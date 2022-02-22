@@ -96,7 +96,7 @@ const meetSlice = createSlice({
       state.members = membersAdapter.getInitialState();
       toast(<div>The meet is finished</div>);
     },
-    setMemberStream: (
+    setMemberWebcam: (
       state,
       {
         payload,
@@ -109,6 +109,36 @@ const meetSlice = createSlice({
       membersAdapter.updateOne(state.members, {
         id: member._id,
         changes: { webcamStream: payload.stream },
+      });
+    },
+    setMemberMicro: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ joinCode: string; stream?: MediaStreamTrack }>
+    ) => {
+      let member = membersAdapter
+        .getSelectors((state: MeetState) => state.members)
+        .selectAll(state)
+        .filter((i) => i.joinSession === payload.joinCode)[0];
+      membersAdapter.updateOne(state.members, {
+        id: member._id,
+        changes: { microStream: payload.stream },
+      });
+    },
+    setMemberScreen: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ joinCode: string; stream?: MediaStreamTrack }>
+    ) => {
+      let member = membersAdapter
+        .getSelectors((state: MeetState) => state.members)
+        .selectAll(state)
+        .filter((i) => i.joinSession === payload.joinCode)[0];
+      membersAdapter.updateOne(state.members, {
+        id: member._id,
+        changes: { screenStream: payload.stream },
       });
     },
   },
@@ -161,6 +191,8 @@ export const {
   addMember,
   removeMember,
   quitRoom,
-  setMemberStream,
+  setMemberWebcam,
+  setMemberMicro,
+  setMemberScreen,
 } = actions;
 export default meetReducer;

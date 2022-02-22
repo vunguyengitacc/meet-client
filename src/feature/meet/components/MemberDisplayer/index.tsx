@@ -45,9 +45,16 @@ const MemberDisplayer: React.FC<IProps> = ({ isShowTask }) => {
           )}
         </Box>
         {members.map((i) => (
-          <Box className={style.item} key={i._id}>
-            <MemberItem member={i} media={i.webcamStream} />
-          </Box>
+          <>
+            <Box className={style.item} key={i._id}>
+              <MemberItem member={i} media={i.webcamStream} />
+            </Box>
+            {i.screenStream && (
+              <Box className={style.item} key={i._id}>
+                <MemberItem member={i} media={i.screenStream} />
+              </Box>
+            )}
+          </>
         ))}
       </Box>
       <Paper className={style.taskField}>hello</Paper>

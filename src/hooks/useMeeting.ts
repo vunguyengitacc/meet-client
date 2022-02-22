@@ -1,9 +1,14 @@
 import * as mediasoupClient from "mediasoup-client";
 import { socketClient } from "app/socketClient";
 import { AppDispatch } from "app/reduxStore";
-import { setMemberStream } from "feature/meet/meetSlice";
+import {
+  setMemberMicro,
+  setMemberScreen,
+  setMemberWebcam,
+} from "feature/meet/meetSlice";
 import { useDispatch } from "react-redux";
 import { IDictionary } from "model/Common";
+import { StreamType } from "utilities/streamTypeUtil";
 
 interface IPropsConsumerTransports {
   consumerTransport: mediasoupClient.types.Transport;
@@ -162,12 +167,14 @@ const useMeeting = () => {
     remoteProducerId: string;
     serverConsumerTransportId: any;
     spec: string;
+    type: StreamType;
   }) => {
     const {
       consumerTransport,
       remoteProducerId,
       serverConsumerTransportId,
       spec,
+      type,
     } = data;
     if (device === undefined) return;
     socketClient.emit(
@@ -217,7 +224,19 @@ const useMeeting = () => {
             serverConsumerId: data.params.serverConsumerId,
           },
           (data: { msg: string }) => {
-            dispatch(setMemberStream({ joinCode: spec, stream: track }));
+            switch (type) {
+              case StreamType.webcam:
+                dispatch(setMemberWebcam({ joinCode: spec, stream: track }));
+                break;
+              case StreamType.micro:
+                dispatch(setMemberMicro({ joinCode: spec, stream: track }));
+                break;
+              case StreamType.screen:
+                dispatch(setMemberScreen({ joinCode: spec, stream: track }));
+                break;
+              default:
+                break;
+            }
           }
         );
       }
@@ -226,8 +245,10 @@ const useMeeting = () => {
 
   const signalNewConsumerTransport = async (
     remoteProducerId: string,
-    spec: string
+    spec: string,
+    type: StreamType
   ) => {
+    console.log(type);
     let consumerTransport: mediasoupClient.types.Transport;
     if (device === undefined) return;
     if (
@@ -243,6 +264,7 @@ const useMeeting = () => {
         remoteProducerId,
         serverConsumerTransportId: data.serverConsumerTransportId,
         spec,
+        type,
       };
       await connectRecvTransport(args);
       return;
@@ -279,6 +301,7 @@ const useMeeting = () => {
           remoteProducerId,
           serverConsumerTransportId: transportParams.id,
           spec,
+          type,
         };
         await connectRecvTransport(args);
       }
@@ -305,10 +328,12 @@ const useMeeting = () => {
 
   const getOldProducers = () => {
     socketClient.emit(
-      "getProducers",
-      async (producers: { producerId: string; spec: string }[]) => {
+      "get-old-producers",
+      async (
+        producers: { producerId: string; spec: string; type: StreamType }[]
+      ) => {
         for (const i of producers) {
-          await signalNewConsumerTransport(i.producerId, i.spec);
+          await signalNewConsumerTransport(i.producerId, i.spec, i.type);
         }
       }
     );

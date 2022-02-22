@@ -2,7 +2,12 @@ import { Box } from "@mui/material";
 import { AppDispatch, RootState } from "app/reduxStore";
 import MemberDisplayer from "feature/meet/components/MemberDisplayer";
 import TaskBar from "feature/meet/components/TaskBar";
-import { getMember, setMemberStream } from "feature/meet/meetSlice";
+import {
+  getMember,
+  setMemberWebcam,
+  setMemberMicro,
+  setMemberScreen,
+} from "feature/meet/meetSlice";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +16,7 @@ import LoadingPage from "feature/loading";
 import { socketClient } from "app/socketClient";
 import * as mediasoupClient from "mediasoup-client";
 import useMeeting from "hooks/useMeeting";
+import { StreamType } from "utilities/streamTypeUtil";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -30,16 +36,36 @@ const MeetPage = () => {
   useEffect(() => {
     socketClient.on(
       "new-producer",
-      (data: { producerId: string; spec: string }) => {
-        signalNewConsumerTransport(data.producerId, data.spec);
+      (data: { producerId: string; spec: string; type: StreamType }) => {
+        signalNewConsumerTransport(data.producerId, data.spec, data.type);
       }
     );
     socketClient.on(
       "producer-closed",
-      async (data: { remoteProducerId: string; spec: string }) => {
-        await dispatch(
-          setMemberStream({ joinCode: data.spec, stream: undefined })
-        );
+      async (data: {
+        remoteProducerId: string;
+        spec: string;
+        type: StreamType;
+      }) => {
+        switch (data.type) {
+          case StreamType.webcam:
+            dispatch(
+              setMemberWebcam({ joinCode: data.spec, stream: undefined })
+            );
+            break;
+          case StreamType.micro:
+            dispatch(
+              setMemberMicro({ joinCode: data.spec, stream: undefined })
+            );
+            break;
+          case StreamType.screen:
+            dispatch(
+              setMemberScreen({ joinCode: data.spec, stream: undefined })
+            );
+            break;
+          default:
+            break;
+        }
         const transport = Object.values(getConsumerTransport()).filter(
           (transportData: any) =>
             transportData.connection.filter(
