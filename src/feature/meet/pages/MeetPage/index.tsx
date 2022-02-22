@@ -47,25 +47,18 @@ const MeetPage = () => {
             ).length > 0
         )[0] as any;
         if (transport === undefined) return;
-        transport.connection
-          .filter((i: any) => i.producerId === data.remoteProducerId)[0]
-          .consumer.close();
-        // setConsumerTransports(
-        //   getConsumerTransport().filter(
-        //     (transportData) =>
-        //       transportData.producerId !== data.remoteProducerId
-        //   )
-        // );
-        // setConsumerTransports({
-        //   id: transport.consumerTransport.id,
-        //   payload: {
 
-        //   },
-        // });
+        setConsumerTransports({
+          id: transport.consumerTransport.id,
+          payload: transport,
+        });
 
         transport.connection
           .filter((i: any) => i.producerId === data.remoteProducerId)[0]
           .consumer.close();
+        transport.connection = transport.connection.filter(
+          (i: any) => i.producerId !== data.remoteProducerId
+        );
       }
     );
   }, []);

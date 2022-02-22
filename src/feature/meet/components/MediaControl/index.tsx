@@ -29,8 +29,13 @@ const MediaControl = () => {
 
   useEffect(() => {
     if (myCam) createSendTransport(myCam.getVideoTracks()[0]);
-    else closeProducer();
+    else closeProducer("webcam");
   }, [myCam]);
+
+  // useEffect(() => {
+  //   if (myScreen) createSendTransport(myScreen.getVideoTracks()[0]);
+  //   else closeProducer("webcam");
+  // }, [myScreen]);
 
   return (
     <Box className={style.surface}>

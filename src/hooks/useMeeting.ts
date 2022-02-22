@@ -8,7 +8,13 @@ import { IDictionary } from "model/Common";
 let device: mediasoupClient.types.Device;
 let producerTransport: mediasoupClient.types.Transport | undefined;
 let consumerTransports: any = [];
-let producer: IDictionary<mediasoupClient.types.Producer> = {};
+let producer: IDictionary<
+  | {
+      serverProducerId: string;
+      data: mediasoupClient.types.Producer | undefined;
+    }
+  | undefined
+> = {};
 let params: {
   encodings: [
     {
@@ -53,22 +59,29 @@ const useMeeting = () => {
   const connectSendTransport = async (stream: MediaStreamTrack) => {
     try {
       if (producerTransport === undefined) return;
-      let newProducer = await producerTransport.produce({
-        track: stream,
-        ...params,
-        stopTracks: false,
-      });
+      if (producer["webcam"]) {
+        producer["webcam"]?.data?.resume();
+      } else {
+        producer["webcam"] = {
+          serverProducerId: "",
+          data: undefined,
+        };
+        producer["webcam"].data = await producerTransport.produce({
+          track: stream,
+          ...params,
+          stopTracks: false,
+        });
+      }
 
-      if (newProducer === undefined) return;
+      if (producer["webcam"]?.data === undefined) return;
 
-      newProducer.on("trackended", () => {
+      producer["webcam"].data?.on("trackended", () => {
         console.log("track ended");
       });
 
-      newProducer.on("transportclose", () => {
+      producer["webcam"].data?.on("transportclose", () => {
         console.log("transport ended");
       });
-      producer["webcam"] = newProducer;
     } catch (error) {
       console.log(error);
     }
@@ -110,7 +123,7 @@ const useMeeting = () => {
           "produce",
           async (parameters, callback, errback) => {
             try {
-              await socketClient.emit(
+              socketClient.emit(
                 "transport-produce",
                 {
                   kind: parameters.kind,
@@ -118,6 +131,12 @@ const useMeeting = () => {
                   appData: parameters.appData,
                 },
                 (data: { id: string; producersExist: any }) => {
+                  if (producer["webcam"] === undefined)
+                    producer["webcam"] = {
+                      serverProducerId: data.id,
+                      data: undefined,
+                    };
+                  else producer["webcam"].serverProducerId = data.id;
                   callback({ id: data.id });
                 }
               );
@@ -248,8 +267,13 @@ const useMeeting = () => {
     );
   };
 
-  const closeProducer = () => {
-    producer["webcam"]?.close();
+  const closeProducer = (type: string) => {
+    if (producer[type] === undefined) return;
+    producer[type]?.data?.close();
+    socketClient.emit("producer-closing", {
+      producerId: producer[type]?.serverProducerId,
+    });
+    producer[type] = undefined;
   };
 
   const setConsumerTransports = (data: { id: string; payload: any }) => {
