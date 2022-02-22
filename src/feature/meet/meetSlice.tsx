@@ -108,7 +108,7 @@ const meetSlice = createSlice({
         .filter((i) => i.joinSession === payload.joinCode)[0];
       membersAdapter.updateOne(state.members, {
         id: member._id,
-        changes: { streamMedia: payload.stream },
+        changes: { webcamStream: payload.stream },
       });
     },
   },

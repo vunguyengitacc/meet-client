@@ -46,7 +46,7 @@ const MemberDisplayer: React.FC<IProps> = ({ isShowTask }) => {
         </Box>
         {members.map((i) => (
           <Box className={style.item} key={i._id}>
-            <MemberItem member={i} media={i.streamMedia} />
+            <MemberItem member={i} media={i.webcamStream} />
           </Box>
         ))}
       </Box>

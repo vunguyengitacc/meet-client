@@ -5,16 +5,23 @@ import { setMemberStream } from "feature/meet/meetSlice";
 import { useDispatch } from "react-redux";
 import { IDictionary } from "model/Common";
 
+interface IPropsConsumerTransports {
+  consumerTransport: mediasoupClient.types.Transport;
+  serverConsumerTransportId: string;
+  connection: {
+    producerId: string;
+    consumer: mediasoupClient.types.Consumer;
+  }[];
+  spec: string;
+}
+
 let device: mediasoupClient.types.Device;
 let producerTransport: mediasoupClient.types.Transport | undefined;
-let consumerTransports: any = [];
-let producer: IDictionary<
-  | {
-      serverProducerId: string;
-      data: mediasoupClient.types.Producer | undefined;
-    }
-  | undefined
-> = {};
+let consumerTransports: IDictionary<IPropsConsumerTransports> = {};
+let producer: IDictionary<{
+  serverProducerId: string;
+  data: mediasoupClient.types.Producer | undefined;
+}> = {};
 let params: {
   encodings: [
     {
@@ -56,38 +63,45 @@ const useMeeting = () => {
     }
   };
 
-  const connectSendTransport = async (stream: MediaStreamTrack) => {
+  const connectSendTransport = async (
+    stream: MediaStreamTrack,
+    type: string
+  ) => {
     try {
       if (producerTransport === undefined) return;
-      if (producer["webcam"]) {
-        producer["webcam"]?.data?.resume();
+      if (producer[type] && producer[type].data != undefined) {
+        producer[type]?.data?.resume();
       } else {
-        producer["webcam"] = {
+        producer[type] = {
           serverProducerId: "",
           data: undefined,
         };
-        producer["webcam"].data = await producerTransport.produce({
+        producer[type].data = await producerTransport.produce({
           track: stream,
           ...params,
+          appData: {
+            type,
+          },
           stopTracks: false,
         });
       }
-
-      if (producer["webcam"]?.data === undefined) return;
-
-      producer["webcam"].data?.on("trackended", () => {
-        console.log("track ended");
-      });
-
-      producer["webcam"].data?.on("transportclose", () => {
-        console.log("transport ended");
-      });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const createSendTransport = async (stream: MediaStreamTrack) => {
+  const createSendTransport = async (
+    stream: MediaStreamTrack,
+    type: string
+  ) => {
+    if (device === undefined) return;
+    if (
+      producerTransport !== undefined &&
+      producerTransport?.closed === false
+    ) {
+      connectSendTransport(stream, type);
+      return;
+    }
     socketClient.emit(
       "createWebRtcTransport",
       { consumer: false },
@@ -95,14 +109,6 @@ const useMeeting = () => {
         const { transportParams } = data;
         if (transportParams.error) {
           console.log(transportParams.error);
-          return;
-        }
-        if (device === undefined) return;
-        if (
-          producerTransport !== undefined &&
-          producerTransport?.closed === false
-        ) {
-          connectSendTransport(stream);
           return;
         }
         producerTransport = device.createSendTransport(transportParams);
@@ -130,13 +136,13 @@ const useMeeting = () => {
                   rtpParameters: parameters.rtpParameters,
                   appData: parameters.appData,
                 },
-                (data: { id: string; producersExist: any }) => {
-                  if (producer["webcam"] === undefined)
-                    producer["webcam"] = {
+                (data: { id: string; producersExist: any; type: string }) => {
+                  if (producer[data.type] === undefined)
+                    producer[data.type] = {
                       serverProducerId: data.id,
                       data: undefined,
                     };
-                  else producer["webcam"].serverProducerId = data.id;
+                  else producer[data.type].serverProducerId = data.id;
                   callback({ id: data.id });
                 }
               );
@@ -146,7 +152,7 @@ const useMeeting = () => {
             }
           }
         );
-        connectSendTransport(stream);
+        connectSendTransport(stream, type);
       }
     );
   };
@@ -183,13 +189,16 @@ const useMeeting = () => {
           rtpParameters: data.params.rtpParameters,
         });
 
-        let connection;
+        let connection: {
+          producerId: string;
+          consumer: mediasoupClient.types.Consumer;
+        }[];
         if (consumerTransports[consumerTransport.id] === undefined)
           connection = [];
         else connection = consumerTransports[consumerTransport.id].connection;
         consumerTransports[consumerTransport.id] = {
           consumerTransport,
-          serverConsumerTransportId: data.params.id,
+          serverConsumerTransportId: serverConsumerTransportId,
           connection: [
             ...connection,
             {
@@ -219,6 +228,26 @@ const useMeeting = () => {
     remoteProducerId: string,
     spec: string
   ) => {
+    let consumerTransport: mediasoupClient.types.Transport;
+    if (device === undefined) return;
+    if (
+      consumerTransports !== undefined &&
+      Object.values(consumerTransports).filter((i: any) => i.spec === spec)
+        .length > 0
+    ) {
+      let data = Object.values(consumerTransports).filter(
+        (i: any) => i.spec === spec
+      )[0];
+      let args = {
+        consumerTransport: data.consumerTransport,
+        remoteProducerId,
+        serverConsumerTransportId: data.serverConsumerTransportId,
+        spec,
+      };
+      await connectRecvTransport(args);
+      return;
+    }
+
     socketClient.emit(
       "createWebRtcTransport",
       { consumer: true },
@@ -227,18 +256,7 @@ const useMeeting = () => {
 
         if (transportParams.error) return;
 
-        if (device === undefined) return;
-        let consumerTransport: mediasoupClient.types.Transport;
-
-        if (consumerTransports === undefined)
-          consumerTransport = device.createRecvTransport(transportParams);
-        else {
-          consumerTransport = consumerTransports.filter(
-            (i: any) => i.spec === spec
-          )[0];
-          if (consumerTransport === undefined)
-            consumerTransport = device.createRecvTransport(transportParams);
-        }
+        consumerTransport = device.createRecvTransport(transportParams);
 
         consumerTransport.on(
           "connect",
@@ -269,11 +287,12 @@ const useMeeting = () => {
 
   const closeProducer = (type: string) => {
     if (producer[type] === undefined) return;
+    console.log(producer[type]);
     producer[type]?.data?.close();
     socketClient.emit("producer-closing", {
       producerId: producer[type]?.serverProducerId,
     });
-    producer[type] = undefined;
+    producer[type] = { serverProducerId: "", data: undefined };
   };
 
   const setConsumerTransports = (data: { id: string; payload: any }) => {

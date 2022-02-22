@@ -12,6 +12,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { exitRoom } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import useMeeting from "hooks/useMeeting";
+import { StreamType } from "utilities/streamTypeUtil";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
@@ -28,14 +29,16 @@ const MediaControl = () => {
   };
 
   useEffect(() => {
-    if (myCam) createSendTransport(myCam.getVideoTracks()[0]);
-    else closeProducer("webcam");
+    if (myCam)
+      createSendTransport(myCam.getVideoTracks()[0], StreamType.webcam);
+    else closeProducer(StreamType.webcam);
   }, [myCam]);
 
-  // useEffect(() => {
-  //   if (myScreen) createSendTransport(myScreen.getVideoTracks()[0]);
-  //   else closeProducer("webcam");
-  // }, [myScreen]);
+  useEffect(() => {
+    if (myScreen)
+      createSendTransport(myScreen.getVideoTracks()[0], StreamType.screen);
+    else closeProducer(StreamType.screen);
+  }, [myScreen]);
 
   return (
     <Box className={style.surface}>
