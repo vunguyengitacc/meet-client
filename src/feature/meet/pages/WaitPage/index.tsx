@@ -6,7 +6,7 @@ import Video from "components/Video";
 import { setJoinCode } from "feature/meet/meetSlice";
 import useMedia from "hooks/useMedia";
 import { IRoom } from "model/Room";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useWaitPageStyle from "./style";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
@@ -38,7 +38,10 @@ const WaitPage = () => {
       <Box className={style.surface}>
         <Box className={style.mediaCheckerField}>
           {myCam ? (
-            <Video className={style.video} srcObject={myCam} />
+            <Video
+              className={style.video}
+              srcObject={myCam.getVideoTracks()[0]}
+            />
           ) : (
             <video className={style.video} />
           )}

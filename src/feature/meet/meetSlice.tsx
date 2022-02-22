@@ -24,7 +24,7 @@ export const getMember = createAsyncThunk(
     });
     const otherRes = await memberApi.getAllInRoom(payload.room);
     let members = otherRes.data.members.filter(
-      (i) => i.joinSession != payload.joinCode
+      (i) => i.joinSession !== payload.joinCode
     );
     return { me: meRes.data.data, members };
   }
@@ -80,7 +80,7 @@ const meetSlice = createSlice({
     },
     addMember: (state, { payload }: PayloadAction<IMember>) => {
       membersAdapter.addOne(state.members, payload);
-      toast(`${payload.user?.fullname} join the meet`);
+      toast(`${payload.user?.fullname} joined the meet`);
     },
     removeMember: (state, { payload }: PayloadAction<IMember>) => {
       let temp = membersAdapter
@@ -94,7 +94,52 @@ const meetSlice = createSlice({
       state.me = undefined;
       state.joinCode = "";
       state.members = membersAdapter.getInitialState();
-      toast(`The meet is finished`);
+      toast(<div>The meet is finished</div>);
+    },
+    setMemberWebcam: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ joinCode: string; stream?: MediaStreamTrack }>
+    ) => {
+      let member = membersAdapter
+        .getSelectors((state: MeetState) => state.members)
+        .selectAll(state)
+        .filter((i) => i.joinSession === payload.joinCode)[0];
+      membersAdapter.updateOne(state.members, {
+        id: member._id,
+        changes: { webcamStream: payload.stream },
+      });
+    },
+    setMemberMicro: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ joinCode: string; stream?: MediaStreamTrack }>
+    ) => {
+      let member = membersAdapter
+        .getSelectors((state: MeetState) => state.members)
+        .selectAll(state)
+        .filter((i) => i.joinSession === payload.joinCode)[0];
+      membersAdapter.updateOne(state.members, {
+        id: member._id,
+        changes: { microStream: payload.stream },
+      });
+    },
+    setMemberScreen: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ joinCode: string; stream?: MediaStreamTrack }>
+    ) => {
+      let member = membersAdapter
+        .getSelectors((state: MeetState) => state.members)
+        .selectAll(state)
+        .filter((i) => i.joinSession === payload.joinCode)[0];
+      membersAdapter.updateOne(state.members, {
+        id: member._id,
+        changes: { screenStream: payload.stream },
+      });
     },
   },
   extraReducers: (builder) => {
@@ -141,5 +186,13 @@ const meetSlice = createSlice({
 
 const { reducer: meetReducer, actions } = meetSlice;
 
-export const { setJoinCode, addMember, removeMember, quitRoom } = actions;
+export const {
+  setJoinCode,
+  addMember,
+  removeMember,
+  quitRoom,
+  setMemberWebcam,
+  setMemberMicro,
+  setMemberScreen,
+} = actions;
 export default meetReducer;

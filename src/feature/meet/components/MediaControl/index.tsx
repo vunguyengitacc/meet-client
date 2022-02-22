@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import PresentToAllIcon from "@mui/icons-material/PresentToAll";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
@@ -11,19 +11,35 @@ import { AppDispatch, RootState } from "app/reduxStore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { exitRoom } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
+import useMeeting from "hooks/useMeeting";
+import { StreamType } from "utilities/streamTypeUtil";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
-  const dispatch = useDispatch<AppDispatch>();
+  const { createSendTransport, closeProducer } = useMeeting();
+  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
 
+  const dispatch = useDispatch<AppDispatch>();
   const style = useMediaControlStyle();
   const { getLocalCamStream, stopCam, stopScreen, getLocalScreenStream } =
     useMedia();
-  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
 
   const handleExit = () => {
     dispatch(exitRoom(me));
   };
+
+  useEffect(() => {
+    if (myCam)
+      createSendTransport(myCam.getVideoTracks()[0], StreamType.webcam);
+    else closeProducer(StreamType.webcam);
+  }, [myCam]);
+
+  useEffect(() => {
+    if (myScreen)
+      createSendTransport(myScreen.getVideoTracks()[0], StreamType.screen);
+    else closeProducer(StreamType.screen);
+  }, [myScreen]);
+
   return (
     <Box className={style.surface}>
       <Button className={style.roundBtn} color="disable" variant="contained">

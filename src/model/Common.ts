@@ -6,3 +6,7 @@ export interface IResponse<T> {
     [key: string]: T;
   };
 }
+
+export interface IDictionary<T> {
+  [index: string]: T;
+}
