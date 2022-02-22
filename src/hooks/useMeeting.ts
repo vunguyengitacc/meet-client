@@ -74,7 +74,7 @@ const useMeeting = () => {
   ) => {
     try {
       if (producerTransport === undefined) return;
-      if (producer[type] && producer[type].data != undefined) {
+      if (producer[type] && producer[type].data !== undefined) {
         producer[type]?.data?.resume();
       } else {
         producer[type] = {

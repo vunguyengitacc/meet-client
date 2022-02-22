@@ -15,7 +15,7 @@ const getRow = (input: number, onPin: boolean, isShowTask: boolean) => {
   }
 };
 
-const useMemberDisplayerStyle = makeStyles({
+const useMeetAppStyle = makeStyles({
   surface: {
     width: "100%",
     height: "100%",
@@ -54,4 +54,4 @@ const useMemberDisplayerStyle = makeStyles({
   }),
 });
 
-export default useMemberDisplayerStyle;
+export default useMeetAppStyle;

@@ -1,12 +1,13 @@
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Typography } from "@mui/material";
 import Video from "components/Video";
 import { IMember } from "model/Member";
-import React, { useEffect } from "react";
+import React from "react";
 import useMemberItemStyle from "./style";
 
 interface IProps {
   member: IMember;
   media?: MediaStreamTrack;
+  isMe?: boolean;
 }
 
 const MemberItem: React.FC<IProps> = (props) => {
@@ -30,7 +31,7 @@ const MemberItem: React.FC<IProps> = (props) => {
         color="secondary"
         className={style.floatingTitle}
       >
-        {props.member.user?.fullname}
+        {props.isMe ? "Me" : props.member.user?.fullname}
       </Typography>
     </Box>
   );

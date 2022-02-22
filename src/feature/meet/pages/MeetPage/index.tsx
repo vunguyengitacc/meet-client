@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { AppDispatch, RootState } from "app/reduxStore";
-import MemberDisplayer from "feature/meet/components/MemberDisplayer";
+import MeetApp from "feature/meet/components/MeetApp";
 import TaskBar from "feature/meet/components/TaskBar";
 import {
   getMember,
@@ -112,7 +112,7 @@ const MeetPage = () => {
       {load ? (
         <Box className={style.surface}>
           <Box className={style.app}>
-            <MemberDisplayer isShowTask={isShowTask} />
+            <MeetApp isShowTask={isShowTask} />
           </Box>
           <Box className={style.task}>
             <TaskBar isShowTask={isShowTask} setIsShowTask={setIsShowTask} />

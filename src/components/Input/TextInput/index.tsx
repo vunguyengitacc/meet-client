@@ -16,6 +16,7 @@ interface ITextInputProps {
   blockCopy?: boolean;
   blockPaste?: boolean;
   autoComplete?: string;
+  hideError?: boolean;
 }
 
 const TextInput: React.FC<ITextInputProps> = ({ name, form, ...other }) => {
@@ -54,7 +55,9 @@ const TextInput: React.FC<ITextInputProps> = ({ name, form, ...other }) => {
               placeholder={other.placeHolder}
               className={other.className}
             />
-            <FormHelperText>{errors[name]?.message}</FormHelperText>
+            {!other.hideError && (
+              <FormHelperText>{errors[name]?.message}</FormHelperText>
+            )}
           </>
         </FormControl>
       )}

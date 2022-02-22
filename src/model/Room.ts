@@ -6,5 +6,6 @@ export interface IRoom {
   isPrivate: boolean;
   isRecording: boolean;
   isShowOldMessage: boolean;
+  isAccessMessage: boolean;
   joinRequest: string[];
 }

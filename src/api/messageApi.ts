@@ -1,4 +1,5 @@
 import { IResponse } from "model/Common";
+import { IMember } from "model/Member";
 import { IMessage } from "model/Message";
 import { IRoom } from "model/Room";
 import axiosClient from "./axiosClient";
@@ -8,11 +9,11 @@ const messageApi = {
     return axiosClient.get(`/rooms/${payload._id}/messages`);
   },
   create(payload: {
-    room: IRoom;
+    member: IMember;
     message: Partial<IMessage>;
   }): Promise<IResponse<IMessage>> {
-    const { room, message } = payload;
-    return axiosClient.post(`/rooms/${room._id}/messages`, message);
+    const { member, message } = payload;
+    return axiosClient.post(`/rooms/${member.roomId}/messages`, payload);
   },
 };
 
