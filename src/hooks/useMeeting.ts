@@ -1,18 +1,38 @@
 import * as mediasoupClient from "mediasoup-client";
 import { socketClient } from "app/socketClient";
-import { AppDispatch, RootState } from "app/reduxStore";
+import { AppDispatch } from "app/reduxStore";
 import { setMemberStream } from "feature/meet/meetSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { setProducerTransport } from "./meetMediaSlice";
-import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { IDictionary } from "model/Common";
 
 let device: mediasoupClient.types.Device;
 let producerTransport: mediasoupClient.types.Transport | undefined;
-let consumerTransports: any[] = [];
-let producer: mediasoupClient.types.Producer | undefined;
+let consumerTransports: any = [];
+let producer: IDictionary<mediasoupClient.types.Producer> = {};
+let params: {
+  encodings: [
+    {
+      rid: "r0";
+      maxBitrate: 100000;
+      scalabilityMode: "S1T3";
+    },
+    {
+      rid: "r1";
+      maxBitrate: 300000;
+      scalabilityMode: "S1T3";
+    },
+    {
+      rid: "r2";
+      maxBitrate: 900000;
+      scalabilityMode: "S1T3";
+    }
+  ];
+  codecOptions: {
+    videoGoogleStartBitrate: 1000;
+  };
+};
 
 const useMeeting = () => {
-  const { params } = useSelector((state: RootState) => state.mediasoup);
   const dispatch = useDispatch<AppDispatch>();
 
   const createDevice = async (
@@ -30,45 +50,54 @@ const useMeeting = () => {
     }
   };
 
-  const connectSendTransport = async (poducerParams: any) => {
+  const connectSendTransport = async (stream: MediaStreamTrack) => {
     try {
       if (producerTransport === undefined) return;
-      producer = await producerTransport.produce({
-        ...poducerParams,
+      let newProducer = await producerTransport.produce({
+        track: stream,
+        ...params,
         stopTracks: false,
       });
 
-      if (producer === undefined) return;
+      if (newProducer === undefined) return;
 
-      producer.on("trackended", () => {
+      newProducer.on("trackended", () => {
         console.log("track ended");
       });
 
-      producer.on("transportclose", () => {
+      newProducer.on("transportclose", () => {
         console.log("transport ended");
       });
+      producer["webcam"] = newProducer;
     } catch (error) {
       console.log(error);
     }
   };
 
-  const createSendTransport = (stream: MediaStreamTrack) => {
+  const createSendTransport = async (stream: MediaStreamTrack) => {
     socketClient.emit(
       "createWebRtcTransport",
       { consumer: false },
-      (data: any) => {
+      async (data: any) => {
         const { transportParams } = data;
         if (transportParams.error) {
           console.log(transportParams.error);
           return;
         }
         if (device === undefined) return;
+        if (
+          producerTransport !== undefined &&
+          producerTransport?.closed === false
+        ) {
+          connectSendTransport(stream);
+          return;
+        }
         producerTransport = device.createSendTransport(transportParams);
         producerTransport.on(
           "connect",
           async ({ dtlsParameters }, callback, errback) => {
             try {
-              await socketClient.emit("transport-connect", {
+              socketClient.emit("transport-connect", {
                 dtlsParameters,
               });
               callback();
@@ -98,7 +127,7 @@ const useMeeting = () => {
             }
           }
         );
-        connectSendTransport({ track: stream, ...params });
+        connectSendTransport(stream);
       }
     );
   };
@@ -116,7 +145,7 @@ const useMeeting = () => {
       spec,
     } = data;
     if (device === undefined) return;
-    await socketClient.emit(
+    socketClient.emit(
       "consume",
       {
         rtpCapabilities: device.rtpCapabilities,
@@ -128,23 +157,31 @@ const useMeeting = () => {
           console.log("Cannot Consume");
           return;
         }
-        const consumer = await consumerTransport.consume({
+        const newConsumer = await consumerTransport.consume({
           id: data.params.id,
           producerId: data.params.producerId,
           kind: data.params.kind,
           rtpParameters: data.params.rtpParameters,
         });
-        consumerTransports = [
-          ...consumerTransports,
-          {
-            consumerTransport,
-            serverConsumerTransportId: data.params.id,
-            producerId: remoteProducerId,
-            consumer,
-          },
-        ];
 
-        const { track } = consumer;
+        let connection;
+        if (consumerTransports[consumerTransport.id] === undefined)
+          connection = [];
+        else connection = consumerTransports[consumerTransport.id].connection;
+        consumerTransports[consumerTransport.id] = {
+          consumerTransport,
+          serverConsumerTransportId: data.params.id,
+          connection: [
+            ...connection,
+            {
+              producerId: remoteProducerId,
+              consumer: newConsumer,
+            },
+          ],
+          spec,
+        };
+
+        const { track } = newConsumer;
 
         socketClient.emit(
           "consumer-resume",
@@ -163,29 +200,32 @@ const useMeeting = () => {
     remoteProducerId: string,
     spec: string
   ) => {
-    await socketClient.emit(
+    socketClient.emit(
       "createWebRtcTransport",
       { consumer: true },
-      (data: any) => {
+      async (data: any) => {
         const { transportParams } = data;
 
         if (transportParams.error) return;
 
         if (device === undefined) return;
         let consumerTransport: mediasoupClient.types.Transport;
-        try {
+
+        if (consumerTransports === undefined)
           consumerTransport = device.createRecvTransport(transportParams);
-        } catch (error) {
-          console.log(error);
-          return;
+        else {
+          consumerTransport = consumerTransports.filter(
+            (i: any) => i.spec === spec
+          )[0];
+          if (consumerTransport === undefined)
+            consumerTransport = device.createRecvTransport(transportParams);
         }
 
         consumerTransport.on(
           "connect",
           async ({ dtlsParameters }, callback, errback) => {
             try {
-              console.log("hello");
-              await socketClient.emit("transport-recv-connect", {
+              socketClient.emit("transport-recv-connect", {
                 dtlsParameters,
                 serverConsumerTransportId: transportParams.id,
               });
@@ -203,33 +243,43 @@ const useMeeting = () => {
           serverConsumerTransportId: transportParams.id,
           spec,
         };
-        connectRecvTransport(args);
+        await connectRecvTransport(args);
       }
     );
   };
 
-  const closeTransport = () => {
-    producerTransport?.close();
-    producer?.close();
-    producerTransport = undefined;
-    producer = undefined;
+  const closeProducer = () => {
+    producer["webcam"]?.close();
   };
 
-  const setConsumerTransports = (data: any[]) => {
-    consumerTransports = data;
+  const setConsumerTransports = (data: { id: string; payload: any }) => {
+    consumerTransports[data.id] = data.payload;
   };
 
   const getConsumerTransport = () => {
     return consumerTransports;
   };
 
+  const getOldProducers = () => {
+    socketClient.emit(
+      "getProducers",
+      async (producers: { producerId: string; spec: string }[]) => {
+        for (const i of producers) {
+          await signalNewConsumerTransport(i.producerId, i.spec);
+        }
+      }
+    );
+  };
+
   return {
     createDevice,
     createSendTransport,
-    closeTransport,
+    closeProducer,
     signalNewConsumerTransport,
     getConsumerTransport,
     setConsumerTransports,
+    getOldProducers,
+    connectSendTransport,
   };
 };
 

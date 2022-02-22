@@ -15,7 +15,7 @@ import useMeeting from "hooks/useMeeting";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
-  const { createSendTransport, closeTransport } = useMeeting();
+  const { createSendTransport, closeProducer } = useMeeting();
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -29,7 +29,7 @@ const MediaControl = () => {
 
   useEffect(() => {
     if (myCam) createSendTransport(myCam.getVideoTracks()[0]);
-    else closeTransport();
+    else closeProducer();
   }, [myCam]);
 
   return (

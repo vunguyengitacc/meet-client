@@ -24,13 +24,13 @@ const MeetPage = () => {
     signalNewConsumerTransport,
     getConsumerTransport,
     setConsumerTransports,
+    getOldProducers,
   } = useMeeting();
 
   useEffect(() => {
     socketClient.on(
       "new-producer",
       (data: { producerId: string; spec: string }) => {
-        console.log("hello");
         signalNewConsumerTransport(data.producerId, data.spec);
       }
     );
@@ -40,19 +40,32 @@ const MeetPage = () => {
         await dispatch(
           setMemberStream({ joinCode: data.spec, stream: undefined })
         );
-        const producerToClose = getConsumerTransport().find(
-          (transportData) => transportData.producerId === data.remoteProducerId
-        );
+        const transport = Object.values(getConsumerTransport()).filter(
+          (transportData: any) =>
+            transportData.connection.filter(
+              (i: any) => i.producerId === data.remoteProducerId
+            ).length > 0
+        )[0] as any;
+        if (transport === undefined) return;
+        transport.connection
+          .filter((i: any) => i.producerId === data.remoteProducerId)[0]
+          .consumer.close();
+        // setConsumerTransports(
+        //   getConsumerTransport().filter(
+        //     (transportData) =>
+        //       transportData.producerId !== data.remoteProducerId
+        //   )
+        // );
+        // setConsumerTransports({
+        //   id: transport.consumerTransport.id,
+        //   payload: {
 
-        setConsumerTransports(
-          getConsumerTransport().filter(
-            (transportData) =>
-              transportData.producerId !== data.remoteProducerId
-          )
-        );
+        //   },
+        // });
 
-        producerToClose.consumerTransport.close();
-        producerToClose.consumer.close();
+        transport.connection
+          .filter((i: any) => i.producerId === data.remoteProducerId)[0]
+          .consumer.close();
       }
     );
   }, []);
@@ -62,8 +75,10 @@ const MeetPage = () => {
       "meet:join",
       { roomId: room._id, joinCode },
       (res: { rtpCapabilities: mediasoupClient.types.RtpCapabilities }) => {
-        createDevice(res.rtpCapabilities).then(() => {});
         dispatch(getMember({ room, joinCode })).then(() => {
+          createDevice(res.rtpCapabilities).then(() => {
+            getOldProducers();
+          });
           setLoad(true);
         });
       }
