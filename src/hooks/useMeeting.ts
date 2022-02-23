@@ -326,7 +326,7 @@ const useMeeting = () => {
     return consumerTransports;
   };
 
-  const getOldProducers = () => {
+  const getOldProducers = async () => {
     socketClient.emit(
       "get-old-producers",
       async (

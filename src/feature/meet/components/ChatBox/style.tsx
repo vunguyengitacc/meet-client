@@ -40,6 +40,7 @@ const useChatBoxStyle = makeStyles({
   },
   messageBox: {
     flexGrow: 1,
+    overflowY: "scroll",
   },
   sendForm: {
     backgroundColor: "#e5e5e5",

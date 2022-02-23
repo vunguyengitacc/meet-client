@@ -7,6 +7,7 @@ import {
   setMemberWebcam,
   setMemberMicro,
   setMemberScreen,
+  getMessage,
 } from "feature/meet/meetSlice";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ import { socketClient } from "app/socketClient";
 import * as mediasoupClient from "mediasoup-client";
 import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -93,19 +95,20 @@ const MeetPage = () => {
     socketClient.emit(
       "meet:join",
       { roomId: room._id, joinCode },
-      (res: { rtpCapabilities: mediasoupClient.types.RtpCapabilities }) => {
-        dispatch(getMember({ room, joinCode })).then(() => {
-          createDevice(res.rtpCapabilities).then(() => {
-            getOldProducers();
-          });
-          setLoad(true);
-        });
+      async (res: {
+        rtpCapabilities: mediasoupClient.types.RtpCapabilities;
+      }) => {
+        await dispatch(getMember({ room, joinCode }));
+        await createDevice(res.rtpCapabilities);
+        await getOldProducers();
+        await dispatch(getMessage(room));
+        setLoad(true);
       }
     );
     return () => {
       socketClient.emit("meet:exit", { roomId: room._id });
     };
-  }, [room]);
+  }, []);
 
   return (
     <>

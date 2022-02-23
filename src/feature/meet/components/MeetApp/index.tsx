@@ -52,16 +52,16 @@ const MeetApp: React.FC<IProps> = ({ isShowTask }) => {
           )}
         </Box>
         {members.map((i) => (
-          <>
-            <Box className={style.item} key={`${i._id}-main`}>
+          <React.Fragment key={i._id}>
+            <Box className={style.item}>
               <MemberItem member={i} media={i.webcamStream} />
             </Box>
             {i.screenStream && (
-              <Box className={style.item} key={`${i._id}-screen`}>
+              <Box className={style.item}>
                 <MemberItem member={i} media={i.screenStream} />
               </Box>
             )}
-          </>
+          </React.Fragment>
         ))}
       </Box>
       {typeDisplay === 0 && (
