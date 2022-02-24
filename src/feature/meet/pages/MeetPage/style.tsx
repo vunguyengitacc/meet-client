@@ -6,15 +6,15 @@ const useMeetPageStyle = makeStyles({
     height: "100vh",
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#363636",
+    backgroundColor: "#202020",
   },
   app: {
     width: "100vw",
-    height: "85vh",
+    height: "90vh",
   },
   task: {
     width: "100vw",
-    height: "15vh",
+    height: "10vh",
   },
 });
 

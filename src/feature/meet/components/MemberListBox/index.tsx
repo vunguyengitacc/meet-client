@@ -1,4 +1,12 @@
-import { Box, Button, IconButton, InputBase, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  Modal,
+  Paper,
+  Typography,
+} from "@mui/material";
 import React, { ChangeEvent, useState } from "react";
 import useMemberListBoxStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
@@ -10,6 +18,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { IMember } from "model/Member";
 import AddIcon from "@mui/icons-material/Add";
+import MemberControlForm from "../MemberControlForm";
 
 interface IProps {
   control: (value: number) => void;
@@ -21,10 +30,15 @@ const MemberListBox: React.FC<IProps> = ({ control }) => {
   );
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const [filter, setFilter] = useState<string>("");
+  const [openControlModal, setOpenControlModal] = useState<boolean>(false);
   const style = useMemberListBoxStyle();
 
   const setFilterHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter(e.currentTarget.value);
+  };
+
+  const closeModalHandler = () => {
+    setOpenControlModal(false);
   };
 
   return (
@@ -53,9 +67,20 @@ const MemberListBox: React.FC<IProps> = ({ control }) => {
               startIcon={<AdminPanelSettingsIcon />}
               className={style.controlBtn}
               color="secondary"
+              onClick={() => setOpenControlModal(true)}
             >
               Admin Settings
             </Button>
+
+            <Modal
+              className={style.modalField}
+              open={openControlModal}
+              onClose={closeModalHandler}
+            >
+              <Paper className={style.formField}>
+                <MemberControlForm control={setOpenControlModal} />
+              </Paper>
+            </Modal>
           </Box>
         </Box>
       )}

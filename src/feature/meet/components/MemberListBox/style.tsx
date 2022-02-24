@@ -49,6 +49,18 @@ const useMemberListBoxStyle = makeStyles({
     gap: "15px",
     flexDirection: "column",
   },
+  modalField: {
+    width: "100vw",
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingTop: "10vh",
+  },
+  formField: {
+    width: "600px",
+    maxWidth: "80vw",
+  },
 });
 
 export default useMemberListBoxStyle;

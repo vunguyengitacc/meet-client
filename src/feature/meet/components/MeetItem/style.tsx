@@ -7,6 +7,7 @@ const useMeetItemStyle = makeStyles({
     boxSizing: "border-box",
     border: "solid 0.5px #525252",
     borderRadius: "5px",
+    backgroundColor: "#464646",
   },
   member: {
     width: "100%",

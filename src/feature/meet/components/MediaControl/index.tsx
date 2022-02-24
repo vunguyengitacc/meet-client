@@ -32,6 +32,17 @@ const MediaControl = () => {
   };
 
   useEffect(() => {
+    if (myCam && !room.isAllowShareWebcam) {
+      closeProducer(StreamType.webcam);
+      toast("Admin block share webcam, your sharing data will be closed");
+    }
+    if (myScreen && !room.isAllowShareScreen) {
+      closeProducer(StreamType.screen);
+      toast("Admin block share screen, your sharing data will be closed");
+    }
+  }, [room]);
+
+  useEffect(() => {
     if (!room.isAllowShareWebcam && myCam && !me.isAdmin) {
       toast(
         "You are not allowed to share your webcam. Your data will be not sent."
@@ -44,6 +55,12 @@ const MediaControl = () => {
   }, [myCam]);
 
   useEffect(() => {
+    if (!room.isAllowShareScreen && myScreen && !me.isAdmin) {
+      toast(
+        "You are not allowed to share your screen. Your data will be not sent."
+      );
+      return;
+    }
     if (myScreen)
       createSendTransport(myScreen.getVideoTracks()[0], StreamType.screen);
     else closeProducer(StreamType.screen);
