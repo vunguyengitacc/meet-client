@@ -16,7 +16,7 @@ import { updateRoom } from "feature/meet/meetSlice";
 import { IRoom } from "model/Room";
 
 interface IProps {
-  control: (value: boolean) => void;
+  control: (value: number) => void;
 }
 
 const ChatBox: React.FC<IProps> = ({ control }) => {
@@ -59,7 +59,7 @@ const ChatBox: React.FC<IProps> = ({ control }) => {
         <Typography variant="h6" className={style.header}>
           Messages
         </Typography>
-        <IconButton onClick={() => control(false)}>
+        <IconButton onClick={() => control(0)}>
           <CloseIcon />
         </IconButton>
       </Box>

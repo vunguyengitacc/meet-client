@@ -18,13 +18,12 @@ import { socketClient } from "app/socketClient";
 import * as mediasoupClient from "mediasoup-client";
 import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
-import { unwrapResult } from "@reduxjs/toolkit";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const joinCode = useSelector((state: RootState) => state.meet.joinCode);
   const [load, setLoad] = useState<boolean>(false);
-  const [isShowTask, setIsShowTask] = useState<boolean>(false);
+  const [type, setType] = useState<number>(0);
   const style = useMeetPageStyle();
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -115,10 +114,10 @@ const MeetPage = () => {
       {load ? (
         <Box className={style.surface}>
           <Box className={style.app}>
-            <MeetApp isShowTask={isShowTask} />
+            <MeetApp setType={setType} typeDisplay={type} />
           </Box>
           <Box className={style.task}>
-            <TaskBar isShowTask={isShowTask} setIsShowTask={setIsShowTask} />
+            <TaskBar currentType={type} setType={setType} />
           </Box>
         </Box>
       ) : (

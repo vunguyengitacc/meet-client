@@ -9,28 +9,23 @@ import MemberItem from "../MemberItem";
 import useMeetAppStyle from "./style";
 
 interface IProps {
-  isShowTask: boolean;
+  typeDisplay: number;
+  setType: (value: number) => void;
 }
 
-const MeetApp: React.FC<IProps> = ({ isShowTask }) => {
+const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const members = useSelector((state: RootState) =>
     membersSelector.selectAll(state)
   );
   const [counter, setCounter] = useState<number>(members.length + 1);
-  const [typeDisplay, setTypeDisplay] = useState<number>(0);
-  const [showTask, setShowTask] = useState<boolean>(isShowTask);
 
   const style = useMeetAppStyle({
     counter: myScreen !== undefined ? counter + 1 : counter,
     onPin: false,
-    isShowTask: showTask,
+    isShowTask: typeDisplay !== 0,
   });
-
-  useEffect(() => {
-    setShowTask(isShowTask);
-  }, [isShowTask]);
 
   useEffect(() => {
     setCounter(members.length + 1);
@@ -64,9 +59,9 @@ const MeetApp: React.FC<IProps> = ({ isShowTask }) => {
           </React.Fragment>
         ))}
       </Box>
-      {typeDisplay === 0 && (
+      {typeDisplay === 2 && (
         <Paper className={style.taskField}>
-          <ChatBox control={setShowTask} />
+          <ChatBox control={setType} />
         </Paper>
       )}
     </Box>
