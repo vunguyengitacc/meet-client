@@ -1,4 +1,4 @@
-import { Box, IconButton, InputBase, Switch, Typography } from "@mui/material";
+import { Box, IconButton, Switch, Typography } from "@mui/material";
 import React from "react";
 import useChatBoxStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
@@ -13,7 +13,6 @@ import SendIcon from "@mui/icons-material/Send";
 import messageApi from "api/messageApi";
 import MessageBox from "../MessageBox";
 import { updateRoom } from "feature/meet/meetSlice";
-import { IRoom } from "model/Room";
 
 interface IProps {
   control: (value: number) => void;
@@ -78,7 +77,7 @@ const ChatBox: React.FC<IProps> = ({ control }) => {
         <Typography color="secondary" className={style.tip}>
           {!me?.isAdmin
             ? !room?.isAllowMessage
-              ? "You are not allow to send message. Contact with the admin to enable this feature."
+              ? "You are not allowed to send message. Contact with the admin to enable this feature."
               : `You can send your message to everyone. All messages will be deleted
             after the meet finish.`
             : `You can enable this feature for everyone to send message or block it`}

@@ -5,7 +5,8 @@ import { IMember } from "model/Member";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ChatBox from "../ChatBox";
-import MemberItem from "../MemberItem";
+import MeetItem from "../MeetItem";
+import MemberListBox from "../MemberListBox";
 import useMeetAppStyle from "./style";
 
 interface IProps {
@@ -36,29 +37,34 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
       <Box className={style.membersList}>
         {myScreen && (
           <Box className={`${style.item} ${style.pinItem}`} key="me-main">
-            <MemberItem member={me} media={myScreen.getTracks()[0]} isMe />
+            <MeetItem member={me} media={myScreen.getTracks()[0]} isMe />
           </Box>
         )}
         <Box className={style.item} key="me-screen">
           {myCam === undefined ? (
-            <MemberItem member={me} isMe />
+            <MeetItem member={me} isMe />
           ) : (
-            <MemberItem member={me} media={myCam.getTracks()[0]} isMe />
+            <MeetItem member={me} media={myCam.getTracks()[0]} isMe />
           )}
         </Box>
         {members.map((i) => (
           <React.Fragment key={i._id}>
             <Box className={style.item}>
-              <MemberItem member={i} media={i.webcamStream} />
+              <MeetItem member={i} media={i.webcamStream} />
             </Box>
             {i.screenStream && (
               <Box className={style.item}>
-                <MemberItem member={i} media={i.screenStream} />
+                <MeetItem member={i} media={i.screenStream} />
               </Box>
             )}
           </React.Fragment>
         ))}
       </Box>
+      {typeDisplay === 1 && (
+        <Paper className={style.taskField}>
+          <MemberListBox control={setType} />
+        </Paper>
+      )}
       {typeDisplay === 2 && (
         <Paper className={style.taskField}>
           <ChatBox control={setType} />

@@ -13,9 +13,12 @@ import { exitRoom } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
+import { IRoom } from "model/Room";
+import toast from "react-hot-toast";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
+  const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const { createSendTransport, closeProducer } = useMeeting();
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
 
@@ -29,6 +32,12 @@ const MediaControl = () => {
   };
 
   useEffect(() => {
+    if (!room.isAllowShareWebcam && myCam && !me.isAdmin) {
+      toast(
+        "You are not allowed to share your webcam. Your data will be not sent."
+      );
+      return;
+    }
     if (myCam)
       createSendTransport(myCam.getVideoTracks()[0], StreamType.webcam);
     else closeProducer(StreamType.webcam);
