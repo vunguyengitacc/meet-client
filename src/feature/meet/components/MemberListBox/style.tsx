@@ -20,7 +20,6 @@ const useMemberListBoxStyle = makeStyles({
     width: "50%",
     justifyContent: "center",
     alignItems: "center",
-    height: "75px",
   },
   controlBtn: {
     width: "100%",
@@ -46,7 +45,8 @@ const useMemberListBoxStyle = makeStyles({
     flexGrow: 1,
     overflowY: "scroll",
     display: "flex",
-    gap: "15px",
+    gap: "20px",
+    padding: "5px",
     flexDirection: "column",
   },
   modalField: {

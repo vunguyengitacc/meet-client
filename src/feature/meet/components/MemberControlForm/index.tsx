@@ -1,17 +1,13 @@
-import { Box, IconButton, Switch, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { AppDispatch, RootState } from "app/reduxStore";
 import { IRoom } from "model/Room";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useMemberControlFormStyle from "./style";
-import CloseIcon from "@mui/icons-material/Close";
 import { updateRoom } from "feature/meet/meetSlice";
+import { CustomSwitch } from "components/CustomSwitch";
 
-interface IProps {
-  control: (value: boolean) => void;
-}
-
-const MemberControlForm: React.FC<IProps> = ({ control }) => {
+const MemberControlForm = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const dispatch = useDispatch<AppDispatch>();
   const style = useMemberControlFormStyle();
@@ -26,22 +22,24 @@ const MemberControlForm: React.FC<IProps> = ({ control }) => {
   };
   return (
     <Box className={style.surface}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        padding="10px"
-        alignItems="center"
-      >
-        <Typography variant="h6">Meet Control</Typography>
-        <IconButton onClick={() => control(false)}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
       <Box padding="10px">
-        <Typography variant="subtitle1">Allow member to</Typography>
+        <Typography
+          variant="subtitle1"
+          style={{
+            fontWeight: 500,
+          }}
+        >
+          Allow member to
+        </Typography>
         <Box className={style.controlItemField}>
-          <Typography variant="subtitle1">Share their micro</Typography>
-          <Switch
+          <Box>
+            <Typography>Share their micro</Typography>
+            <Typography variant="subtitle1">
+              Member's audio data will be not sent to everyone if you turn off
+              this feature
+            </Typography>
+          </Box>
+          <CustomSwitch
             checked={room.isAllowShareMicro}
             onClick={() =>
               updateHandler(
@@ -54,8 +52,14 @@ const MemberControlForm: React.FC<IProps> = ({ control }) => {
           />
         </Box>
         <Box className={style.controlItemField}>
-          <Typography variant="subtitle1">Share their webcam</Typography>
-          <Switch
+          <Box>
+            <Typography>Share their webcam</Typography>
+            <Typography variant="subtitle1">
+              Member's webcam video data will be not sent to everyone if you
+              turn off this feature
+            </Typography>
+          </Box>
+          <CustomSwitch
             checked={room.isAllowShareWebcam}
             onClick={() =>
               updateHandler(
@@ -68,8 +72,14 @@ const MemberControlForm: React.FC<IProps> = ({ control }) => {
           />
         </Box>
         <Box className={style.controlItemField}>
-          <Typography variant="subtitle1">Share their screen</Typography>
-          <Switch
+          <Box>
+            <Typography>Share their screen</Typography>
+            <Typography variant="subtitle1">
+              Member's screen video data will be not sent to everyone if you
+              turn off this feature
+            </Typography>
+          </Box>
+          <CustomSwitch
             checked={room.isAllowShareScreen}
             onClick={() =>
               updateHandler(

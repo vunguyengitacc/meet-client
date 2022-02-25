@@ -51,39 +51,6 @@ const MemberListBox: React.FC<IProps> = ({ control }) => {
           <CloseIcon />
         </IconButton>
       </Box>
-      {me.isAdmin && (
-        <Box className={style.controlField}>
-          <Box className={style.controlItem}>
-            <Button
-              className={style.controlBtn}
-              startIcon={<AddIcon />}
-              color="secondary"
-            >
-              Invite
-            </Button>
-          </Box>
-          <Box className={style.controlItem}>
-            <Button
-              startIcon={<AdminPanelSettingsIcon />}
-              className={style.controlBtn}
-              color="secondary"
-              onClick={() => setOpenControlModal(true)}
-            >
-              Admin Settings
-            </Button>
-
-            <Modal
-              className={style.modalField}
-              open={openControlModal}
-              onClose={closeModalHandler}
-            >
-              <Paper className={style.formField}>
-                <MemberControlForm control={setOpenControlModal} />
-              </Paper>
-            </Modal>
-          </Box>
-        </Box>
-      )}
       <Box className={style.filterField}>
         <InputBase
           onChange={setFilterHandler}

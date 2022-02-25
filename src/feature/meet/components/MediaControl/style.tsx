@@ -7,7 +7,7 @@ const useMediaControlStyle = makeStyles({
     gap: "10px",
   },
   roundBtn: {
-    borderRadius: "50% !important",
+    borderRadius: "10px !important",
     width: "40px",
     height: "40px",
   },

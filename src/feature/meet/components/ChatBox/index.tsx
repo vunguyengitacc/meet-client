@@ -1,4 +1,4 @@
-import { Box, IconButton, Switch, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import React from "react";
 import useChatBoxStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
@@ -13,6 +13,7 @@ import SendIcon from "@mui/icons-material/Send";
 import messageApi from "api/messageApi";
 import MessageBox from "../MessageBox";
 import { updateRoom } from "feature/meet/meetSlice";
+import { CustomSwitch } from "components/CustomSwitch";
 
 interface IProps {
   control: (value: number) => void;
@@ -66,7 +67,7 @@ const ChatBox: React.FC<IProps> = ({ control }) => {
         <Box className={style.controlField}>
           <Box className={style.controlTask}>
             <Typography color="secondary">Allow member send message</Typography>
-            <Switch
+            <CustomSwitch
               checked={room?.isAllowMessage}
               onClick={handleToogleAllowMessage}
             />

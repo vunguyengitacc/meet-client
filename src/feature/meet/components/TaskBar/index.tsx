@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, Chip } from "@mui/material";
 import React from "react";
 import useTaskBarStyle from "./style";
 import MessageIcon from "@mui/icons-material/Message";
@@ -23,7 +23,12 @@ const TaskBar: React.FC<IProps> = ({ setType, currentType }) => {
 
   return (
     <Box className={style.surface}>
-      <Typography>{date.toLocaleDateString()}</Typography>
+      <Chip
+        label={<Typography>{date.toLocaleDateString()}</Typography>}
+        variant="filled"
+        color="primary"
+      />
+
       <Box className={style.groupBtn}>
         <MediaControl />
       </Box>

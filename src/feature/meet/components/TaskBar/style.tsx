@@ -7,6 +7,8 @@ const useTaskBarStyle = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    padding: "5px",
+    boxSizing: "border-box",
   },
   roundBtn: {
     borderRadius: "50% !important",

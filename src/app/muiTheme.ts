@@ -37,6 +37,20 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {},
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "10px",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: "10px",
+        },
+      },
+    },
   },
 });
 

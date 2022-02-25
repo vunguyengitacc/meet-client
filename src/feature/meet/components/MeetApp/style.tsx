@@ -21,6 +21,19 @@ const useMeetAppStyle = makeStyles({
     height: "100%",
     display: "flex",
   },
+  appField: (props: IProps) => ({
+    width: `${props.isShowTask ? "65%" : "100%"}`,
+    transition: "width .15s",
+    padding: "5px",
+  }),
+  appHeader: {
+    height: "100px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    boxSizing: "border-box",
+    padding: "10px",
+  },
   membersList: (props: IProps) => ({
     display: "grid",
     gridTemplateColumns: `repeat(${getRow(
@@ -29,11 +42,8 @@ const useMeetAppStyle = makeStyles({
       props.isShowTask
     )}, 1fr)`,
     gridTemplateRows: "auto",
-    height: "100%",
+    height: "calc( 100% - 100px )",
     gridGap: "5px",
-    padding: "5px",
-    width: `${props.isShowTask ? "65%" : "100%"}`,
-    transition: "width .15s",
   }),
   item: {
     height: "100%",

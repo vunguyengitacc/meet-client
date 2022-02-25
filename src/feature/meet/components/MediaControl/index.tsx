@@ -74,7 +74,9 @@ const MediaControl = () => {
       <Button
         onClick={myCam ? stopCam : getLocalCamStream}
         className={style.roundBtn}
-        color={`${myCam ? "error" : "disable"}`}
+        color={`${
+          myCam ? (!room.isAllowShareWebcam ? "warning" : "error") : "disable"
+        }`}
         variant="contained"
       >
         <VideoCameraFrontIcon />

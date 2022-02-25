@@ -46,7 +46,7 @@ const useChatBoxStyle = makeStyles({
     backgroundColor: "#e5e5e5",
     padding: "10px",
     display: "flex",
-    borderRadius: "20px",
+    borderRadius: "10px",
   },
   msgInput: {
     flexGrow: 1,
