@@ -6,13 +6,20 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import memberApi from "api/memberApi";
+import messageApi from "api/messageApi";
 import roomApi, { ICreateRoomResponse } from "api/roomApi";
 import { RootState } from "app/reduxStore";
 import { IMember } from "model/Member";
+import { IMessage } from "model/Message";
 import { IRoom } from "model/Room";
 import toast from "react-hot-toast";
+
 export const membersAdapter = createEntityAdapter({
   selectId: (member: IMember) => member._id,
+});
+
+export const messagesAdapter = createEntityAdapter({
+  selectId: (message: IMessage) => message._id,
 });
 
 export const getMember = createAsyncThunk(
@@ -30,6 +37,14 @@ export const getMember = createAsyncThunk(
   }
 );
 
+export const getMessage = createAsyncThunk(
+  "meet/getMessage",
+  async (room: IRoom) => {
+    const res = await messageApi.getAllInRoom(room);
+    return res.data.messages;
+  }
+);
+
 export const getOneRoom = createAsyncThunk(
   "room/getOne",
   async (payload: string) => {
@@ -42,6 +57,14 @@ export const createRoom = createAsyncThunk("room/create", async () => {
   const { data } = await roomApi.create();
   return data.result;
 });
+
+export const updateRoom = createAsyncThunk(
+  "room/update",
+  async (payload: { room: Partial<IRoom>; notification: string }) => {
+    const { data } = await roomApi.update(payload);
+    return data.roomUpdated;
+  }
+);
 
 export const exitRoom = createAsyncThunk(
   "room/exit",
@@ -58,6 +81,7 @@ interface MeetState {
   me?: IMember;
   members: EntityState<IMember>;
   joinCode: string;
+  messages: EntityState<IMessage>;
 }
 
 const initialState: MeetState = {
@@ -65,10 +89,15 @@ const initialState: MeetState = {
   me: undefined,
   members: membersAdapter.getInitialState(),
   joinCode: "",
+  messages: messagesAdapter.getInitialState(),
 };
 
 export const membersSelector = membersAdapter.getSelectors(
   (state: RootState) => state.meet.members
+);
+
+export const messagesSelector = messagesAdapter.getSelectors(
+  (state: RootState) => state.meet.messages
 );
 
 const meetSlice = createSlice({
@@ -81,6 +110,12 @@ const meetSlice = createSlice({
     addMember: (state, { payload }: PayloadAction<IMember>) => {
       membersAdapter.addOne(state.members, payload);
       toast(`${payload.user?.fullname} joined the meet`);
+    },
+    addMessage: (state, { payload }: PayloadAction<IMessage>) => {
+      messagesAdapter.addOne(state.messages, payload);
+    },
+    normalUpdateRoom: (state, { payload }: PayloadAction<IRoom>) => {
+      state.room = payload;
     },
     removeMember: (state, { payload }: PayloadAction<IMember>) => {
       let temp = membersAdapter
@@ -157,11 +192,24 @@ const meetSlice = createSlice({
       getMember.fulfilled,
       (
         state,
-        { payload }: PayloadAction<{ me: IMember; members: IMember[] }>
+        {
+          payload,
+        }: PayloadAction<{
+          me: IMember;
+          members: IMember[];
+        }>
       ) => {
         state.me = payload.me;
         membersAdapter.removeAll(state.members);
         membersAdapter.addMany(state.members, payload.members);
+      }
+    );
+    builder.addCase(getMessage.rejected, (state) => {});
+    builder.addCase(getMessage.pending, (state) => {});
+    builder.addCase(
+      getMessage.fulfilled,
+      (state, { payload }: PayloadAction<IMessage[]>) => {
+        messagesAdapter.addMany(state.messages, payload);
       }
     );
     builder.addCase(createRoom.rejected, (state) => {});
@@ -179,8 +227,17 @@ const meetSlice = createSlice({
       state.me = undefined;
       state.joinCode = "";
       state.members = membersAdapter.getInitialState();
+      state.messages = messagesAdapter.getInitialState();
       toast(`The meet is finished`);
     });
+    builder.addCase(updateRoom.rejected, (state) => {});
+    builder.addCase(updateRoom.pending, (state) => {});
+    builder.addCase(
+      updateRoom.fulfilled,
+      (state, { payload }: PayloadAction<IRoom>) => {
+        state.room = payload;
+      }
+    );
   },
 });
 
@@ -194,5 +251,7 @@ export const {
   setMemberWebcam,
   setMemberMicro,
   setMemberScreen,
+  addMessage,
+  normalUpdateRoom,
 } = actions;
 export default meetReducer;

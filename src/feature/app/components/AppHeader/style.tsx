@@ -10,6 +10,8 @@ const useAppHeaderStyle = makeStyles({
   },
   logoField: {
     paddingLeft: "5%",
+    height: "100%",
+    boxSizing: "border-box",
   },
   configField: {
     display: "flex",

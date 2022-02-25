@@ -6,7 +6,7 @@ const axiosClient = axios.create({
   baseURL:
     process.env.NODE_ENV === "production"
       ? process.env.REACT_APP_API
-      : `http://192.168.1.8:8000/api`,
+      : `http://127.0.0.1:8000/api`,
   headers: {
     "content-type": "application/json",
   },

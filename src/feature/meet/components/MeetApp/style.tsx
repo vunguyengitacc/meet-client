@@ -15,11 +15,24 @@ const getRow = (input: number, onPin: boolean, isShowTask: boolean) => {
   }
 };
 
-const useMemberDisplayerStyle = makeStyles({
+const useMeetAppStyle = makeStyles({
   surface: {
     width: "100%",
     height: "100%",
     display: "flex",
+  },
+  appField: (props: IProps) => ({
+    width: `${props.isShowTask ? "65%" : "100%"}`,
+    transition: "width .15s",
+    padding: "5px",
+  }),
+  appHeader: {
+    height: "100px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    boxSizing: "border-box",
+    padding: "10px",
   },
   membersList: (props: IProps) => ({
     display: "grid",
@@ -29,11 +42,8 @@ const useMemberDisplayerStyle = makeStyles({
       props.isShowTask
     )}, 1fr)`,
     gridTemplateRows: "auto",
-    height: "100%",
+    height: "calc( 100% - 100px )",
     gridGap: "5px",
-    padding: "5px",
-    width: `${props.isShowTask ? "65%" : "100%"}`,
-    transition: "width .15s",
   }),
   item: {
     height: "100%",
@@ -52,6 +62,17 @@ const useMemberDisplayerStyle = makeStyles({
     height: "100%",
     margin: "5px",
   }),
+  inviteModal: {
+    display: "flex",
+    alignItems: "center",
+    paddingTop: "10vh",
+    flexDirection: "column",
+  },
+  modal: {
+    width: "600px",
+    maxWidth: "90vw",
+    display: "flex",
+  },
 });
 
-export default useMemberDisplayerStyle;
+export default useMeetAppStyle;

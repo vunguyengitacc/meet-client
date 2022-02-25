@@ -1,12 +1,13 @@
 import { Box } from "@mui/material";
 import { AppDispatch, RootState } from "app/reduxStore";
-import MemberDisplayer from "feature/meet/components/MemberDisplayer";
+import MeetApp from "feature/meet/components/MeetApp";
 import TaskBar from "feature/meet/components/TaskBar";
 import {
   getMember,
   setMemberWebcam,
   setMemberMicro,
   setMemberScreen,
+  getMessage,
 } from "feature/meet/meetSlice";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
@@ -22,7 +23,7 @@ const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const joinCode = useSelector((state: RootState) => state.meet.joinCode);
   const [load, setLoad] = useState<boolean>(false);
-  const [isShowTask, setIsShowTask] = useState<boolean>(false);
+  const [type, setType] = useState<number>(0);
   const style = useMeetPageStyle();
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -93,29 +94,30 @@ const MeetPage = () => {
     socketClient.emit(
       "meet:join",
       { roomId: room._id, joinCode },
-      (res: { rtpCapabilities: mediasoupClient.types.RtpCapabilities }) => {
-        dispatch(getMember({ room, joinCode })).then(() => {
-          createDevice(res.rtpCapabilities).then(() => {
-            getOldProducers();
-          });
-          setLoad(true);
-        });
+      async (res: {
+        rtpCapabilities: mediasoupClient.types.RtpCapabilities;
+      }) => {
+        await dispatch(getMember({ room, joinCode }));
+        await createDevice(res.rtpCapabilities);
+        await getOldProducers();
+        await dispatch(getMessage(room));
+        setLoad(true);
       }
     );
     return () => {
       socketClient.emit("meet:exit", { roomId: room._id });
     };
-  }, [room]);
+  }, []);
 
   return (
     <>
       {load ? (
         <Box className={style.surface}>
           <Box className={style.app}>
-            <MemberDisplayer isShowTask={isShowTask} />
+            <MeetApp setType={setType} typeDisplay={type} />
           </Box>
           <Box className={style.task}>
-            <TaskBar isShowTask={isShowTask} setIsShowTask={setIsShowTask} />
+            <TaskBar currentType={type} setType={setType} />
           </Box>
         </Box>
       ) : (

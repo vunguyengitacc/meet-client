@@ -1,5 +1,4 @@
 import { AppDispatch, RootState } from "app/reduxStore";
-import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";

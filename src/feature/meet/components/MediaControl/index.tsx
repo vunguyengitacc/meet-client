@@ -13,42 +13,96 @@ import { exitRoom } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
+import { IRoom } from "model/Room";
+import toast from "react-hot-toast";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
+  const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const { createSendTransport, closeProducer } = useMeeting();
-  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
+  const { myCam, myScreen, myMic } = useSelector(
+    (state: RootState) => state.media
+  );
 
   const dispatch = useDispatch<AppDispatch>();
   const style = useMediaControlStyle();
-  const { getLocalCamStream, stopCam, stopScreen, getLocalScreenStream } =
-    useMedia();
+  const {
+    getLocalCamStream,
+    stopCam,
+    stopScreen,
+    getLocalScreenStream,
+    getLocalMicStream,
+    stopMic,
+  } = useMedia();
 
   const handleExit = () => {
     dispatch(exitRoom(me));
   };
 
   useEffect(() => {
+    if (myCam && !room.isAllowShareWebcam) {
+      closeProducer(StreamType.webcam);
+      toast("Admin block share webcam, your sharing data will be closed");
+    }
+    if (myScreen && !room.isAllowShareScreen) {
+      closeProducer(StreamType.screen);
+      toast("Admin block share screen, your sharing data will be closed");
+    }
+  }, [room]);
+
+  useEffect(() => {
+    if (!room.isAllowShareWebcam && myCam && !me.isAdmin) {
+      toast(
+        "You are not allowed to share your webcam. Your data will be not sent."
+      );
+      return;
+    }
     if (myCam)
       createSendTransport(myCam.getVideoTracks()[0], StreamType.webcam);
     else closeProducer(StreamType.webcam);
   }, [myCam]);
 
   useEffect(() => {
+    if (!room.isAllowShareScreen && myScreen && !me.isAdmin) {
+      toast(
+        "You are not allowed to share your screen. Your data will be not sent."
+      );
+      return;
+    }
     if (myScreen)
       createSendTransport(myScreen.getVideoTracks()[0], StreamType.screen);
     else closeProducer(StreamType.screen);
   }, [myScreen]);
-
+  useEffect(() => {
+    if (!room.isAllowShareMicro && myMic && !me.isAdmin) {
+      toast(
+        "You are not allowed to share your audio micro. Your data will be not sent."
+      );
+      return;
+    }
+    if (myMic) createSendTransport(myMic.getVideoTracks()[0], StreamType.micro);
+    else closeProducer(StreamType.micro);
+  }, [myMic]);
   return (
     <Box className={style.surface}>
-      <Button className={style.roundBtn} color="disable" variant="contained">
+      <Button
+        onClick={myMic ? stopMic : getLocalMicStream}
+        className={style.roundBtn}
+        color="disable"
+        variant="contained"
+      >
         <MicIcon />
       </Button>
       <Button
         onClick={myCam ? stopCam : getLocalCamStream}
         className={style.roundBtn}
-        color={`${myCam ? "error" : "disable"}`}
+        color={`${
+          myCam
+            ? !room.isAllowShareWebcam && !me.isAdmin
+              ? "warning"
+              : "error"
+            : "disable"
+        }`}
         variant="contained"
       >
         <VideoCameraFrontIcon />
@@ -56,7 +110,13 @@ const MediaControl = () => {
       <Button
         onClick={myScreen ? stopScreen : getLocalScreenStream}
         className={style.roundBtn}
-        color={`${myScreen ? "error" : "disable"}`}
+        color={`${
+          myScreen
+            ? !room.isAllowShareWebcam && !me.isAdmin
+              ? "warning"
+              : "error"
+            : "disable"
+        }`}
         variant="contained"
       >
         <PresentToAllIcon />

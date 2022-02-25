@@ -1,15 +1,9 @@
 import {
-  createAsyncThunk,
   createEntityAdapter,
   createSlice,
-  EntityState,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import memberApi from "api/memberApi";
-import roomApi from "api/roomApi";
-import { RootState } from "app/reduxStore";
 import { IMember } from "model/Member";
-import { IRoom } from "model/Room";
 export const membersAdapter = createEntityAdapter({
   selectId: (member: IMember) => member._id,
 });
@@ -17,11 +11,13 @@ export const membersAdapter = createEntityAdapter({
 interface MediaState {
   myCam?: MediaStream;
   myScreen?: MediaStream;
+  myMic?: MediaStream;
 }
 
 const initialState: MediaState = {
   myCam: undefined,
   myScreen: undefined,
+  myMic: undefined,
 };
 const mediaSlice = createSlice({
   name: "meetSlice",
@@ -33,6 +29,9 @@ const mediaSlice = createSlice({
     setScreenStream: (state, { payload }: PayloadAction<MediaStream>) => {
       state.myScreen = payload;
     },
+    setMicStream: (state, { payload }: PayloadAction<MediaStream>) => {
+      state.myMic = payload;
+    },
     stopMyCam: (state) => {
       state.myCam?.getTracks()[0].stop();
       state.myCam = undefined;
@@ -41,11 +40,21 @@ const mediaSlice = createSlice({
       state.myScreen?.getTracks()[0].stop();
       state.myScreen = undefined;
     },
+    stopMyMic: (state) => {
+      state.myMic?.getTracks()[0].stop();
+      state.myMic = undefined;
+    },
   },
 });
 
 const { reducer: mediaReducer, actions } = mediaSlice;
 
-export const { setCamStream, setScreenStream, stopMyCam, stopMyScreen } =
-  actions;
+export const {
+  setCamStream,
+  setScreenStream,
+  setMicStream,
+  stopMyCam,
+  stopMyScreen,
+  stopMyMic,
+} = actions;
 export default mediaReducer;

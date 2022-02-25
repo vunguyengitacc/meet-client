@@ -6,5 +6,9 @@ export interface IRoom {
   isPrivate: boolean;
   isRecording: boolean;
   isShowOldMessage: boolean;
+  isAllowMessage: boolean;
+  isAllowShareScreen: boolean;
+  isAllowShareWebcam: boolean;
+  isAllowShareMicro: boolean;
   joinRequest: string[];
 }

@@ -7,14 +7,14 @@ const useMediaControlStyle = makeStyles({
     gap: "10px",
   },
   roundBtn: {
-    borderRadius: "50% !important",
-    width: "60px",
-    height: "60px",
+    borderRadius: "10px !important",
+    width: "40px",
+    height: "40px",
   },
   fadeBgBtn: {
     color: "white !important",
-    width: "60px",
-    height: "60px",
+    width: "40px",
+    height: "40px",
   },
 });
 

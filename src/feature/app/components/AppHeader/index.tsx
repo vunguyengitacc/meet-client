@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   IconButton,
   Menu,
@@ -17,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useAppHeaderStyle from "./style";
 import useTime from "hooks/useTime";
 import { getDayOfWeek, getMonthString } from "utilities/dateUtils";
+import logo from "static/Logo.svg";
 
 const AppHeader = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -45,7 +45,7 @@ const AppHeader = () => {
   return (
     <Box className={style.surface}>
       <Box className={style.logoField}>
-        <Typography variant="h4">LET'S MEET</Typography>
+        <img height="95%" src={logo} />
       </Box>
       <Box className={style.configField}>
         <Typography variant="h6" color="secondary">

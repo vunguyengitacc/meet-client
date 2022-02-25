@@ -15,8 +15,11 @@ const roomApi = {
   create(payload?: IRoom): Promise<IResponse<ICreateRoomResponse>> {
     return axiosClient.post("/rooms", payload);
   },
-  update(payload: Partial<IRoom>): Promise<IResponse<IRoom>> {
-    return axiosClient.put(`/rooms/${payload._id}`, payload);
+  update(payload: {
+    room: Partial<IRoom>;
+    notification: string;
+  }): Promise<IResponse<IRoom>> {
+    return axiosClient.put(`/rooms/${payload.room._id}`, payload);
   },
   delete(payload: string): Promise<IResponse<any>> {
     return axiosClient.delete(`/rooms/${payload}`);

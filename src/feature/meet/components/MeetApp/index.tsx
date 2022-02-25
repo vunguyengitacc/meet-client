@@ -1,0 +1,156 @@
+import { Box, Button, Chip, Modal, Paper, Typography } from "@mui/material";
+import { RootState } from "app/reduxStore";
+import { membersSelector } from "feature/meet/meetSlice";
+import { IMember } from "model/Member";
+import { IRoom } from "model/Room";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import ChatBox from "../ChatBox";
+import MeetItem from "../MeetItem";
+import MemberListBox from "../MemberListBox";
+import useMeetAppStyle from "./style";
+import AddIcon from "@mui/icons-material/Add";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import AdminControl from "../AdminControl";
+import InvitationControl from "../InvitationControl";
+
+interface IProps {
+  typeDisplay: number;
+  setType: (value: number) => void;
+}
+
+const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
+  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
+  const me = useSelector((state: RootState) => state.meet.me) as IMember;
+  const room = useSelector((state: RootState) => state.meet.room) as IRoom;
+  const members = useSelector((state: RootState) =>
+    membersSelector.selectAll(state)
+  );
+  const [counter, setCounter] = useState<number>(members.length + 1);
+  const [openModalInvitation, setOpenModalInvitation] =
+    useState<boolean>(false);
+
+  const style = useMeetAppStyle({
+    counter: myScreen !== undefined ? counter + 1 : counter,
+    onPin: false,
+    isShowTask: typeDisplay !== 0,
+  });
+
+  useEffect(() => {
+    setCounter(members.length + 1);
+  }, [members]);
+
+  return (
+    <Box className={style.surface}>
+      <Box className={style.appField}>
+        <Box className={style.appHeader}>
+          <Box display="flex" gap="10px" alignItems="center">
+            <Typography color="white" variant="h6">
+              {room.accessCode}
+            </Typography>
+            <Chip
+              label={<b>{room.isPrivate ? "Private" : "Public"}</b>}
+              variant="filled"
+              color={room.isPrivate ? "warning" : "info"}
+            />
+          </Box>
+          <Box>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box display="flex" gap="10px" alignItems="center" color="white">
+                <PeopleAltIcon />
+                <Typography color="white">Member in room</Typography>
+                <Chip
+                  label={<b>{members.length + 1}</b>}
+                  variant="filled"
+                  color="primary"
+                  style={{ borderRadius: "10px !important" }}
+                />
+              </Box>
+              {me.isAdmin && (
+                <Box display="flex" gap="10px">
+                  {room.isPrivate && (
+                    <Button
+                      startIcon={<AddIcon />}
+                      variant="contained"
+                      disableElevation
+                      color="warning"
+                      onClick={() => setOpenModalInvitation(true)}
+                    >
+                      Request to join
+                    </Button>
+                  )}
+                  <Button
+                    startIcon={<AddIcon />}
+                    variant="contained"
+                    disableElevation
+                    color="success"
+                    onClick={() => setOpenModalInvitation(true)}
+                  >
+                    Invite member
+                  </Button>
+                  <Modal
+                    open={openModalInvitation}
+                    onClose={() => setOpenModalInvitation(false)}
+                    className={style.inviteModal}
+                  >
+                    <Paper className={style.modal}>
+                      <InvitationControl control={setOpenModalInvitation} />
+                    </Paper>
+                  </Modal>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Box>
+        <Box className={style.membersList}>
+          {myScreen && (
+            <Box className={`${style.item} ${style.pinItem}`} key="me-main">
+              <MeetItem member={me} media={myScreen.getTracks()[0]} isMe />
+            </Box>
+          )}
+          <Box className={style.item} key="me-screen">
+            {myCam === undefined ? (
+              <MeetItem member={me} isMe />
+            ) : (
+              <MeetItem member={me} media={myCam.getTracks()[0]} isMe />
+            )}
+          </Box>
+          {members.map((i) => (
+            <React.Fragment key={i._id}>
+              <Box className={style.item}>
+                <MeetItem member={i} media={i.webcamStream} />
+              </Box>
+              {i.screenStream && (
+                <Box className={style.item}>
+                  <MeetItem member={i} media={i.screenStream} />
+                </Box>
+              )}
+            </React.Fragment>
+          ))}
+        </Box>
+      </Box>
+
+      {typeDisplay === 1 && (
+        <Paper className={style.taskField}>
+          <MemberListBox control={setType} />
+        </Paper>
+      )}
+      {typeDisplay === 2 && (
+        <Paper className={style.taskField}>
+          <ChatBox control={setType} />
+        </Paper>
+      )}
+      {typeDisplay === 3 && (
+        <Paper className={style.taskField}>
+          <AdminControl control={setType} />
+        </Paper>
+      )}
+    </Box>
+  );
+};
+
+export default MeetApp;

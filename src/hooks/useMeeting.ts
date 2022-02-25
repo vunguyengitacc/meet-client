@@ -74,7 +74,7 @@ const useMeeting = () => {
   ) => {
     try {
       if (producerTransport === undefined) return;
-      if (producer[type] && producer[type].data != undefined) {
+      if (producer[type] && producer[type].data !== undefined) {
         producer[type]?.data?.resume();
       } else {
         producer[type] = {
@@ -326,7 +326,7 @@ const useMeeting = () => {
     return consumerTransports;
   };
 
-  const getOldProducers = () => {
+  const getOldProducers = async () => {
     socketClient.emit(
       "get-old-producers",
       async (

@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, Chip } from "@mui/material";
 import React from "react";
 import useTaskBarStyle from "./style";
 import MessageIcon from "@mui/icons-material/Message";
@@ -8,37 +8,38 @@ import MediaControl from "../MediaControl";
 import useTime from "hooks/useTime";
 
 interface IProps {
-  setIsShowTask: (value: boolean) => void;
-  isShowTask: boolean;
+  setType: (value: number) => void;
+  currentType: number;
 }
 
-const TaskBar: React.FC<IProps> = ({ setIsShowTask, isShowTask }) => {
+const TaskBar: React.FC<IProps> = ({ setType, currentType }) => {
   const style = useTaskBarStyle();
   const { date } = useTime();
 
+  const controlType = (value: number) => {
+    if (currentType === value) setType(0);
+    else setType(value);
+  };
+
   return (
     <Box className={style.surface}>
-      <Typography>{date.toLocaleDateString()}</Typography>
+      <Chip
+        label={<Typography>{date.toLocaleDateString()}</Typography>}
+        variant="filled"
+        color="primary"
+      />
+
       <Box className={style.groupBtn}>
         <MediaControl />
       </Box>
       <Box className={style.groupBtn}>
-        <IconButton
-          onClick={() => setIsShowTask(!isShowTask)}
-          className={style.fadeBgBtn}
-        >
+        <IconButton onClick={() => controlType(1)} className={style.fadeBgBtn}>
           <PersonIcon />
         </IconButton>
-        <IconButton
-          onClick={() => setIsShowTask(!isShowTask)}
-          className={style.fadeBgBtn}
-        >
+        <IconButton onClick={() => controlType(2)} className={style.fadeBgBtn}>
           <MessageIcon />
         </IconButton>
-        <IconButton
-          onClick={() => setIsShowTask(!isShowTask)}
-          className={style.fadeBgBtn}
-        >
+        <IconButton onClick={() => controlType(3)} className={style.fadeBgBtn}>
           <SettingsIcon />
         </IconButton>
       </Box>
