@@ -62,6 +62,17 @@ const useMeetAppStyle = makeStyles({
     height: "100%",
     margin: "5px",
   }),
+  inviteModal: {
+    display: "flex",
+    alignItems: "center",
+    paddingTop: "10vh",
+    flexDirection: "column",
+  },
+  modal: {
+    width: "600px",
+    maxWidth: "90vw",
+    display: "flex",
+  },
 });
 
 export default useMeetAppStyle;

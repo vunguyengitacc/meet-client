@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-const useMemberControlFormStyle = makeStyles({
+const useMeetControlFormStyle = makeStyles({
   surface: {
     width: "100%",
     transition: "width 2s",
@@ -13,4 +13,4 @@ const useMemberControlFormStyle = makeStyles({
   },
 });
 
-export default useMemberControlFormStyle;
+export default useMeetControlFormStyle;

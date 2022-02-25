@@ -1,10 +1,12 @@
 import { AppDispatch, RootState } from "app/reduxStore";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCamStream,
   setScreenStream,
   stopMyCam,
+  stopMyMic,
   stopMyScreen,
 } from "./mediaSlice";
 
@@ -52,7 +54,7 @@ const useMedia = () => {
       })
       .then(camStreamSuccess)
       .catch((error) => {
-        console.log(error.message);
+        toast.error(error.message);
       });
   };
   const getLocalScreenStream = () => {
@@ -63,11 +65,24 @@ const useMedia = () => {
         console.log(error.message);
       });
   };
+  const getLocalMicStream = () => {
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+      })
+      .then(camStreamSuccess)
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
   const stopCam = () => {
     dispatch(stopMyCam());
   };
   const stopScreen = () => {
     dispatch(stopMyScreen());
+  };
+  const stopMic = () => {
+    dispatch(stopMyMic());
   };
   return {
     params,
@@ -75,6 +90,8 @@ const useMedia = () => {
     getLocalCamStream,
     stopCam,
     stopScreen,
+    getLocalMicStream,
+    stopMic,
   };
 };
 

@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  InputBase,
-  Modal,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, InputBase, Typography } from "@mui/material";
 import React, { ChangeEvent, useState } from "react";
 import useMemberListBoxStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
@@ -15,10 +7,7 @@ import { RootState } from "app/reduxStore";
 import { membersSelector } from "feature/meet/meetSlice";
 import MemberItem from "../MemberItem";
 import SearchIcon from "@mui/icons-material/Search";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { IMember } from "model/Member";
-import AddIcon from "@mui/icons-material/Add";
-import MemberControlForm from "../MemberControlForm";
 
 interface IProps {
   control: (value: number) => void;

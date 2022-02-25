@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Paper, Typography } from "@mui/material";
+import { Box, Button, Chip, Modal, Paper, Typography } from "@mui/material";
 import { RootState } from "app/reduxStore";
 import { membersSelector } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
@@ -12,6 +12,7 @@ import useMeetAppStyle from "./style";
 import AddIcon from "@mui/icons-material/Add";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AdminControl from "../AdminControl";
+import InvitationControl from "../InvitationControl";
 
 interface IProps {
   typeDisplay: number;
@@ -26,6 +27,8 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
     membersSelector.selectAll(state)
   );
   const [counter, setCounter] = useState<number>(members.length + 1);
+  const [openModalInvitation, setOpenModalInvitation] =
+    useState<boolean>(false);
 
   const style = useMeetAppStyle({
     counter: myScreen !== undefined ? counter + 1 : counter,
@@ -42,8 +45,14 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
       <Box className={style.appField}>
         <Box className={style.appHeader}>
           <Box display="flex" gap="10px" alignItems="center">
-            <Typography color="white">{room.accessCode}</Typography>
-            <Chip label="Public" variant="filled" color="info" />
+            <Typography color="white" variant="h6">
+              {room.accessCode}
+            </Typography>
+            <Chip
+              label={<b>{room.isPrivate ? "Private" : "Public"}</b>}
+              variant="filled"
+              color={room.isPrivate ? "warning" : "info"}
+            />
           </Box>
           <Box>
             <Box
@@ -55,22 +64,45 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
                 <PeopleAltIcon />
                 <Typography color="white">Member in room</Typography>
                 <Chip
-                  label={members.length + 1}
+                  label={<b>{members.length + 1}</b>}
                   variant="filled"
-                  color="warning"
+                  color="primary"
                   style={{ borderRadius: "10px !important" }}
                 />
               </Box>
-              <Box>
-                <Button
-                  startIcon={<AddIcon />}
-                  variant="contained"
-                  disableElevation
-                  color="success"
-                >
-                  Invite member
-                </Button>
-              </Box>
+              {me.isAdmin && (
+                <Box display="flex" gap="10px">
+                  {room.isPrivate && (
+                    <Button
+                      startIcon={<AddIcon />}
+                      variant="contained"
+                      disableElevation
+                      color="warning"
+                      onClick={() => setOpenModalInvitation(true)}
+                    >
+                      Request to join
+                    </Button>
+                  )}
+                  <Button
+                    startIcon={<AddIcon />}
+                    variant="contained"
+                    disableElevation
+                    color="success"
+                    onClick={() => setOpenModalInvitation(true)}
+                  >
+                    Invite member
+                  </Button>
+                  <Modal
+                    open={openModalInvitation}
+                    onClose={() => setOpenModalInvitation(false)}
+                    className={style.inviteModal}
+                  >
+                    <Paper className={style.modal}>
+                      <InvitationControl control={setOpenModalInvitation} />
+                    </Paper>
+                  </Modal>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>

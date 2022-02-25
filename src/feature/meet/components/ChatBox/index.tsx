@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import React from "react";
 import useChatBoxStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
@@ -100,9 +100,9 @@ const ChatBox: React.FC<IProps> = ({ control }) => {
             name="content"
             hideError
           />
-          <IconButton type="submit">
+          <Button variant="contained" disableElevation type="submit">
             <SendIcon />
-          </IconButton>
+          </Button>
         </form>
       )}
     </Box>

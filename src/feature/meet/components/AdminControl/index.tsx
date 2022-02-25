@@ -1,6 +1,6 @@
 import { Box, IconButton, Typography } from "@mui/material";
 import React from "react";
-import MemberControlForm from "../MemberControlForm";
+import MeetControlForm from "../MeetControlForm";
 import useAdminControlStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSelector } from "react-redux";
@@ -24,7 +24,7 @@ const AdminControl: React.FC<IProps> = ({ control }) => {
           <CloseIcon />
         </IconButton>
       </Box>
-      <Box>{me.isAdmin && <MemberControlForm />}</Box>
+      <Box>{me.isAdmin && <MeetControlForm />}</Box>
     </Box>
   );
 };
