@@ -1,21 +1,22 @@
-import {
-  createAsyncThunk,
-  createEntityAdapter,
-  createSlice,
-  EntityState,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
+import { createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import memberApi from "api/memberApi";
 import messageApi from "api/messageApi";
+import requestApi from "api/requestApi";
 import roomApi, { ICreateRoomResponse } from "api/roomApi";
 import { RootState } from "app/reduxStore";
 import { IMember } from "model/Member";
 import { IMessage } from "model/Message";
+import { IRequest } from "model/Request";
 import { IRoom } from "model/Room";
 import toast from "react-hot-toast";
 
 export const membersAdapter = createEntityAdapter({
   selectId: (member: IMember) => member._id,
+});
+
+export const requestsAdapter = createEntityAdapter({
+  selectId: (request: IRequest) => request._id,
 });
 
 export const messagesAdapter = createEntityAdapter({
@@ -37,6 +38,18 @@ export const getMember = createAsyncThunk(
   }
 );
 
+export const answerRequest = createAsyncThunk(
+  "meet/answerRequest",
+  async (payload: {
+    room: IRoom;
+    request: IRequest;
+    answer: Partial<IRequest>;
+  }) => {
+    const res = await requestApi.answer(payload);
+    return payload.request;
+  }
+);
+
 export const getMessage = createAsyncThunk(
   "meet/getMessage",
   async (room: IRoom) => {
@@ -53,10 +66,13 @@ export const getOneRoom = createAsyncThunk(
   }
 );
 
-export const createRoom = createAsyncThunk("room/create", async () => {
-  const { data } = await roomApi.create();
-  return data.result;
-});
+export const createRoom = createAsyncThunk(
+  "room/create",
+  async (payload?: Partial<IRoom>) => {
+    const { data } = await roomApi.create(payload);
+    return data.result;
+  }
+);
 
 export const updateRoom = createAsyncThunk(
   "room/update",
@@ -82,20 +98,23 @@ interface MeetState {
   members: EntityState<IMember>;
   joinCode: string;
   messages: EntityState<IMessage>;
+  myRequest?: IRequest;
+  requests: EntityState<IRequest>;
 }
 
 const initialState: MeetState = {
-  room: undefined,
-  me: undefined,
   members: membersAdapter.getInitialState(),
   joinCode: "",
   messages: messagesAdapter.getInitialState(),
+  requests: requestsAdapter.getInitialState(),
 };
 
 export const membersSelector = membersAdapter.getSelectors(
   (state: RootState) => state.meet.members
 );
-
+export const requestsSelector = requestsAdapter.getSelectors(
+  (state: RootState) => state.meet.requests
+);
 export const messagesSelector = messagesAdapter.getSelectors(
   (state: RootState) => state.meet.messages
 );
@@ -104,6 +123,12 @@ const meetSlice = createSlice({
   name: "meetSlice",
   initialState,
   reducers: {
+    setMyRequest: (state, { payload }: PayloadAction<IRequest>) => {
+      state.myRequest = payload;
+    },
+    addNewRequest: (state, { payload }: PayloadAction<IRequest>) => {
+      if (state.me?.isAdmin) requestsAdapter.addOne(state.requests, payload);
+    },
     setJoinCode: (state, { payload }: PayloadAction<string>) => {
       state.joinCode = payload;
     },
@@ -238,6 +263,14 @@ const meetSlice = createSlice({
         state.room = payload;
       }
     );
+    builder.addCase(answerRequest.rejected, (state) => {});
+    builder.addCase(answerRequest.pending, (state) => {});
+    builder.addCase(
+      answerRequest.fulfilled,
+      (state, { payload }: PayloadAction<IRequest>) => {
+        requestsAdapter.removeOne(state.requests, payload._id);
+      }
+    );
   },
 });
 
@@ -245,6 +278,7 @@ const { reducer: meetReducer, actions } = meetSlice;
 
 export const {
   setJoinCode,
+  addNewRequest,
   addMember,
   removeMember,
   quitRoom,
@@ -253,5 +287,6 @@ export const {
   setMemberScreen,
   addMessage,
   normalUpdateRoom,
+  setMyRequest,
 } = actions;
 export default meetReducer;

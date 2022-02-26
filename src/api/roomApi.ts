@@ -12,7 +12,7 @@ const roomApi = {
   getOne(payload: string): Promise<IResponse<IRoom>> {
     return axiosClient.get(`/rooms/${payload}`);
   },
-  create(payload?: IRoom): Promise<IResponse<ICreateRoomResponse>> {
+  create(payload?: Partial<IRoom>): Promise<IResponse<ICreateRoomResponse>> {
     return axiosClient.post("/rooms", payload);
   },
   update(payload: {

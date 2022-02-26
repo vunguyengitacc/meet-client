@@ -8,6 +8,7 @@ import {
   setMemberMicro,
   setMemberScreen,
   getMessage,
+  addNewRequest,
 } from "feature/meet/meetSlice";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ import { socketClient } from "app/socketClient";
 import * as mediasoupClient from "mediasoup-client";
 import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
+import { IRequest } from "model/Request";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -104,6 +106,9 @@ const MeetPage = () => {
         setLoad(true);
       }
     );
+    socketClient.on("request/new", (payload: IRequest) => {
+      dispatch(addNewRequest(payload));
+    });
     return () => {
       socketClient.emit("meet:exit", { roomId: room._id });
     };

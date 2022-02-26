@@ -3,15 +3,19 @@ import { Box, Button, Typography } from "@mui/material";
 import memberApi from "api/memberApi";
 import { AppDispatch, RootState } from "app/reduxStore";
 import Video from "components/Video";
-import { setJoinCode } from "feature/meet/meetSlice";
+import { setJoinCode, setMyRequest } from "feature/meet/meetSlice";
 import useMedia from "hooks/useMedia";
 import { IRoom } from "model/Room";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useWaitPageStyle from "./style";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import MicIcon from "@mui/icons-material/Mic";
 import AppHeader from "feature/app/components/AppHeader";
+import requestApi from "api/requestApi";
+import { socketClient } from "app/socketClient";
+import { IRequest } from "model/Request";
+import toast from "react-hot-toast";
 
 const WaitPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,12 +25,29 @@ const WaitPage = () => {
   let style = useWaitPageStyle({ onCam: true, onMic: false });
   const { getLocalCamStream, stopCam } = useMedia();
 
+  useEffect(() => {
+    socketClient.on(
+      "request/answer",
+      (payload: { joinCode: string; requestUpdated: IRequest }) => {
+        if (payload.joinCode !== undefined)
+          dispatch(setJoinCode(payload.joinCode));
+        else if (payload.requestUpdated !== undefined) {
+          toast.error("Admin rejected your request");
+          setIsWait(false);
+        }
+      }
+    );
+  }, []);
+
   const handleJoin = async () => {
     try {
-      const rs = await memberApi.join(room);
+      setIsWait(true);
+      const rs = await requestApi.join(room);
       if (rs.data.joinCode !== undefined) {
         dispatch(setJoinCode(rs.data.joinCode));
-      } else setIsWait(true);
+      } else if (rs.data.newRequest !== undefined) {
+        dispatch(setMyRequest(rs.data.newRequest));
+      }
     } catch (error) {
       console.log(error);
     }

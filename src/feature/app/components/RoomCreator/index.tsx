@@ -35,7 +35,9 @@ const RoomCreator = () => {
 
   const createRoomHandler = async () => {
     try {
-      const data = await dispatch(createRoom()).then(unwrapResult);
+      const data = await dispatch(createRoom({ isPrivate: true })).then(
+        unwrapResult
+      );
       const code = data.room.accessCode;
       navigator(`/meet/${code}`);
     } catch (error: any) {
