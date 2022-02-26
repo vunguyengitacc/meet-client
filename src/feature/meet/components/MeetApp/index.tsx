@@ -1,6 +1,7 @@
-import { Box, Button, Chip, Modal, Paper, Typography } from "@mui/material";
+import { Badge, Box, Button, Chip } from "@mui/material";
+import { Modal, Paper, Typography } from "@mui/material";
 import { RootState } from "app/reduxStore";
-import { membersSelector } from "feature/meet/meetSlice";
+import { membersSelector, requestsSelector } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
@@ -9,10 +10,12 @@ import ChatBox from "../ChatBox";
 import MeetItem from "../MeetItem";
 import MemberListBox from "../MemberListBox";
 import useMeetAppStyle from "./style";
-import AddIcon from "@mui/icons-material/Add";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AdminControl from "../AdminControl";
 import InvitationControl from "../InvitationControl";
+import RequestControl from "../RequestControl";
+import MapsUgcIcon from "@mui/icons-material/MapsUgc";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 interface IProps {
   typeDisplay: number;
@@ -23,12 +26,16 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
+  const requests = useSelector((state: RootState) =>
+    requestsSelector.selectAll(state)
+  );
   const members = useSelector((state: RootState) =>
     membersSelector.selectAll(state)
   );
   const [counter, setCounter] = useState<number>(members.length + 1);
   const [openModalInvitation, setOpenModalInvitation] =
     useState<boolean>(false);
+  const [openModalRequest, setOpenModalRequest] = useState<boolean>(false);
 
   const style = useMeetAppStyle({
     counter: myScreen !== undefined ? counter + 1 : counter,
@@ -73,24 +80,37 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
               {me.isAdmin && (
                 <Box display="flex" gap="10px">
                   {room.isPrivate && (
-                    <Button
-                      startIcon={<AddIcon />}
-                      variant="contained"
-                      disableElevation
-                      color="warning"
-                      onClick={() => setOpenModalInvitation(true)}
-                    >
-                      Request to join
-                    </Button>
+                    <>
+                      <Badge badgeContent={requests.length} color="error">
+                        <Button
+                          startIcon={<MapsUgcIcon />}
+                          variant="contained"
+                          disableElevation
+                          color="warning"
+                          onClick={() => setOpenModalRequest(true)}
+                        >
+                          Requests
+                        </Button>
+                      </Badge>
+                      <Modal
+                        open={openModalRequest}
+                        onClose={() => setOpenModalRequest(false)}
+                        className={style.inviteModal}
+                      >
+                        <Paper className={style.modal}>
+                          <RequestControl control={setOpenModalRequest} />
+                        </Paper>
+                      </Modal>
+                    </>
                   )}
                   <Button
-                    startIcon={<AddIcon />}
+                    startIcon={<AddCircleOutlineIcon />}
                     variant="contained"
                     disableElevation
                     color="success"
                     onClick={() => setOpenModalInvitation(true)}
                   >
-                    Invite member
+                    Invite
                   </Button>
                   <Modal
                     open={openModalInvitation}

@@ -35,7 +35,9 @@ const RoomCreator = () => {
 
   const createRoomHandler = async () => {
     try {
-      const data = await dispatch(createRoom()).then(unwrapResult);
+      const data = await dispatch(createRoom({ isPrivate: true })).then(
+        unwrapResult
+      );
       const code = data.room.accessCode;
       navigator(`/meet/${code}`);
     } catch (error: any) {
@@ -109,6 +111,7 @@ const RoomCreator = () => {
           <OutlinedInput
             placeholder="Pass a room code here"
             inputRef={inputCodeEl}
+            style={{ borderRadius: "10px" }}
           />
           <Button color="secondary" disableElevation onClick={handleJoinRoom}>
             Join
