@@ -111,6 +111,7 @@ const RoomCreator = () => {
           <OutlinedInput
             placeholder="Pass a room code here"
             inputRef={inputCodeEl}
+            style={{ borderRadius: "10px" }}
           />
           <Button color="secondary" disableElevation onClick={handleJoinRoom}>
             Join
