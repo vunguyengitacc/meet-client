@@ -3,7 +3,11 @@ import { Box, Button, Typography } from "@mui/material";
 import memberApi from "api/memberApi";
 import { AppDispatch, RootState } from "app/reduxStore";
 import Video from "components/Video";
-import { setJoinCode, setMyRequest } from "feature/meet/meetSlice";
+import {
+  setJoinCode,
+  setJoinCodeStrict,
+  setMyRequest,
+} from "feature/meet/meetSlice";
 import useMedia from "hooks/useMedia";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
@@ -20,6 +24,9 @@ import toast from "react-hot-toast";
 const WaitPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
+  const myRequest = useSelector(
+    (state: RootState) => state.meet.myRequest
+  ) as IRequest;
   const [isWait, setIsWait] = useState<boolean>(false);
   const myCam = useSelector((state: RootState) => state.media.myCam);
   let style = useWaitPageStyle({ onCam: true, onMic: false });
@@ -29,9 +36,14 @@ const WaitPage = () => {
     socketClient.on(
       "request/answer",
       (payload: { joinCode: string; requestUpdated: IRequest }) => {
-        if (payload.joinCode !== undefined)
-          dispatch(setJoinCode(payload.joinCode));
-        else if (payload.requestUpdated !== undefined) {
+        if (payload.joinCode !== undefined) {
+          dispatch(
+            setJoinCodeStrict({
+              joinCode: payload.joinCode,
+              request: payload.requestUpdated,
+            })
+          );
+        } else {
           toast.error("Admin rejected your request");
           setIsWait(false);
         }

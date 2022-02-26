@@ -4,7 +4,7 @@ import { IRoom } from "model/Room";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateRoom } from "feature/meet/meetSlice";
-import { CustomSwitch } from "components/CustomSwitch";
+import CustomSwitch from "components/CustomSwitch";
 import useMeetControlFormStyle from "./style";
 
 const MeetControlForm = () => {

@@ -13,7 +13,7 @@ import SendIcon from "@mui/icons-material/Send";
 import messageApi from "api/messageApi";
 import MessageBox from "../MessageBox";
 import { updateRoom } from "feature/meet/meetSlice";
-import { CustomSwitch } from "components/CustomSwitch";
+import CustomSwitch from "components/CustomSwitch";
 
 interface IProps {
   control: (value: number) => void;

@@ -124,6 +124,7 @@ const meetSlice = createSlice({
   initialState,
   reducers: {
     setMyRequest: (state, { payload }: PayloadAction<IRequest>) => {
+      console.log(payload);
       state.myRequest = payload;
     },
     addNewRequest: (state, { payload }: PayloadAction<IRequest>) => {
@@ -131,6 +132,13 @@ const meetSlice = createSlice({
     },
     setJoinCode: (state, { payload }: PayloadAction<string>) => {
       state.joinCode = payload;
+    },
+    setJoinCodeStrict: (
+      state,
+      { payload }: PayloadAction<{ joinCode: string; request: IRequest }>
+    ) => {
+      if (state.myRequest?._id === payload.request?._id)
+        state.joinCode = payload.joinCode;
     },
     addMember: (state, { payload }: PayloadAction<IMember>) => {
       membersAdapter.addOne(state.members, payload);
@@ -288,5 +296,6 @@ export const {
   addMessage,
   normalUpdateRoom,
   setMyRequest,
+  setJoinCodeStrict,
 } = actions;
 export default meetReducer;
