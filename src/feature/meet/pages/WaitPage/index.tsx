@@ -67,7 +67,7 @@ const WaitPage = () => {
 
   return (
     <Box>
-      <Box height="10vh" width="100%">
+      <Box height="70px" width="100%">
         <AppHeader />
       </Box>
       <Box className={style.surface}>

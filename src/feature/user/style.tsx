@@ -4,15 +4,24 @@ const useUserFeatureStyle = makeStyles({
   surface: {
     width: "100vw",
     height: "100vh",
+    overflowY: "scroll",
   },
   header: {
-    width: "100%",
-    height: "10vh",
     position: "fixed",
+    height: "70px",
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: "5%",
+  },
+  logo: {
+    height: "80%",
+    width: "70%",
   },
   body: {
-    width: "100vw",
-    height: "100vh",
+    marginLeft: "10vw",
+    width: "80vw",
+    height: "100%",
+    display: "flex",
   },
 });
 

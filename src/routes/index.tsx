@@ -10,6 +10,9 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthEntry from "./AuthEntry";
 import PrivateEntry from "./PrivateEntry";
+import UserInfor from "feature/user/components/UserInfor";
+import Calendar from "feature/user/components/Calendar";
+import MeetHistory from "feature/user/components/MeetHistory";
 
 const MasterRoute = () => {
   return (
@@ -29,7 +32,11 @@ const MasterRoute = () => {
           <Route path="/meet/:code" element={<MeetFeature />} />
         </Route>
         <Route path="/user" element={<PrivateEntry />}>
-          <Route path="/user" element={<UserFeature />} />
+          <Route path="/user" element={<UserFeature />}>
+            <Route path="profile" element={<UserInfor />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="history" element={<MeetHistory />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

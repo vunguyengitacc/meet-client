@@ -8,8 +8,6 @@ import { logout } from "feature/auth/authSlice";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAppHeaderStyle from "./style";
-import useTime from "hooks/useTime";
-import { getDayOfWeek, getMonthString } from "utilities/dateUtils";
 import logo from "static/Logo.svg";
 import { useNavigate } from "react-router-dom";
 
@@ -93,7 +91,7 @@ const AppHeader = () => {
             onMouseOver={() => setSubMenu1(true)}
             onMouseLeave={() => setSubMenu1(false)}
           >
-            <IconButton onClick={() => navigator("/user")}>
+            <IconButton onClick={() => navigator("/user/profile")}>
               <PermIdentityIcon />
             </IconButton>
           </Box>
