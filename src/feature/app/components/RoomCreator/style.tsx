@@ -4,7 +4,7 @@ const useRoomCreatorStyle = makeStyles({
   surface: {
     width: "100%",
     height: "100%",
-    paddingTop: "30%",
+    paddingTop: "40%",
     padding: "10%",
     boxSizing: "border-box",
     display: "flex",

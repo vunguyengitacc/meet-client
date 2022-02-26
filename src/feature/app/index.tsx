@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
 import AppContent from "./components/AppContent";
-import AppHeader from "./components/AppHeader";
+import AppHeader from "components/AppHeader";
 import useAppFeatureStyle from "./style";
 
 const AppFeature = () => {

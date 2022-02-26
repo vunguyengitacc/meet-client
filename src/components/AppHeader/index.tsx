@@ -1,11 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Divider,
-  IconButton,
-  Menu,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Divider } from "@mui/material";
+import { IconButton, Menu, Typography } from "@mui/material";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -17,16 +11,16 @@ import useAppHeaderStyle from "./style";
 import useTime from "hooks/useTime";
 import { getDayOfWeek, getMonthString } from "utilities/dateUtils";
 import logo from "static/Logo.svg";
+import { useNavigate } from "react-router-dom";
 
 const AppHeader = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [subMenu1, setSubMenu1] = React.useState<boolean>(false);
   const [subMenu2, setSubMenu2] = React.useState<boolean>(false);
   const [subMenu3, setSubMenu3] = React.useState<boolean>(false);
-  let { date } = useTime();
-
   const currentUser = useSelector((state: RootState) => state.auth.currentUser);
   const dispatch = useDispatch<AppDispatch>();
+  const navigator = useNavigate();
 
   const style = useAppHeaderStyle();
 
@@ -45,13 +39,13 @@ const AppHeader = () => {
   return (
     <Box className={style.surface}>
       <Box className={style.logoField}>
-        <img height="95%" src={logo} />
+        <img
+          className={style.logo}
+          src={logo}
+          onClick={() => navigator("/app")}
+        />
       </Box>
       <Box className={style.configField}>
-        <Typography variant="h6" color="secondary">
-          {`${date.getHours()} : ${date.getMinutes()} `} -{" "}
-          {`${getDayOfWeek(date)}, ${date.getDate()} ${getMonthString(date)} `}
-        </Typography>
         <IconButton onClick={handleClick}>
           <Avatar src={currentUser?.avatarURI} />
         </IconButton>
@@ -99,7 +93,7 @@ const AppHeader = () => {
             onMouseOver={() => setSubMenu1(true)}
             onMouseLeave={() => setSubMenu1(false)}
           >
-            <IconButton>
+            <IconButton onClick={() => navigator("/user")}>
               <PermIdentityIcon />
             </IconButton>
           </Box>

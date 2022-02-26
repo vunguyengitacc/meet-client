@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useWaitPageStyle from "./style";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import MicIcon from "@mui/icons-material/Mic";
-import AppHeader from "feature/app/components/AppHeader";
+import AppHeader from "components/AppHeader";
 import requestApi from "api/requestApi";
 import { socketClient } from "app/socketClient";
 import { IRequest } from "model/Request";

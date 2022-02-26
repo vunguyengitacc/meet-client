@@ -13,6 +13,11 @@ const useAppHeaderStyle = makeStyles({
     height: "100%",
     boxSizing: "border-box",
   },
+  logo: {
+    width: "70%",
+    height: "80%",
+    cursor: "pointer",
+  },
   configField: {
     display: "flex",
     alignItems: "center",
