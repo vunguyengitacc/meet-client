@@ -1,8 +1,6 @@
 import { IResponse } from "model/Common";
 import { IMember } from "model/Member";
-import { IRequest } from "model/Request";
 import { IRoom } from "model/Room";
-import { IUser } from "model/User";
 import axiosClient from "./axiosClient";
 
 const memberApi = {
