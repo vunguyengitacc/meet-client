@@ -128,7 +128,7 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
         </Box>
         <Box className={style.membersList}>
           {myScreen && (
-            <Box className={`${style.item} ${style.pinItem}`} key="me-main">
+            <Box className={style.item} key="me-main">
               <MeetItem member={me} media={myScreen.getTracks()[0]} isMe />
             </Box>
           )}

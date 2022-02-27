@@ -21,6 +21,7 @@ interface IPasswordInputProps {
   endIcon?: JSX.Element;
   fullWidth?: boolean;
   className?: string;
+  errorClassName?: string;
   blockCopy?: boolean;
   blockPaste?: boolean;
   autoComplete?: string;
@@ -74,7 +75,9 @@ const PasswordInput: React.FC<IPasswordInputProps> = ({
               {...field}
               autoComplete={other.autoComplete}
               placeholder={other.placeHolder}
-              className={other.className}
+              className={`${other.className} ${
+                hasError && other.errorClassName
+              }`}
             />
             <FormHelperText>{errors[name]?.message}</FormHelperText>
           </>

@@ -1,9 +1,11 @@
-import { Avatar, Box, Button, Divider, Typography } from "@mui/material";
+import { Avatar, Box, Button, Divider, Grid, Typography } from "@mui/material";
 import { InputBase } from "@mui/material";
 import { RootState } from "app/reduxStore";
 import { IUser } from "model/User";
 import React from "react";
 import { useSelector } from "react-redux";
+import PasswordEditerForm from "../PasswordEditerForm";
+import UserInforEditerForm from "../UserInforEditerForm";
 import useUserInforStyle from "./style";
 
 const UserInfor = () => {
@@ -37,56 +39,10 @@ const UserInfor = () => {
         </Box>
       </Box>
       <Box className={style.form}>
-        <Box display="flex" gap="20px">
-          <Box>
-            <Typography variant="h6">Information</Typography>
-            <Box display="flex" alignItems="center" gap="20px" padding="20px">
-              <Typography>Fullname</Typography>
-              <InputBase fullWidth></InputBase>
-            </Box>
-            <Box display="flex" alignItems="center" gap="20px" padding="20px">
-              <Typography>Email</Typography>
-              <InputBase fullWidth></InputBase>
-            </Box>
-          </Box>
-        </Box>
-        <Divider light />
-        <Box className={style.submitField}>
-          <Button variant="contained" disableElevation>
-            Save
-          </Button>
-          <Button variant="contained" disableElevation color="inherit">
-            Save
-          </Button>
-        </Box>
+        <UserInforEditerForm />
       </Box>
       <Box className={style.form}>
-        <Box display="flex" gap="20px">
-          <Box width="100%">
-            <Typography variant="h6">Password</Typography>
-            <Box display="flex" alignItems="center" gap="20px" padding="20px">
-              <Typography style={{ width: "40%" }}>Old password</Typography>
-              <InputBase fullWidth></InputBase>
-            </Box>
-            <Box display="flex" alignItems="center" gap="20px" padding="20px">
-              <Typography style={{ width: "40%" }}>New password</Typography>
-              <InputBase fullWidth></InputBase>
-            </Box>
-            <Box display="flex" alignItems="center" gap="20px" padding="20px">
-              <Typography style={{ width: "40%" }}>Confirm password</Typography>
-              <InputBase fullWidth></InputBase>
-            </Box>
-          </Box>
-        </Box>
-        <Divider light />
-        <Box className={style.submitField}>
-          <Button variant="contained" disableElevation>
-            Save
-          </Button>
-          <Button variant="contained" disableElevation color="inherit">
-            Save
-          </Button>
-        </Box>
+        <PasswordEditerForm />
       </Box>
     </Box>
   );

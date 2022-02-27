@@ -15,13 +15,23 @@ const useUserFeatureStyle = makeStyles({
   },
   logo: {
     height: "80%",
-    width: "70%",
+    width: "100%",
+    cursor: "pointer",
   },
   body: {
     marginLeft: "10vw",
     width: "80vw",
     height: "100%",
     display: "flex",
+  },
+  sidebar: {
+    width: "20%",
+    height: "100vh",
+    position: "fixed",
+  },
+  content: {
+    width: "80%",
+    marginLeft: "30%",
   },
 });
 

@@ -18,10 +18,10 @@ const UserFeature = () => {
         />
       </Box>
       <Box className={style.body}>
-        <Box width="35%" height="100vh">
+        <Box className={style.sidebar}>
           <ProfileSidebar />
         </Box>
-        <Box width="65%" height="100vh">
+        <Box className={style.content}>
           <Outlet />
         </Box>
       </Box>

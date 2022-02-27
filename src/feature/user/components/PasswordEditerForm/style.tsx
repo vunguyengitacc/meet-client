@@ -1,18 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-const useUserInforStyle = makeStyles({
-  surface: {
-    paddingTop: "100px",
-    display: "flex",
-    gap: "40px",
-    flexDirection: "column",
-  },
-  form: {
-    padding: "20px",
-    backgroundColor: "white",
-    borderRadius: "10px",
-    boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 10px",
-  },
+const usePasswordEditerFormStyle = makeStyles({
   submitField: {
     display: "flex",
     paddingTop: "20px",
@@ -31,6 +19,9 @@ const useUserInforStyle = makeStyles({
     border: "2px solid #afafaf",
     borderRadius: "10px",
   },
+  errInput: {
+    border: "2px solid #d32f2f !important",
+  },
 });
 
-export default useUserInforStyle;
+export default usePasswordEditerFormStyle;

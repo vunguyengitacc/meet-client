@@ -1,3 +1,4 @@
+import { IChangePasswordParams } from "feature/user/components/PasswordEditerForm/form";
 import { IResponse } from "model/Common";
 import { IUser } from "model/User";
 import axiosClient from "./axiosClient";
@@ -9,10 +10,7 @@ const userApi = {
   update(payload: Partial<IUser>): Promise<IResponse<IUser>> {
     return axiosClient.put("/users/me", payload);
   },
-  changePassword(payload: {
-    currentPassword: string;
-    newPassword: string;
-  }): Promise<IResponse<IUser>> {
+  changePassword(payload: IChangePasswordParams): Promise<IResponse<IUser>> {
     return axiosClient.put("/users/me/password", payload);
   },
 };

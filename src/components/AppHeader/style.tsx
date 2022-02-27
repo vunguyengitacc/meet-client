@@ -14,7 +14,7 @@ const useAppHeaderStyle = makeStyles({
     boxSizing: "border-box",
   },
   logo: {
-    width: "70%",
+    width: "100%",
     height: "100%",
     cursor: "pointer",
   },
