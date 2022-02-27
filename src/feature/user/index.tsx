@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import logo from "static/Logo.svg";
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -10,20 +10,32 @@ const UserFeature = () => {
   const style = useUserFeatureStyle();
   return (
     <Box className={style.surface}>
-      <Box className={style.header}>
-        <img
-          className={style.logo}
-          onClick={() => navigator("/app")}
-          src={logo}
-        />
+      <Box className={style.navigationBar}>
+        <Box padding="20px">
+          <img
+            className={style.logo}
+            onClick={() => navigator("/app")}
+            src={logo}
+          />
+        </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flexGrow="1"
+          justifyContent="space-between"
+        >
+          <Box padding="20px">
+            <ProfileSidebar />
+          </Box>
+          <Box padding="20px">
+            <Button fullWidth variant="outlined" color="error">
+              Logout
+            </Button>
+          </Box>
+        </Box>
       </Box>
       <Box className={style.body}>
-        <Box className={style.sidebar}>
-          <ProfileSidebar />
-        </Box>
-        <Box className={style.content}>
-          <Outlet />
-        </Box>
+        <Outlet />
       </Box>
     </Box>
   );

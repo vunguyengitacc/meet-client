@@ -4,10 +4,7 @@ const useProfileSidebarStyle = makeStyles({
   surface: {
     width: "100%",
     height: "100%",
-    paddingTop: "100px",
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
     boxSizing: "border-box",
     gap: "20px",
   },
@@ -16,6 +13,7 @@ const useProfileSidebarStyle = makeStyles({
     height: "auto !important",
   },
   link: {
+    display: "flex",
     backgroundColor: "transparent !important",
     padding: "10px !important",
     textDecoration: "none",
@@ -23,6 +21,8 @@ const useProfileSidebarStyle = makeStyles({
     fontSize: "1.25rem",
     color: "#cfcfcf",
     fontWeight: 500,
+    alignItems: "center",
+    gap: "5px",
   },
   activeLink: {
     color: "#4e4e4e !important",

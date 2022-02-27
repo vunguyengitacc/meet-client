@@ -10,9 +10,9 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthEntry from "./AuthEntry";
 import PrivateEntry from "./PrivateEntry";
-import UserInfor from "feature/user/components/UserInfor";
-import Calendar from "feature/user/components/Calendar";
-import MeetHistory from "feature/user/components/MeetHistory";
+import CalendarPage from "feature/user/pages/CalendarPage";
+import MeetHistoryPage from "feature/user/pages/MeetHistoryPage";
+import UserInforPage from "feature/user/pages/UserInforPage";
 
 const MasterRoute = () => {
   return (
@@ -33,9 +33,9 @@ const MasterRoute = () => {
         </Route>
         <Route path="/user" element={<PrivateEntry />}>
           <Route path="/user" element={<UserFeature />}>
-            <Route path="profile" element={<UserInfor />} />
-            <Route path="calendar" element={<Calendar />} />
-            <Route path="history" element={<MeetHistory />} />
+            <Route path="profile" element={<UserInforPage />} />
+            <Route path="calendar" element={<CalendarPage />} />
+            <Route path="history" element={<MeetHistoryPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />

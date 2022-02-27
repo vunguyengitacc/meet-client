@@ -1,10 +1,13 @@
-import { Avatar, Box, ButtonBase, Chip, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { RootState } from "app/reduxStore";
 import { IUser } from "model/User";
 import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import useProfileSidebarStyle from "./style";
+import TodayIcon from "@mui/icons-material/Today";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import HistoryIcon from "@mui/icons-material/History";
 
 const ProfileSidebar = () => {
   const currentUser = useSelector(
@@ -22,6 +25,7 @@ const ProfileSidebar = () => {
           }
           to="profile"
         >
+          {/* <PersonOutlineIcon /> */}
           Profile
         </NavLink>
         <NavLink
@@ -30,6 +34,7 @@ const ProfileSidebar = () => {
           }
           to="calendar"
         >
+          {/* <TodayIcon /> */}
           Calendar
         </NavLink>
         <NavLink
@@ -38,6 +43,7 @@ const ProfileSidebar = () => {
           }
           to="history"
         >
+          {/* <HistoryIcon /> */}
           History
         </NavLink>
       </Box>
