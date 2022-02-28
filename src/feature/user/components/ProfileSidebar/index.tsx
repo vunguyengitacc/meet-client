@@ -18,7 +18,7 @@ const ProfileSidebar = () => {
 
   return (
     <Box className={style.surface}>
-      <Box display="flex" flexDirection="column" width="80%">
+      <Box display="flex" flexDirection="column" width="100%" gap="10px">
         <NavLink
           className={({ isActive }) =>
             `${style.link} ${isActive && style.activeLink}`

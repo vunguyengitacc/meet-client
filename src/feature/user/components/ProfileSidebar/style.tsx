@@ -20,14 +20,14 @@ const useProfileSidebarStyle = makeStyles({
     textAlign: "center",
     fontSize: "1.25rem",
     color: "#cfcfcf",
-    fontWeight: 500,
+    fontWeight: 700,
     alignItems: "center",
     gap: "5px",
+    borderRadius: "10px",
   },
   activeLink: {
-    color: "#4e4e4e !important",
-    fontSize: "1.75rem !important",
-    fontWeight: 700,
+    backgroundColor: "#4b45b221 !important",
+    color: "#4b45b27a",
   },
 });
 

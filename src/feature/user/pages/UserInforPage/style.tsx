@@ -3,10 +3,22 @@ import { makeStyles } from "@mui/styles";
 const useUserInforStyle = makeStyles({
   surface: {
     width: "100%",
-    height: "100%",
+    height: "100vh",
+    overflowY: "scroll",
   },
   header: {
-    height: "100px",
+    margin: "20px 50px",
+    display: "flex",
+    alignItems: "center",
+    boxSizing: "border-box",
+    gap: "20px",
+  },
+  headerIcon: {
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    backgroundColor: "white",
+    padding: "10px",
+    borderRadius: "5px",
+    color: "#bb0000d1",
   },
   form: {
     padding: "20px",
@@ -33,21 +45,11 @@ const useUserInforStyle = makeStyles({
     borderRadius: "10px",
   },
   content: {
-    backgroundColor: "#f8fafb",
-    height: "calc( 100vh - 100px )",
-    borderRadius: "20px 0 0 0",
-    boxShadow: "inset 0px 0px 5px rgba(0,0,0,0.25)",
     boxSizing: "border-box",
-    paddingTop: "4px",
-  },
-  detail: {
-    height: "100%",
     padding: "20px 50px",
     display: "flex",
     flexDirection: "column",
     gap: "40px",
-    overflowY: "scroll",
-    boxSizing: "border-box",
   },
 });
 

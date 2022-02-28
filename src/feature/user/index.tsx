@@ -11,7 +11,7 @@ const UserFeature = () => {
   return (
     <Box className={style.surface}>
       <Box className={style.navigationBar}>
-        <Box padding="20px">
+        <Box padding="20px" display="flex" justifyContent="center">
           <img
             className={style.logo}
             onClick={() => navigator("/app")}

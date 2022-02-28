@@ -1,25 +1,26 @@
 import { makeStyles } from "@mui/styles";
 
 const useMeetHistoryPageStyle = makeStyles({
-  header: {
-    height: "100px",
-  },
   content: {
-    backgroundColor: "#f8fafb",
-    height: "calc( 100vh - 100px )",
-    borderRadius: "20px 0 0 0",
-    boxShadow: "inset 0px 0px 5px rgba(0,0,0,0.25)",
     boxSizing: "border-box",
-    paddingTop: "4px",
-  },
-  detail: {
-    height: "100%",
     padding: "20px 50px",
     display: "flex",
     flexDirection: "column",
     gap: "40px",
-    overflowY: "scroll",
+  },
+  header: {
+    margin: "20px 50px",
+    display: "flex",
+    alignItems: "center",
     boxSizing: "border-box",
+    gap: "20px",
+  },
+  headerIcon: {
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    backgroundColor: "white",
+    padding: "10px",
+    borderRadius: "5px",
+    color: "#9d9d00b3",
   },
 });
 
