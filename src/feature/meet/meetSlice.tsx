@@ -100,6 +100,7 @@ interface MeetState {
   messages: EntityState<IMessage>;
   myRequest?: IRequest;
   requests: EntityState<IRequest>;
+  pinItem?: string;
 }
 
 const initialState: MeetState = {
@@ -132,6 +133,13 @@ const meetSlice = createSlice({
     },
     setJoinCode: (state, { payload }: PayloadAction<string>) => {
       state.joinCode = payload;
+    },
+    setPinItem: (state, { payload }: PayloadAction<string>) => {
+      if (state.pinItem === payload) {
+        state.pinItem = "";
+        return;
+      }
+      state.pinItem = payload;
     },
     setJoinCodeStrict: (
       state,
@@ -204,6 +212,8 @@ const meetSlice = createSlice({
         .getSelectors((state: MeetState) => state.members)
         .selectAll(state)
         .filter((i) => i.joinSession === payload.joinCode)[0];
+      if (member === undefined) return;
+      if (!state.pinItem) state.pinItem = member._id + "-screen";
       membersAdapter.updateOne(state.members, {
         id: member._id,
         changes: { screenStream: payload.stream },
@@ -261,7 +271,6 @@ const meetSlice = createSlice({
       state.joinCode = "";
       state.members = membersAdapter.getInitialState();
       state.messages = messagesAdapter.getInitialState();
-      toast(`The meet is finished`);
     });
     builder.addCase(updateRoom.rejected, (state) => {});
     builder.addCase(updateRoom.pending, (state) => {});
@@ -297,5 +306,6 @@ export const {
   normalUpdateRoom,
   setMyRequest,
   setJoinCodeStrict,
+  setPinItem,
 } = actions;
 export default meetReducer;

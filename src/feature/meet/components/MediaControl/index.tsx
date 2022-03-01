@@ -9,7 +9,7 @@ import useMedia from "hooks/useMedia";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "app/reduxStore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { exitRoom } from "feature/meet/meetSlice";
+import { exitRoom, setPinItem } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 
 const MediaControl = () => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
+  const pin = useSelector((state: RootState) => state.meet.pinItem);
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const { createSendTransport, closeProducer } = useMeeting();
   const { myCam, myScreen, myMic } = useSelector(
@@ -69,9 +70,13 @@ const MediaControl = () => {
       );
       return;
     }
-    if (myScreen)
+    if (myScreen) {
       createSendTransport(myScreen.getVideoTracks()[0], StreamType.screen);
-    else closeProducer(StreamType.screen);
+      if (!pin) dispatch(setPinItem(`${me._id}-screen`));
+    } else {
+      closeProducer(StreamType.screen);
+      if (pin === `${me._id}-screen`) dispatch(setPinItem(""));
+    }
   }, [myScreen]);
   useEffect(() => {
     if (!room.isAllowShareMicro && myMic && !me.isAdmin) {

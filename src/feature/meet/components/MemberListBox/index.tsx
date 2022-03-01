@@ -19,15 +19,10 @@ const MemberListBox: React.FC<IProps> = ({ control }) => {
   );
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const [filter, setFilter] = useState<string>("");
-  const [openControlModal, setOpenControlModal] = useState<boolean>(false);
   const style = useMemberListBoxStyle();
 
   const setFilterHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter(e.currentTarget.value);
-  };
-
-  const closeModalHandler = () => {
-    setOpenControlModal(false);
   };
 
   return (
