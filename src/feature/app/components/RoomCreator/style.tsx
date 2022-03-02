@@ -19,10 +19,10 @@ const useRoomCreatorStyle = makeStyles({
   modal: {
     width: "600px",
     maxWidth: "80vw",
-    height: "600px",
     maxHeight: "80vh",
     margin: "auto",
-    marginTop: "10vh",
+    marginTop: "20vh",
+    borderRadius: "15px !important",
   },
 });
 

@@ -8,10 +8,12 @@ import { useDispatch } from "react-redux";
 import useMeetItemStyle from "./style";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ClearIcon from "@mui/icons-material/Clear";
+import Audio from "components/Audio";
 
 interface IProps {
   member: IMember;
   media?: MediaStreamTrack;
+  audio?: MediaStreamTrack;
   isMe?: boolean;
   type?: string;
 }
@@ -73,6 +75,7 @@ const MeetItem: React.FC<IProps> = (props) => {
           )}
         </Box>
       )}
+      {props.audio && <Audio srcObject={props.audio} />}
       <Typography
         variant="h6"
         color="secondary"

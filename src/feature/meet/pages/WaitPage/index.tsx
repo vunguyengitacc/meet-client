@@ -1,6 +1,5 @@
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Typography } from "@mui/material";
-import memberApi from "api/memberApi";
 import { AppDispatch, RootState } from "app/reduxStore";
 import Video from "components/Video";
 import {
@@ -24,6 +23,7 @@ import toast from "react-hot-toast";
 const WaitPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
+  const joinCode = useSelector((state: RootState) => state.meet.joinCode);
   const myRequest = useSelector(
     (state: RootState) => state.meet.myRequest
   ) as IRequest;
@@ -54,6 +54,7 @@ const WaitPage = () => {
   const handleJoin = async () => {
     try {
       setIsWait(true);
+      console.log(joinCode);
       const rs = await requestApi.join(room);
       if (rs.data.joinCode !== undefined) {
         dispatch(setJoinCode(rs.data.joinCode));

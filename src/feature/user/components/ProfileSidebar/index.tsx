@@ -46,6 +46,15 @@ const ProfileSidebar = () => {
           {/* <HistoryIcon /> */}
           History
         </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            `${style.link} ${isActive && style.activeLink}`
+          }
+          to="notification"
+        >
+          {/* <HistoryIcon /> */}
+          Notification
+        </NavLink>
       </Box>
     </Box>
   );

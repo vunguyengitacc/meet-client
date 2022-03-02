@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCamStream,
+  setMicStream,
   setScreenStream,
   stopMyCam,
   stopMyMic,
@@ -46,6 +47,11 @@ const useMedia = () => {
     const track = stream.getVideoTracks()[0];
     setParams({ track, ...params });
   };
+  const micStreamSuccess = (stream: MediaStream) => {
+    dispatch(setMicStream(stream));
+    const track = stream.getAudioTracks()[0];
+    setParams({ track, ...params });
+  };
 
   const getLocalCamStream = () => {
     navigator.mediaDevices
@@ -70,7 +76,7 @@ const useMedia = () => {
       .getUserMedia({
         audio: true,
       })
-      .then(camStreamSuccess)
+      .then(micStreamSuccess)
       .catch((error) => {
         toast.error(error.message);
       });

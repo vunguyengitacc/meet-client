@@ -37,6 +37,7 @@ const ImageSearch: React.FC<IProps> = (props) => {
 
   const searchHandler = async (payload: { term: string }) => {
     try {
+      setImages([]);
       if (payload.term.length < 1) return;
       setOnFetching(true);
       const res = await fetch(

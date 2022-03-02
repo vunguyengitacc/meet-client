@@ -18,7 +18,7 @@ const useUserInforStyle = makeStyles({
     backgroundColor: "white",
     padding: "10px",
     borderRadius: "5px",
-    color: "#bb0000d1",
+    color: "#00bb17d1",
   },
   form: {
     padding: "20px",

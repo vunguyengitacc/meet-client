@@ -85,7 +85,7 @@ const MediaControl = () => {
       );
       return;
     }
-    if (myMic) createSendTransport(myMic.getVideoTracks()[0], StreamType.micro);
+    if (myMic) createSendTransport(myMic.getAudioTracks()[0], StreamType.micro);
     else closeProducer(StreamType.micro);
   }, [myMic]);
   return (
@@ -93,7 +93,13 @@ const MediaControl = () => {
       <Button
         onClick={myMic ? stopMic : getLocalMicStream}
         className={style.roundBtn}
-        color="disable"
+        color={`${
+          myMic
+            ? !room.isAllowShareWebcam && !me.isAdmin
+              ? "warning"
+              : "error"
+            : "disable"
+        }`}
         variant="contained"
       >
         <MicIcon />

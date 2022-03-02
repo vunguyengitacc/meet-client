@@ -3,7 +3,7 @@ import { createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import memberApi from "api/memberApi";
 import messageApi from "api/messageApi";
 import requestApi from "api/requestApi";
-import roomApi, { ICreateRoomResponse } from "api/roomApi";
+import roomApi, { IRoomResponse } from "api/roomApi";
 import { RootState } from "app/reduxStore";
 import { IMember } from "model/Member";
 import { IMessage } from "model/Message";
@@ -62,7 +62,7 @@ export const getOneRoom = createAsyncThunk(
   "room/getOne",
   async (payload: string) => {
     const { data } = await roomApi.getOne(payload);
-    return data.data;
+    return { room: data.result.room, joinCode: data.result.joinCode };
   }
 );
 
@@ -225,8 +225,11 @@ const meetSlice = createSlice({
     builder.addCase(getOneRoom.pending, (state) => {});
     builder.addCase(
       getOneRoom.fulfilled,
-      (state, { payload }: PayloadAction<IRoom>) => {
-        state.room = payload;
+      (state, { payload }: PayloadAction<IRoomResponse>) => {
+        const { room, joinCode } = payload;
+        state.room = room;
+        if (!joinCode) return;
+        state.joinCode = joinCode;
       }
     );
     builder.addCase(getMember.rejected, (state) => {});
@@ -259,9 +262,9 @@ const meetSlice = createSlice({
     builder.addCase(createRoom.pending, (state) => {});
     builder.addCase(
       createRoom.fulfilled,
-      (state, { payload }: PayloadAction<ICreateRoomResponse>) => {
+      (state, { payload }: PayloadAction<IRoomResponse>) => {
         state.room = payload.room;
-        state.joinCode = payload.joinCode;
+        state.joinCode = payload.joinCode as string;
       }
     );
     builder.addCase(exitRoom.rejected, (state) => {});

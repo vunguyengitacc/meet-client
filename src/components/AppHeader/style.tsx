@@ -21,6 +21,7 @@ const useAppHeaderStyle = makeStyles({
   configField: {
     display: "flex",
     alignItems: "center",
+    gap: "20px",
   },
   menuInforField: {
     boxSizing: "border-box",

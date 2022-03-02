@@ -5,6 +5,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import useAppHeaderStyle from "./style";
 import logo from "static/Logo.svg";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useNavigate } from "react-router-dom";
 
 const AppHeader = () => {
@@ -24,6 +25,9 @@ const AppHeader = () => {
         />
       </Box>
       <Box className={style.configField}>
+        <IconButton>
+          <NotificationsIcon />
+        </IconButton>
         <IconButton onClick={() => navigator("/user/profile")}>
           <Avatar src={currentUser?.avatarURI} />
         </IconButton>
