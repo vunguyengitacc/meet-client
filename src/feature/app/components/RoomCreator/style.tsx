@@ -21,7 +21,6 @@ const useRoomCreatorStyle = makeStyles({
     maxWidth: "80vw",
     maxHeight: "80vh",
     margin: "auto",
-    marginTop: "20vh",
     borderRadius: "15px !important",
   },
 });

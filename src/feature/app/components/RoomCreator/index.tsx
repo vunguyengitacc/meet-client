@@ -119,9 +119,11 @@ const RoomCreator = () => {
         </Box>
       </Box>
       <Modal open={openModal} onClose={handleCloseModal}>
-        <Paper className={style.modal}>
-          <RoomCreatorModal control={setOpenModal} />
-        </Paper>
+        <Box display="flex" width="100vw" height="100vh">
+          <Paper className={style.modal}>
+            <RoomCreatorModal control={setOpenModal} />
+          </Paper>
+        </Box>
       </Modal>
     </Box>
   );
