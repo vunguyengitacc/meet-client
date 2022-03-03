@@ -11,6 +11,7 @@ import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import { IRequest } from "model/Request";
 import { IRoom } from "model/Room";
 import { RequestType } from "utilities/joinRequestTypeUtil";
+import SquareButton from "components/CustomUI/SquareButton";
 
 interface IProps {
   control: (value: boolean) => void;
@@ -40,14 +41,14 @@ const RequestControl: React.FC<IProps> = ({ control }) => {
     <Box className={style.surface}>
       <Box className={style.headerField}>
         <Typography variant="h6">Request to join</Typography>
-        <Button
+        <SquareButton
           variant="contained"
           disableElevation
           color="error"
           onClick={() => control(false)}
         >
           <CloseIcon />
-        </Button>
+        </SquareButton>
       </Box>
       <Box className={style.searchInput}>
         <InputBase

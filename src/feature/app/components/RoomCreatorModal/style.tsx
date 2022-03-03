@@ -25,6 +25,10 @@ const useRoomCreatorModalStyle = makeStyles({
     justifyContent: "flex-end",
     gap: "10px",
   },
+  closeBtn: {
+    minWidth: "auto !important",
+    padding: "5px 5px !important",
+  },
 });
 
 export default useRoomCreatorModalStyle;

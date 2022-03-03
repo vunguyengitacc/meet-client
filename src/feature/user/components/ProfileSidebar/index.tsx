@@ -5,9 +5,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import useProfileSidebarStyle from "./style";
-import TodayIcon from "@mui/icons-material/Today";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import HistoryIcon from "@mui/icons-material/History";
 
 const ProfileSidebar = () => {
   const currentUser = useSelector(

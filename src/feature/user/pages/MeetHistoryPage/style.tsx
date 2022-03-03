@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-const useMeetHistoryPageStyle = makeStyles({
+const useMeetsPageStyle = makeStyles({
   content: {
     boxSizing: "border-box",
     padding: "20px 50px",
@@ -24,4 +24,4 @@ const useMeetHistoryPageStyle = makeStyles({
   },
 });
 
-export default useMeetHistoryPageStyle;
+export default useMeetsPageStyle;

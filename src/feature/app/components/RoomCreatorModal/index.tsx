@@ -1,7 +1,7 @@
 import { Box, Button, Divider, MenuItem, Select } from "@mui/material";
 import { SelectChangeEvent, TextField } from "@mui/material";
 import { Typography, IconButton, InputAdornment } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import useRoomCreatorModalStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
 import DateAdapter from "@mui/lab/AdapterDateFns";
@@ -11,6 +11,8 @@ import toast from "react-hot-toast";
 import { IRoom } from "model/Room";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
+import SquareButton from "components/CustomUI/SquareButton";
+import { DateValue } from "utilities/dateUtils";
 
 interface IProps {
   control: (value: boolean) => void;
@@ -18,7 +20,8 @@ interface IProps {
 
 const RoomCreatorModal: React.FC<IProps> = ({ control }) => {
   const style = useRoomCreatorModalStyle();
-  const [startAt, setStartAt] = React.useState<Date | undefined>(new Date());
+  const [startAt, setStartAt] = React.useState<Date>(new Date());
+  const [finishAt, setFinishAt] = React.useState<Date | undefined>();
   const [newRoom, setNewRoom] = React.useState<IRoom | undefined>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isCopy, setIsCopy] = React.useState<boolean>(false);
@@ -26,6 +29,11 @@ const RoomCreatorModal: React.FC<IProps> = ({ control }) => {
   const changeRemindTypeHandler = (event: SelectChangeEvent<number>) => {
     setRemindType(event.target.value as number);
   };
+
+  useEffect(() => {
+    setFinishAt(new Date(startAt.getTime() + DateValue.HOUR));
+  }, [startAt]);
+
   const resetHandler = () => {
     setRemindType(0);
     setStartAt(new Date());
@@ -35,8 +43,7 @@ const RoomCreatorModal: React.FC<IProps> = ({ control }) => {
   const submitHandler = async () => {
     try {
       setIsLoading(true);
-      const { data } = await roomApi.create({ startAt, remindType });
-
+      const { data } = await roomApi.create({ startAt, remindType, finishAt });
       setNewRoom(data.result.room);
     } catch (error: any) {
       toast.error(error);
@@ -55,22 +62,20 @@ const RoomCreatorModal: React.FC<IProps> = ({ control }) => {
     <Box className={style.surface}>
       <Box className={style.header}>
         <Typography variant="h6">Create room</Typography>
-        <Button
+        <SquareButton
           variant="contained"
           disableElevation
           onClick={() => control(false)}
           color="error"
         >
           <CloseIcon />
-        </Button>
+        </SquareButton>
       </Box>
       {!newRoom ? (
         <>
           <Box className={style.form}>
             <Box display="flex" alignItems="center">
-              <Typography className={style.formLbl}>
-                The meet start at
-              </Typography>
+              <Typography className={style.formLbl}>Will start at</Typography>
               <LocalizationProvider dateAdapter={DateAdapter}>
                 <DateTimePicker
                   renderInput={(params) => (
@@ -108,7 +113,23 @@ const RoomCreatorModal: React.FC<IProps> = ({ control }) => {
                 </i>
               </Box>
             </Box>
+            <Box display="flex" alignItems="center">
+              <Typography className={style.formLbl}>Might finish at</Typography>
+              <LocalizationProvider dateAdapter={DateAdapter}>
+                <DateTimePicker
+                  renderInput={(params) => (
+                    <TextField fullWidth size="small" {...params} />
+                  )}
+                  disablePast
+                  value={finishAt}
+                  onChange={(newValue) => {
+                    if (newValue) setFinishAt(newValue);
+                  }}
+                />
+              </LocalizationProvider>
+            </Box>
           </Box>
+
           <Divider light />
           <Box className={style.submit}>
             <LoadingButton

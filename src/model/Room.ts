@@ -11,5 +11,6 @@ export interface IRoom {
   isAllowShareWebcam: boolean;
   isAllowShareMicro: boolean;
   startAt?: Date;
+  finishAt?: Date;
   remindType?: number;
 }

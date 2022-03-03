@@ -3,6 +3,7 @@ import React from "react";
 import useInvitationControlStyle from "./style";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
+import SquareButton from "components/CustomUI/SquareButton";
 
 interface IProps {
   control: (value: boolean) => void;
@@ -14,14 +15,14 @@ const InvitationControl: React.FC<IProps> = ({ control }) => {
     <Box className={style.surface}>
       <Box className={style.headerField}>
         <Typography variant="h6">Invite member</Typography>
-        <Button
+        <SquareButton
           variant="contained"
           disableElevation
           color="error"
           onClick={() => control(false)}
         >
           <CloseIcon />
-        </Button>
+        </SquareButton>
       </Box>
       <Box className={style.searchInput}>
         <InputBase
