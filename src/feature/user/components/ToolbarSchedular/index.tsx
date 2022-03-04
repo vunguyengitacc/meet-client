@@ -10,20 +10,42 @@ import { ViewType } from "../ScheduleBox";
 interface IProps {
   currentDate: Date;
   setCurrentDate: (value: Date) => void;
-  view?: ViewType;
+  view: ViewType;
+  setView: (value: ViewType) => void;
 }
 
-const ToolbarShedular: React.FC<IProps> = ({ currentDate, setCurrentDate }) => {
+const ToolbarShedular: React.FC<IProps> = ({
+  currentDate,
+  setCurrentDate,
+  view,
+  setView,
+}) => {
   const style = useToolbarSchedularStyle();
+
+  const setNext = () => {
+    if (view === ViewType.DAY)
+      setCurrentDate(new Date(currentDate.getTime() + DateValue.DAY));
+    else if (view === ViewType.WEEK)
+      setCurrentDate(new Date(currentDate.getTime() + DateValue.WEEK));
+    else if (view === ViewType.MONTH)
+      setCurrentDate(new Date(currentDate.getTime() + DateValue.MONTH));
+  };
+  const setPrevious = () => {
+    if (view === ViewType.DAY)
+      setCurrentDate(new Date(currentDate.getTime() - DateValue.DAY));
+    else if (view === ViewType.WEEK)
+      setCurrentDate(new Date(currentDate.getTime() - DateValue.WEEK));
+    else if (view === ViewType.MONTH)
+      setCurrentDate(new Date(currentDate.getTime() - DateValue.MONTH));
+  };
+
   return (
     <Box className={style.surface}>
       <Box display="flex" gap="10px">
         <SquareButton
           variant="contained"
           disableElevation
-          onClick={() =>
-            setCurrentDate(new Date(currentDate.getTime() - DateValue.MONTH))
-          }
+          onClick={setPrevious}
         >
           <ArrowLeftIcon />
         </SquareButton>
@@ -35,20 +57,29 @@ const ToolbarShedular: React.FC<IProps> = ({ currentDate, setCurrentDate }) => {
         >
           Now
         </SquareButton>
-        <SquareButton
-          variant="contained"
-          disableElevation
-          onClick={() =>
-            setCurrentDate(new Date(currentDate.getTime() + DateValue.MONTH))
-          }
-        >
+        <SquareButton variant="contained" disableElevation onClick={setNext}>
           <ArrowRightIcon />
         </SquareButton>
       </Box>
       <Box display="flex" gap="10px">
-        <SquareButton>Day</SquareButton>
-        <SquareButton>Week</SquareButton>
-        <SquareButton>Month</SquareButton>
+        <SquareButton
+          variant={view === ViewType.DAY ? "contained" : "text"}
+          onClick={() => setView(ViewType.DAY)}
+        >
+          Day
+        </SquareButton>
+        <SquareButton
+          variant={view === ViewType.WEEK ? "contained" : "text"}
+          onClick={() => setView(ViewType.WEEK)}
+        >
+          Week
+        </SquareButton>
+        <SquareButton
+          variant={view === ViewType.MONTH ? "contained" : "text"}
+          onClick={() => setView(ViewType.MONTH)}
+        >
+          Month
+        </SquareButton>
       </Box>
     </Box>
   );

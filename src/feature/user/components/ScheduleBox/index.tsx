@@ -3,6 +3,7 @@ import {
   Appointments,
   AppointmentTooltip,
   DayView,
+  WeekView,
   MonthView,
   Resources,
   Scheduler,
@@ -36,8 +37,9 @@ const resorces = [
 ];
 
 export enum ViewType {
-  MONTH = "month",
-  DAY = "day",
+  MONTH = "Month",
+  DAY = "Day",
+  WEEK = "Week",
 }
 
 const ScheduleBox = () => {
@@ -57,13 +59,13 @@ const ScheduleBox = () => {
 
   useEffect(() => {
     let temp = [] as IParams[];
-    currentUser.rooms?.forEach((i, index) => {
+    currentUser.rooms?.forEach((i) => {
       if (!i.startAt) return;
       temp.push({
         startDate: i.startAt,
         title: i.accessCode,
         endDate: i.finishAt,
-        type: index === 1 ? "type_1" : "type_2",
+        type: "type_1",
       });
     });
     setData(temp);
@@ -74,6 +76,8 @@ const ScheduleBox = () => {
       <Paper className={style.schedule}>
         <Box className={style.toolbar}>
           <ToolbarShedular
+            view={currentView}
+            setView={setCurrentView}
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
           />
@@ -82,10 +86,11 @@ const ScheduleBox = () => {
           <ViewState
             defaultCurrentDate={new Date()}
             currentDate={currentDate}
-            currentViewName="Day"
+            currentViewName={currentView}
           />
           <MonthView />
-          <DayView startDayHour={7} endDayHour={24} cellDuration={60} />
+          <DayView startDayHour={7} endDayHour={22} cellDuration={60} />
+          <WeekView startDayHour={7} endDayHour={22} cellDuration={60} />
           <Appointments />
           <AppointmentTooltip />
           <Resources data={resorces} />
