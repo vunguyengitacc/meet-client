@@ -43,6 +43,7 @@ const ToolbarShedular: React.FC<IProps> = ({
     <Box className={style.surface}>
       <Box display="flex" gap="10px">
         <SquareButton
+          color="info"
           variant="contained"
           disableElevation
           onClick={setPrevious}
@@ -51,30 +52,40 @@ const ToolbarShedular: React.FC<IProps> = ({
         </SquareButton>
         <SquareButton
           variant="contained"
-          color="info"
           onClick={() => setCurrentDate(new Date())}
           disableElevation
         >
           Now
         </SquareButton>
-        <SquareButton variant="contained" disableElevation onClick={setNext}>
+        <SquareButton
+          color="info"
+          variant="contained"
+          disableElevation
+          onClick={setNext}
+        >
           <ArrowRightIcon />
         </SquareButton>
       </Box>
       <Box display="flex" gap="10px">
         <SquareButton
+          color="info"
+          disableElevation
           variant={view === ViewType.DAY ? "contained" : "text"}
           onClick={() => setView(ViewType.DAY)}
         >
           Day
         </SquareButton>
         <SquareButton
+          color="info"
+          disableElevation
           variant={view === ViewType.WEEK ? "contained" : "text"}
           onClick={() => setView(ViewType.WEEK)}
         >
           Week
         </SquareButton>
         <SquareButton
+          color="info"
+          disableElevation
           variant={view === ViewType.MONTH ? "contained" : "text"}
           onClick={() => setView(ViewType.MONTH)}
         >

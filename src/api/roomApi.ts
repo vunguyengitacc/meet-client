@@ -15,7 +15,6 @@ const roomApi = {
     return axiosClient.post("/rooms", payload);
   },
   getMyRooms(): Promise<IResponse<IRoom[]>> {
-    console.log("huh");
     return axiosClient.get("/rooms");
   },
   update(payload: {

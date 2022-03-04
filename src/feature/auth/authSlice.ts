@@ -29,7 +29,6 @@ export const getMe = createAsyncThunk("auth/getMe", async () => {
 });
 
 export const getMyRoom = createAsyncThunk("auth/getMyRoom", async () => {
-  console.log("alo");
   const res = await roomApi.getMyRooms();
   console.log(res);
   return res.data.rooms;

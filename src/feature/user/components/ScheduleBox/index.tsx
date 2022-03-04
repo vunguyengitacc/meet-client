@@ -54,7 +54,7 @@ const ScheduleBox = () => {
   const style = useScheduleBoxStyle();
 
   useEffect(() => {
-    dispatch(getMyRoom());
+    if (!currentUser.rooms) dispatch(getMyRoom());
   }, []);
 
   useEffect(() => {

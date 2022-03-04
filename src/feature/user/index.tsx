@@ -4,8 +4,12 @@ import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import ProfileSidebar from "./components/ProfileSidebar";
 import useUserFeatureStyle from "./style";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "app/reduxStore";
+import { logout } from "feature/auth/authSlice";
 
 const UserFeature = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const navigator = useNavigate();
   const style = useUserFeatureStyle();
   return (
@@ -28,7 +32,12 @@ const UserFeature = () => {
             <ProfileSidebar />
           </Box>
           <Box padding="20px">
-            <Button fullWidth variant="outlined" color="error">
+            <Button
+              fullWidth
+              variant="outlined"
+              color="error"
+              onClick={() => dispatch(logout())}
+            >
               Logout
             </Button>
           </Box>
