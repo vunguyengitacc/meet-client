@@ -1,3 +1,5 @@
+import { IRoom } from "./Room";
+
 export interface IUser {
   _id: string;
   username: string;
@@ -7,4 +9,5 @@ export interface IUser {
   address: string;
   phone: string;
   avatarURI: string;
+  rooms?: IRoom[];
 }

@@ -20,6 +20,7 @@ export default function Video({ srcObject, ...props }: PropsType) {
       autoPlay
       id="my-video"
       ref={refVideo}
+      muted={true}
       {...props}
     />
   );

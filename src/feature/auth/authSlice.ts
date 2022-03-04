@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import authApi from "api/authApi";
+import roomApi from "api/roomApi";
 import userApi from "api/userApi";
 import { IChangePasswordParams } from "feature/user/components/PasswordEditerForm/form";
+import { IRoom } from "model/Room";
 import { IUser } from "model/User";
 import { ILoginParams } from "./pages/login/form";
 
@@ -24,6 +26,13 @@ export const register = createAsyncThunk(
 export const getMe = createAsyncThunk("auth/getMe", async () => {
   const res = await userApi.getMe();
   return res.data.currentUser;
+});
+
+export const getMyRoom = createAsyncThunk("auth/getMyRoom", async () => {
+  console.log("alo");
+  const res = await roomApi.getMyRooms();
+  console.log(res);
+  return res.data.rooms;
 });
 
 export const changePassword = createAsyncThunk(
@@ -97,6 +106,17 @@ const authSlice = createSlice({
       (state, { payload }: PayloadAction<IUser>) => {
         state.currentUser = payload;
         state.isAuth = true;
+      }
+    );
+    builder.addCase(getMyRoom.rejected, (state) => {});
+    builder.addCase(getMyRoom.pending, (state) => {});
+    builder.addCase(
+      getMyRoom.fulfilled,
+      (state, { payload }: PayloadAction<IRoom[]>) => {
+        if (!state.currentUser) return;
+        let temp = state.currentUser;
+        temp.rooms = payload;
+        state.currentUser = temp;
       }
     );
     builder.addCase(changePassword.rejected, (state) => {});

@@ -1,6 +1,11 @@
 import { makeStyles } from "@mui/styles";
 
 const useCalendarPageStyle = makeStyles({
+  surface: {
+    width: "100%",
+    height: "100vh",
+    overflowY: "scroll",
+  },
   content: {
     boxSizing: "border-box",
     padding: "20px 50px",

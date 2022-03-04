@@ -1,5 +1,6 @@
 import { IChangePasswordParams } from "feature/user/components/PasswordEditerForm/form";
 import { IResponse } from "model/Common";
+import { IRoom } from "model/Room";
 import { IUser } from "model/User";
 import axiosClient from "./axiosClient";
 

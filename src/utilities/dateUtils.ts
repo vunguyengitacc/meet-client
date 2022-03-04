@@ -57,6 +57,7 @@ enum DateValue {
   MINUTE = 60 * 1000,
   HOUR = 60 * 60 * 1000,
   DAY = 24 * 60 * 60 * 1000,
+  MONTH = 40 * 24 * 60 * 60 * 1000,
 }
 
 export { getDayOfWeek, getMonthName, DateValue };

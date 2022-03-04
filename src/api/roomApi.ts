@@ -1,6 +1,5 @@
 import { IResponse } from "model/Common";
 import { IRoom } from "model/Room";
-import { IUser } from "model/User";
 import axiosClient from "./axiosClient";
 
 export interface IRoomResponse {
@@ -14,6 +13,10 @@ const roomApi = {
   },
   create(payload?: Partial<IRoom>): Promise<IResponse<IRoomResponse>> {
     return axiosClient.post("/rooms", payload);
+  },
+  getMyRooms(): Promise<IResponse<IRoom[]>> {
+    console.log("huh");
+    return axiosClient.get("/rooms");
   },
   update(payload: {
     room: Partial<IRoom>;
