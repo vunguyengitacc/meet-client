@@ -82,6 +82,13 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
               variant="filled"
               color={room.isPrivate ? "warning" : "info"}
             />
+            {room.isRecording && (
+              <Chip
+                label={<b>On recording</b>}
+                variant="filled"
+                color="error"
+              />
+            )}
           </Box>
           <Box>
             <Box

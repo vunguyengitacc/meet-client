@@ -12,13 +12,11 @@ interface MediaState {
   myCam?: MediaStream;
   myScreen?: MediaStream;
   myMic?: MediaStream;
+  recorderStream?: MediaStream;
+  recorder?: MediaRecorder;
 }
 
-const initialState: MediaState = {
-  myCam: undefined,
-  myScreen: undefined,
-  myMic: undefined,
-};
+const initialState: MediaState = {};
 const mediaSlice = createSlice({
   name: "meetSlice",
   initialState,
@@ -32,6 +30,18 @@ const mediaSlice = createSlice({
     setMicStream: (state, { payload }: PayloadAction<MediaStream>) => {
       state.myMic = payload;
     },
+    setRecorderStream: (
+      state,
+      { payload }: PayloadAction<MediaStream | undefined>
+    ) => {
+      state.recorderStream = payload;
+    },
+    setRecorder: (
+      state,
+      { payload }: PayloadAction<MediaRecorder | undefined>
+    ) => {
+      state.recorder = payload;
+    },
     stopMyCam: (state) => {
       state.myCam?.getTracks()[0].stop();
       state.myCam = undefined;
@@ -44,6 +54,13 @@ const mediaSlice = createSlice({
       state.myMic?.getTracks()[0].stop();
       state.myMic = undefined;
     },
+    stopRecorderStream: (state) => {
+      state.recorderStream?.getTracks()[0].stop();
+      state.recorderStream = undefined;
+    },
+    stopRecorder: (state) => {
+      state.recorder?.stop();
+    },
   },
 });
 
@@ -53,8 +70,12 @@ export const {
   setCamStream,
   setScreenStream,
   setMicStream,
+  setRecorderStream,
+  setRecorder,
   stopMyCam,
   stopMyScreen,
   stopMyMic,
+  stopRecorderStream,
+  stopRecorder,
 } = actions;
 export default mediaReducer;

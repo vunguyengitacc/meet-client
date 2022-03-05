@@ -18,8 +18,8 @@ const useMeetItemStyle = makeStyles({
     alignItems: "center",
   },
   avatar: {
-    height: "200px !important",
-    width: "200px !important",
+    height: "100px !important",
+    width: "100px !important",
   },
   video: {
     maxWidth: "95%",

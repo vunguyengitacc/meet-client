@@ -1,7 +1,7 @@
-import { AppDispatch, RootState } from "app/reduxStore";
+import { AppDispatch } from "app/reduxStore";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setCamStream,
   setMicStream,
@@ -12,7 +12,6 @@ import {
 } from "./mediaSlice";
 
 const useMedia = () => {
-  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
   const dispatch = useDispatch<AppDispatch>();
   const [params, setParams] = useState<any>({
     encodings: [
@@ -71,6 +70,7 @@ const useMedia = () => {
         console.log(error.message);
       });
   };
+
   const getLocalMicStream = () => {
     navigator.mediaDevices
       .getUserMedia({

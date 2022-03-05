@@ -7,7 +7,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import useMeetItemStyle from "./style";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import ClearIcon from "@mui/icons-material/Clear";
 import Audio from "components/Audio";
 
 interface IProps {
