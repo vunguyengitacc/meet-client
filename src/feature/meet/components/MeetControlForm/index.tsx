@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "app/reduxStore";
 import { IRoom } from "model/Room";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateRoom } from "feature/meet/meetSlice";
+import { setIsOwnerRecorder, updateRoom } from "feature/meet/meetSlice";
 import CustomSwitch from "components/CustomUI/CustomSwitch";
 import useMeetControlFormStyle from "./style";
 import {
@@ -29,10 +29,6 @@ const MeetControlForm = () => {
       })
     );
   };
-
-  useEffect(() => {
-    console.log(recorderStream);
-  }, [recorderStream]);
 
   const recordHandler = async () => {
     try {
@@ -76,6 +72,7 @@ const MeetControlForm = () => {
       };
 
       mediaRecorder.start(200);
+      dispatch(setIsOwnerRecorder(true));
       dispatch(setRecorderStream(stream));
       dispatch(setRecorder(mediaRecorder));
     } catch (error) {
@@ -194,13 +191,26 @@ const MeetControlForm = () => {
               This meet will be recorded and sent to your mail
             </Typography>
           </Box>
-          <Button
-            variant={room.isRecording ? "contained" : "outlined"}
-            disableElevation
-            onClick={!recorder ? recordHandler : stopRecorderHandler}
-          >
-            {room.isRecording ? "STOP" : "RECORD"}
-          </Button>
+          {room.isRecording ? (
+            !recorder ? (
+              <Button color="error" variant="outlined">
+                You are not recorder
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                disableElevation
+                color="error"
+                onClick={stopRecorderHandler}
+              >
+                STOP
+              </Button>
+            )
+          ) : (
+            <Button variant="outlined" disableElevation onClick={recordHandler}>
+              RECORD
+            </Button>
+          )}
         </Box>
       </Box>
     </Box>

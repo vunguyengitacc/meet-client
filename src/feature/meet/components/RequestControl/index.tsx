@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, InputBase, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,8 +19,13 @@ interface IProps {
 
 const RequestControl: React.FC<IProps> = ({ control }) => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
+  const [filter, setFilter] = useState<string>("");
   const requests = useSelector((state: RootState) =>
-    requestsSelector.selectAll(state)
+    requestsSelector
+      .selectAll(state)
+      .filter((i) =>
+        i.user.fullname.toUpperCase().includes(filter.toUpperCase())
+      )
   );
   const dispatch = useDispatch<AppDispatch>();
   const style = useRequestControlStyle();
@@ -35,6 +40,10 @@ const RequestControl: React.FC<IProps> = ({ control }) => {
         ...payload,
       })
     );
+  };
+
+  const setFilterHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter(e.currentTarget.value);
   };
 
   return (
@@ -55,6 +64,7 @@ const RequestControl: React.FC<IProps> = ({ control }) => {
           startAdornment={
             <SearchIcon style={{ marginRight: "10px", color: "#dddddd" }} />
           }
+          onChange={setFilterHandler}
           fullWidth
           placeholder="Filter by user's name"
         />

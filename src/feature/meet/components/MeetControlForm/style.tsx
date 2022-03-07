@@ -10,6 +10,7 @@ const useMeetControlFormStyle = makeStyles({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "15px",
+    gap: "10px",
   },
 });
 

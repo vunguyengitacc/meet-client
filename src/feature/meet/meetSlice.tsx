@@ -101,6 +101,7 @@ interface MeetState {
   myRequest?: IRequest;
   requests: EntityState<IRequest>;
   pinItem?: string;
+  isRecorderOwner?: boolean;
 }
 
 const initialState: MeetState = {
@@ -147,6 +148,9 @@ const meetSlice = createSlice({
     ) => {
       if (state.myRequest?._id === payload.request?._id)
         state.joinCode = payload.joinCode;
+    },
+    setIsOwnerRecorder: (state, { payload }: PayloadAction<boolean>) => {
+      state.isRecorderOwner = payload;
     },
     addMember: (state, { payload }: PayloadAction<IMember>) => {
       membersAdapter.addOne(state.members, payload);
@@ -310,5 +314,6 @@ export const {
   setMyRequest,
   setJoinCodeStrict,
   setPinItem,
+  setIsOwnerRecorder,
 } = actions;
 export default meetReducer;
