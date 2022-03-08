@@ -3,17 +3,12 @@ import { RootState } from "app/reduxStore";
 import PasswordEditerForm from "feature/user/components/PasswordEditerForm";
 import UserInforEditerForm from "feature/user/components/UserInforEditerForm";
 import { IUser } from "model/User";
-import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import useUserInforStyle from "./style";
 import PersonIcon from "@mui/icons-material/Person";
 import AvatarEditerForm from "feature/user/components/AvatarEditerForm";
 
 const UserInforPage = () => {
-  const currentUser = useSelector(
-    (state: RootState) => state.auth.currentUser
-  ) as IUser;
-
   const style = useUserInforStyle();
 
   return (

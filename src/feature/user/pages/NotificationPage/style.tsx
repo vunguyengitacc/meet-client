@@ -3,10 +3,12 @@ import { makeStyles } from "@mui/styles";
 const useNotificationPageStyle = makeStyles({
   content: {
     boxSizing: "border-box",
-    padding: "20px 50px",
+    margin: "20px 50px",
     display: "flex",
     flexDirection: "column",
-    gap: "40px",
+    borderRadius: "10px",
+    overflow: "hidden",
+    boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 10px",
   },
   header: {
     margin: "20px 50px",

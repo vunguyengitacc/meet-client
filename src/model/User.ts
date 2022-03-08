@@ -1,3 +1,4 @@
+import { INotification } from "./Notification";
 import { IRoom } from "./Room";
 
 export interface IUser {
@@ -10,4 +11,5 @@ export interface IUser {
   phone: string;
   avatarURI: string;
   rooms?: IRoom[];
+  notifications?: INotification<any>[];
 }

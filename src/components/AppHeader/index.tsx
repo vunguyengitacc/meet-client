@@ -25,7 +25,7 @@ const AppHeader = () => {
         />
       </Box>
       <Box className={style.configField}>
-        <IconButton>
+        <IconButton onClick={() => navigator("/user/notification")}>
           <NotificationsIcon />
         </IconButton>
         <IconButton onClick={() => navigator("/user/profile")}>

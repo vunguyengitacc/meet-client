@@ -1,10 +1,23 @@
-import { Box, Typography } from "@mui/material";
-import React from "react";
+import { Box, Divider, Typography } from "@mui/material";
+import React, { useEffect } from "react";
 import useNotificationPageStyle from "./style";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "app/reduxStore";
+import { getMyNotification } from "feature/auth/authSlice";
+import { IUser } from "model/User";
+import NotificationItem from "feature/user/components/NotificationItem";
 
 const NotificationPage = () => {
+  const currentUser = useSelector(
+    (state: RootState) => state.auth.currentUser
+  ) as IUser;
   const style = useNotificationPageStyle();
+
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(getMyNotification());
+  }, []);
   return (
     <Box>
       <Box className={style.header}>
@@ -16,7 +29,14 @@ const NotificationPage = () => {
           <Typography>Notification to your account</Typography>
         </Box>
       </Box>
-      <Box className={style.content}></Box>
+      <Box className={style.content}>
+        {currentUser.notifications?.map((i, index) => (
+          <React.Fragment key={index}>
+            <NotificationItem notification={i} />
+            <Divider light />
+          </React.Fragment>
+        ))}
+      </Box>
     </Box>
   );
 };

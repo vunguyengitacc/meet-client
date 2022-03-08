@@ -1,4 +1,4 @@
-import { purple } from "@mui/material/colors";
+import { green, red } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
@@ -13,6 +13,9 @@ declare module "@mui/material/styles" {
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
     disable: true;
+  }
+  interface ButtonPropsVariantOverrides {
+    fade: true;
   }
 }
 
@@ -43,6 +46,22 @@ const theme = createTheme({
           borderRadius: "10px",
         },
       },
+      variants: [
+        {
+          props: { variant: "fade", color: "success" },
+          style: {
+            color: green[500],
+            backgroundColor: green[100],
+          },
+        },
+        {
+          props: { variant: "fade", color: "error" },
+          style: {
+            color: red[500],
+            backgroundColor: red[100],
+          },
+        },
+      ],
     },
     MuiChip: {
       styleOverrides: {

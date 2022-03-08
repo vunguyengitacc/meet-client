@@ -8,6 +8,14 @@ const userApi = {
   getMe(): Promise<IResponse<IUser>> {
     return axiosClient.get("/users/me");
   },
+  search(payload: {
+    term: string;
+    not: string[];
+  }): Promise<IResponse<IUser[]>> {
+    return axiosClient.get("/users/search", {
+      params: payload,
+    });
+  },
   update(payload: Partial<IUser>): Promise<IResponse<IUser>> {
     return axiosClient.put("/users/me", payload);
   },

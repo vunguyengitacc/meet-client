@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import authApi from "api/authApi";
+import notificationApi from "api/notificationApi";
 import roomApi from "api/roomApi";
 import userApi from "api/userApi";
 import { IChangePasswordParams } from "feature/user/components/PasswordEditerForm/form";
+import { INotification } from "model/Notification";
 import { IRoom } from "model/Room";
 import { IUser } from "model/User";
 import { ILoginParams } from "./pages/login/form";
@@ -30,9 +32,16 @@ export const getMe = createAsyncThunk("auth/getMe", async () => {
 
 export const getMyRoom = createAsyncThunk("auth/getMyRoom", async () => {
   const res = await roomApi.getMyRooms();
-  console.log(res);
   return res.data.rooms;
 });
+
+export const getMyNotification = createAsyncThunk(
+  "auth/getMyNotification",
+  async () => {
+    const res = await notificationApi.getAll();
+    return res.data.notifications;
+  }
+);
 
 export const changePassword = createAsyncThunk(
   "auth/changePass",
@@ -66,6 +75,14 @@ const authSlice = createSlice({
       state.isAuth = false;
       state.currentUser = null;
       localStorage.removeItem("access_token");
+    },
+    addNotification: (
+      state,
+      { payload }: PayloadAction<INotification<any>>
+    ) => {
+      let temp = state.currentUser;
+      temp?.notifications?.push(payload);
+      state.currentUser = temp;
     },
   },
   extraReducers: (builder) => {
@@ -118,6 +135,17 @@ const authSlice = createSlice({
         state.currentUser = temp;
       }
     );
+    builder.addCase(getMyNotification.rejected, (state) => {});
+    builder.addCase(getMyNotification.pending, (state) => {});
+    builder.addCase(
+      getMyNotification.fulfilled,
+      (state, { payload }: PayloadAction<INotification<any>[]>) => {
+        if (!state.currentUser) return;
+        let temp = state.currentUser;
+        temp.notifications = payload;
+        state.currentUser = temp;
+      }
+    );
     builder.addCase(changePassword.rejected, (state) => {});
     builder.addCase(changePassword.pending, (state) => {});
     builder.addCase(
@@ -139,6 +167,6 @@ const authSlice = createSlice({
 
 const { reducer: authRedecer, actions } = authSlice;
 
-export const { logout } = actions;
+export const { logout, addNotification } = actions;
 
 export default authRedecer;

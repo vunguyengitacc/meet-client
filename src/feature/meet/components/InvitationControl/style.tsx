@@ -14,9 +14,28 @@ const useInvitationControlStyle = makeStyles({
     alignItems: "center",
   },
   searchInput: {
-    padding: "10px",
+    flexGrow: 1,
+    padding: " 5px 10px",
     border: "2px solid #dddddd",
     borderRadius: "10px",
+  },
+  searchResults: {
+    maxHeight: "50vh",
+    overflowY: "scroll",
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  },
+  searchItem: {
+    padding: "10px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "transparent",
+    borderRadius: "5px",
+    "&:hover": {
+      backgroundColor: "#e5e5e5",
+    },
   },
 });
 

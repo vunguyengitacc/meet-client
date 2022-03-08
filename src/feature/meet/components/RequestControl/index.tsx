@@ -49,7 +49,7 @@ const RequestControl: React.FC<IProps> = ({ control }) => {
   return (
     <Box className={style.surface}>
       <Box className={style.headerField}>
-        <Typography variant="h6">Request to join</Typography>
+        <Typography variant="h6">Request</Typography>
         <SquareButton
           variant="contained"
           disableElevation
