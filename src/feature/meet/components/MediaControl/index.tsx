@@ -141,7 +141,7 @@ const MediaControl = () => {
         color="error"
         variant="contained"
       >
-        <PhoneEnabledIcon />
+        <PhoneEnabledIcon className={style.phoneOffIcon} />
       </Button>
     </Box>
   );

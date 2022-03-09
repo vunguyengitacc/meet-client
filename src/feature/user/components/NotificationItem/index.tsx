@@ -27,6 +27,7 @@ const NotificationItem: React.FC<IProps> = ({ notification }) => {
         <Typography variant="subtitle2">{notification.name}</Typography>
         {notification.type === "INVITATION" && (
           <NotificationInvitation
+            notificationId={notification._id}
             invitation={notification.content as IInvitation}
           />
         )}

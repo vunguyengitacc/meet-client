@@ -1,4 +1,4 @@
-import { green, red } from "@mui/material/colors";
+import { green, orange, red } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
@@ -15,7 +15,7 @@ declare module "@mui/material/Button" {
     disable: true;
   }
   interface ButtonPropsVariantOverrides {
-    fade: true;
+    blur: true;
   }
 }
 
@@ -48,17 +48,24 @@ const theme = createTheme({
       },
       variants: [
         {
-          props: { variant: "fade", color: "success" },
+          props: { variant: "blur", color: "success" },
           style: {
             color: green[500],
             backgroundColor: green[100],
           },
         },
         {
-          props: { variant: "fade", color: "error" },
+          props: { variant: "blur", color: "error" },
           style: {
             color: red[500],
             backgroundColor: red[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "warning" },
+          style: {
+            color: orange[500],
+            backgroundColor: orange[100],
           },
         },
       ],

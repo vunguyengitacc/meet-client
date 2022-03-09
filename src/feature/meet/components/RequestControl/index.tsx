@@ -116,10 +116,10 @@ const RequestControl: React.FC<IProps> = ({ control }) => {
         ))}
       </Box>
       <Box display="flex" gap="10px" justifyContent="flex-end">
-        <Button color="success" variant="contained" disableElevation>
+        <Button color="success" variant="blur" disableElevation>
           Accept All
         </Button>
-        <Button color="warning" variant="contained" disableElevation>
+        <Button color="warning" variant="blur" disableElevation>
           Reject All
         </Button>
       </Box>

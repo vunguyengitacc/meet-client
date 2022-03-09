@@ -46,10 +46,14 @@ const useSocket = () => {
       socketClient.on("message:new", (data: IMessage) => {
         dispatch(addMessage(data));
       });
-      socketClient.on("notification:new", (data: INotification<any>) => {
-        toast(`You have got an invitation`);
-        dispatch(addNotification(data));
-      });
+      socketClient.on(
+        "notification:new",
+        ({ notification }: { notification: INotification<any> }) => {
+          toast(`You have got an invitation`);
+          console.log(notification);
+          dispatch(addNotification(notification));
+        }
+      );
     })();
     return () => {
       socketClient.disconnect();

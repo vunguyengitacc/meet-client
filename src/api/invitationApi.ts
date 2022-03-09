@@ -11,10 +11,12 @@ const invitationApi = {
   ): Promise<IResponse<IInvitation>> {
     return axiosClient.post("/invitations", payload);
   },
-  answer(
-    payload: Pick<IInvitation, "_id" | "result">
-  ): Promise<IResponse<string>> {
-    return axiosClient.put(`/invitations/${payload._id}`, payload);
+  answer(payload: {
+    invitation: Pick<IInvitation, "_id" | "result">;
+    notificationId: string;
+  }): Promise<IResponse<string>> {
+    const { invitation } = payload;
+    return axiosClient.put(`/invitations/${invitation._id}`, payload);
   },
 };
 

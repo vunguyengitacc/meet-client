@@ -81,7 +81,14 @@ const authSlice = createSlice({
       { payload }: PayloadAction<INotification<any>>
     ) => {
       let temp = state.currentUser;
-      temp?.notifications?.push(payload);
+      if (!temp) return;
+      temp.notifications?.push(payload);
+      state.currentUser = temp;
+    },
+    removeNotification: (state, { payload }: PayloadAction<string>) => {
+      let temp = state.currentUser;
+      if (!temp) return;
+      temp.notifications = temp.notifications?.filter((i) => i._id != payload);
       state.currentUser = temp;
     },
   },
@@ -167,6 +174,6 @@ const authSlice = createSlice({
 
 const { reducer: authRedecer, actions } = authSlice;
 
-export const { logout, addNotification } = actions;
+export const { logout, addNotification, removeNotification } = actions;
 
 export default authRedecer;
