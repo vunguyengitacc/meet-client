@@ -18,8 +18,8 @@ const useMeetItemStyle = makeStyles({
     alignItems: "center",
   },
   avatar: {
-    height: "40% !important",
-    width: "auto !important",
+    height: "100px !important",
+    width: "100px !important",
   },
   video: {
     maxWidth: "95%",
@@ -32,6 +32,12 @@ const useMeetItemStyle = makeStyles({
   },
   floatingGroup: {
     position: "absolute",
+  },
+  floatingToolbar: {
+    backgroundColor: "#000000a3",
+    padding: "10px",
+    position: "absolute",
+    borderRadius: "20px",
   },
 });
 

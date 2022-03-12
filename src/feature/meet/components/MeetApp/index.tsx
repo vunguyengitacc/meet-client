@@ -25,6 +25,7 @@ interface IProps {
 const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
+  const pin = useSelector((state: RootState) => state.meet.pinItem);
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const requests = useSelector((state: RootState) =>
     requestsSelector.selectAll(state)
@@ -35,17 +36,38 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
   const [counter, setCounter] = useState<number>(members.length + 1);
   const [openModalInvitation, setOpenModalInvitation] =
     useState<boolean>(false);
+  const [isPin, setIsPin] = useState<boolean>(false);
   const [openModalRequest, setOpenModalRequest] = useState<boolean>(false);
 
   const style = useMeetAppStyle({
     counter: myScreen !== undefined ? counter + 1 : counter,
-    onPin: false,
+    onPin: isPin,
     isShowTask: typeDisplay !== 0,
   });
-
   useEffect(() => {
     setCounter(members.length + 1);
+    let flag =
+      members.filter(
+        (i) =>
+          i._id + "-cam" === pin ||
+          (i.screenStream && i._id + "-screen" === pin)
+      ).length > 0;
+    setIsPin(flag);
   }, [members]);
+
+  useEffect(() => {
+    if (me._id + "-cam" === pin || me._id + "-screen" === pin) {
+      setIsPin(true);
+      return;
+    }
+    let flag =
+      members.filter(
+        (i) =>
+          i._id + "-cam" === pin ||
+          (i.screenStream && i._id + "-screen" === pin)
+      ).length > 0;
+    setIsPin(flag);
+  }, [pin]);
 
   return (
     <Box className={style.surface}>
@@ -60,6 +82,13 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
               variant="filled"
               color={room.isPrivate ? "warning" : "info"}
             />
+            {room.isRecording && (
+              <Chip
+                label={<b>On recording...</b>}
+                variant="filled"
+                color="error"
+              />
+            )}
           </Box>
           <Box>
             <Box
@@ -128,25 +157,53 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
         </Box>
         <Box className={style.membersList}>
           {myScreen && (
-            <Box className={`${style.item} ${style.pinItem}`} key="me-main">
-              <MeetItem member={me} media={myScreen.getTracks()[0]} isMe />
+            <Box
+              className={`${style.item} ${
+                me._id + "-screen" === pin && style.pinItem
+              }`}
+              key="me-main"
+            >
+              <MeetItem
+                member={me}
+                media={myScreen.getTracks()[0]}
+                isMe
+                type="screen"
+              />
             </Box>
           )}
-          <Box className={style.item} key="me-screen">
+          <Box
+            className={`${style.item} ${
+              me._id + "-cam" === pin && style.pinItem
+            }`}
+            key="me-screen"
+          >
             {myCam === undefined ? (
-              <MeetItem member={me} isMe />
+              <MeetItem member={me} isMe type="cam" />
             ) : (
-              <MeetItem member={me} media={myCam.getTracks()[0]} isMe />
+              <MeetItem
+                member={me}
+                media={myCam.getTracks()[0]}
+                isMe
+                type="cam"
+              />
             )}
           </Box>
           {members.map((i) => (
             <React.Fragment key={i._id}>
-              <Box className={style.item}>
-                <MeetItem member={i} media={i.webcamStream} />
+              <Box
+                className={`${style.item} ${
+                  pin === i._id + "-cam" && style.pinItem
+                }`}
+              >
+                <MeetItem member={i} media={i.webcamStream} type="cam" />
               </Box>
               {i.screenStream && (
-                <Box className={style.item}>
-                  <MeetItem member={i} media={i.screenStream} />
+                <Box
+                  className={`${style.item} ${
+                    pin === i._id + "-screen" && style.pinItem
+                  }`}
+                >
+                  <MeetItem member={i} media={i.screenStream} type="screen" />
                 </Box>
               )}
             </React.Fragment>

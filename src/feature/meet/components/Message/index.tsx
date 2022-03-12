@@ -20,7 +20,7 @@ const Message: React.FC<IProps> = ({ message, isMe }) => {
           </Typography>
         </Box>
         <Box>
-          <Typography variant="subtitle2">
+          <Typography variant="subtitle2" style={{ fontWeight: 400 }}>
             {`${createAt.getHours()} : ${createAt.getMinutes()}`}
           </Typography>
         </Box>

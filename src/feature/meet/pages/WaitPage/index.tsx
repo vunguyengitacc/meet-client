@@ -1,6 +1,5 @@
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Typography } from "@mui/material";
-import memberApi from "api/memberApi";
 import { AppDispatch, RootState } from "app/reduxStore";
 import Video from "components/Video";
 import {
@@ -15,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useWaitPageStyle from "./style";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import MicIcon from "@mui/icons-material/Mic";
-import AppHeader from "feature/app/components/AppHeader";
+import AppHeader from "components/AppHeader";
 import requestApi from "api/requestApi";
 import { socketClient } from "app/socketClient";
 import { IRequest } from "model/Request";
@@ -24,9 +23,6 @@ import toast from "react-hot-toast";
 const WaitPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
-  const myRequest = useSelector(
-    (state: RootState) => state.meet.myRequest
-  ) as IRequest;
   const [isWait, setIsWait] = useState<boolean>(false);
   const myCam = useSelector((state: RootState) => state.media.myCam);
   let style = useWaitPageStyle({ onCam: true, onMic: false });
@@ -67,7 +63,7 @@ const WaitPage = () => {
 
   return (
     <Box>
-      <Box height="10vh" width="100%">
+      <Box height="70px" width="100%">
         <AppHeader />
       </Box>
       <Box className={style.surface}>

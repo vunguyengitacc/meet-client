@@ -4,7 +4,7 @@ const useRoomCreatorStyle = makeStyles({
   surface: {
     width: "100%",
     height: "100%",
-    paddingTop: "30%",
+    paddingTop: "40%",
     padding: "10%",
     boxSizing: "border-box",
     display: "flex",
@@ -19,10 +19,9 @@ const useRoomCreatorStyle = makeStyles({
   modal: {
     width: "600px",
     maxWidth: "80vw",
-    height: "600px",
     maxHeight: "80vh",
     margin: "auto",
-    marginTop: "10vh",
+    borderRadius: "15px !important",
   },
 });
 

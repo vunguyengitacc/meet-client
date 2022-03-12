@@ -1,4 +1,4 @@
-export const getDayOfWeek = (date: Date): string => {
+const getDayOfWeek = (date: Date): string => {
   switch (date.getDay()) {
     case 0:
       return "Monday";
@@ -21,7 +21,7 @@ export const getDayOfWeek = (date: Date): string => {
   }
 };
 
-export const getMonthString = (date: Date): string => {
+const getMonthName = (date: Date): string => {
   switch (date.getMonth()) {
     case 0:
       return "January";
@@ -51,3 +51,14 @@ export const getMonthString = (date: Date): string => {
       return "Error";
   }
 };
+
+enum DateValue {
+  SECOND = 1000,
+  MINUTE = 60 * 1000,
+  HOUR = 60 * 60 * 1000,
+  DAY = 24 * 60 * 60 * 1000,
+  WEEK = 7 * 24 * 60 * 60 * 1000,
+  MONTH = 40 * 24 * 60 * 60 * 1000,
+}
+
+export { getDayOfWeek, getMonthName, DateValue };

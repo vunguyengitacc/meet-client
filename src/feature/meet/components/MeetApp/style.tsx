@@ -41,7 +41,7 @@ const useMeetAppStyle = makeStyles({
       props.onPin,
       props.isShowTask
     )}, 1fr)`,
-    gridTemplateRows: "auto",
+    gridAutoRows: "1fr",
     height: "calc( 100% - 100px )",
     gridGap: "5px",
   }),
@@ -61,6 +61,7 @@ const useMeetAppStyle = makeStyles({
     width: "35%",
     height: "100%",
     margin: "5px",
+    overflowY: "scroll",
   }),
   inviteModal: {
     display: "flex",

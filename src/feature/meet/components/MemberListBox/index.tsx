@@ -14,20 +14,16 @@ interface IProps {
 }
 
 const MemberListBox: React.FC<IProps> = ({ control }) => {
+  const myScreen = useSelector((state: RootState) => state.media.myScreen);
   const members = useSelector((state: RootState) =>
     membersSelector.selectAll(state)
   );
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const [filter, setFilter] = useState<string>("");
-  const [openControlModal, setOpenControlModal] = useState<boolean>(false);
   const style = useMemberListBoxStyle();
 
   const setFilterHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter(e.currentTarget.value);
-  };
-
-  const closeModalHandler = () => {
-    setOpenControlModal(false);
   };
 
   return (
@@ -53,10 +49,19 @@ const MemberListBox: React.FC<IProps> = ({ control }) => {
         />
       </Box>
       <Box className={style.listField}>
+        {me.user?.fullname.includes(filter) && (
+          <React.Fragment key={me.joinSession}>
+            <MemberItem member={me} isMe />
+            {myScreen && <MemberItem member={me} isMe isScreen />}
+          </React.Fragment>
+        )}
         {members
           .filter((j) => j.user?.fullname.includes(filter))
           .map((i) => (
-            <MemberItem key={i._id} member={i} />
+            <React.Fragment key={i.joinSession}>
+              <MemberItem member={i} />
+              {i.screenStream && <MemberItem member={i} isScreen />}
+            </React.Fragment>
           ))}
       </Box>
     </Box>

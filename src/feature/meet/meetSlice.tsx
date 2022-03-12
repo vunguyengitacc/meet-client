@@ -3,7 +3,7 @@ import { createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import memberApi from "api/memberApi";
 import messageApi from "api/messageApi";
 import requestApi from "api/requestApi";
-import roomApi, { ICreateRoomResponse } from "api/roomApi";
+import roomApi, { IRoomResponse } from "api/roomApi";
 import { RootState } from "app/reduxStore";
 import { IMember } from "model/Member";
 import { IMessage } from "model/Message";
@@ -62,7 +62,7 @@ export const getOneRoom = createAsyncThunk(
   "room/getOne",
   async (payload: string) => {
     const { data } = await roomApi.getOne(payload);
-    return data.data;
+    return { room: data.result.room, joinCode: data.result.joinCode };
   }
 );
 
@@ -85,9 +85,17 @@ export const updateRoom = createAsyncThunk(
 export const exitRoom = createAsyncThunk(
   "room/exit",
   async (payload: IMember) => {
+    let res = await memberApi.delete(payload);
+    return res.data.rs;
+  }
+);
+
+export const finishRoom = createAsyncThunk(
+  "room/finishRoom",
+  async (payload: IMember) => {
     let res;
     if (payload.isAdmin) res = await roomApi.delete(payload.roomId);
-    else res = await memberApi.delete(payload);
+    else throw new Error("Unauthorized");
     return res.data.rs;
   }
 );
@@ -100,6 +108,8 @@ interface MeetState {
   messages: EntityState<IMessage>;
   myRequest?: IRequest;
   requests: EntityState<IRequest>;
+  pinItem?: string;
+  isRecorderOwner?: boolean;
 }
 
 const initialState: MeetState = {
@@ -133,12 +143,22 @@ const meetSlice = createSlice({
     setJoinCode: (state, { payload }: PayloadAction<string>) => {
       state.joinCode = payload;
     },
+    setPinItem: (state, { payload }: PayloadAction<string>) => {
+      if (state.pinItem === payload) {
+        state.pinItem = "";
+        return;
+      }
+      state.pinItem = payload;
+    },
     setJoinCodeStrict: (
       state,
       { payload }: PayloadAction<{ joinCode: string; request: IRequest }>
     ) => {
       if (state.myRequest?._id === payload.request?._id)
         state.joinCode = payload.joinCode;
+    },
+    setIsOwnerRecorder: (state, { payload }: PayloadAction<boolean>) => {
+      state.isRecorderOwner = payload;
     },
     addMember: (state, { payload }: PayloadAction<IMember>) => {
       membersAdapter.addOne(state.members, payload);
@@ -204,6 +224,8 @@ const meetSlice = createSlice({
         .getSelectors((state: MeetState) => state.members)
         .selectAll(state)
         .filter((i) => i.joinSession === payload.joinCode)[0];
+      if (member === undefined) return;
+      if (!state.pinItem) state.pinItem = member._id + "-screen";
       membersAdapter.updateOne(state.members, {
         id: member._id,
         changes: { screenStream: payload.stream },
@@ -215,8 +237,11 @@ const meetSlice = createSlice({
     builder.addCase(getOneRoom.pending, (state) => {});
     builder.addCase(
       getOneRoom.fulfilled,
-      (state, { payload }: PayloadAction<IRoom>) => {
-        state.room = payload;
+      (state, { payload }: PayloadAction<IRoomResponse>) => {
+        const { room, joinCode } = payload;
+        state.room = room;
+        if (!joinCode) return;
+        state.joinCode = joinCode;
       }
     );
     builder.addCase(getMember.rejected, (state) => {});
@@ -249,9 +274,9 @@ const meetSlice = createSlice({
     builder.addCase(createRoom.pending, (state) => {});
     builder.addCase(
       createRoom.fulfilled,
-      (state, { payload }: PayloadAction<ICreateRoomResponse>) => {
+      (state, { payload }: PayloadAction<IRoomResponse>) => {
         state.room = payload.room;
-        state.joinCode = payload.joinCode;
+        state.joinCode = payload.joinCode as string;
       }
     );
     builder.addCase(exitRoom.rejected, (state) => {});
@@ -261,7 +286,14 @@ const meetSlice = createSlice({
       state.joinCode = "";
       state.members = membersAdapter.getInitialState();
       state.messages = messagesAdapter.getInitialState();
-      toast(`The meet is finished`);
+    });
+    builder.addCase(finishRoom.rejected, (state) => {});
+    builder.addCase(finishRoom.pending, (state) => {});
+    builder.addCase(finishRoom.fulfilled, (state) => {
+      state.me = undefined;
+      state.joinCode = "";
+      state.members = membersAdapter.getInitialState();
+      state.messages = messagesAdapter.getInitialState();
     });
     builder.addCase(updateRoom.rejected, (state) => {});
     builder.addCase(updateRoom.pending, (state) => {});
@@ -297,5 +329,7 @@ export const {
   normalUpdateRoom,
   setMyRequest,
   setJoinCodeStrict,
+  setPinItem,
+  setIsOwnerRecorder,
 } = actions;
 export default meetReducer;

@@ -7,7 +7,7 @@ const useAppFeatureStyle = makeStyles({
   },
   header: {
     width: "100%",
-    height: "10vh",
+    height: "70px",
     position: "fixed",
   },
   body: {

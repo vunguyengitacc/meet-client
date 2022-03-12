@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "app/reduxStore";
 import { createRoom } from "feature/meet/meetSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import RoomCreatorModal from "../RoomCreatorModal";
 
 const RoomCreator = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -87,24 +88,23 @@ const RoomCreator = () => {
           <MenuItem
             className={style.menuCreatorItem}
             onClick={() => {
-              handleClose();
-              createRoomHandler();
-            }}
-          >
-            <BoltIcon />
-            Create a meet right now
-          </MenuItem>
-
-          <Divider />
-          <MenuItem
-            className={style.menuCreatorItem}
-            onClick={() => {
               handleOpenModal();
               handleClose();
             }}
           >
             <EventNoteIcon />
             Create and use later
+          </MenuItem>
+          <Divider />
+          <MenuItem
+            className={style.menuCreatorItem}
+            onClick={() => {
+              handleClose();
+              createRoomHandler();
+            }}
+          >
+            <BoltIcon />
+            Create a meet right now
           </MenuItem>
         </Menu>
         <Box display="flex" gap={1}>
@@ -119,14 +119,11 @@ const RoomCreator = () => {
         </Box>
       </Box>
       <Modal open={openModal} onClose={handleCloseModal}>
-        <Paper className={style.modal}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Paper>
+        <Box display="flex" width="100vw" height="100vh">
+          <Paper className={style.modal}>
+            <RoomCreatorModal control={setOpenModal} />
+          </Paper>
+        </Box>
       </Modal>
     </Box>
   );

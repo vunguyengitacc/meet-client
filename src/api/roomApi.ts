@@ -1,19 +1,21 @@
 import { IResponse } from "model/Common";
 import { IRoom } from "model/Room";
-import { IUser } from "model/User";
 import axiosClient from "./axiosClient";
 
-export interface ICreateRoomResponse {
+export interface IRoomResponse {
   room: IRoom;
-  joinCode: string;
+  joinCode?: string;
 }
 
 const roomApi = {
-  getOne(payload: string): Promise<IResponse<IRoom>> {
+  getOne(payload: string): Promise<IResponse<IRoomResponse>> {
     return axiosClient.get(`/rooms/${payload}`);
   },
-  create(payload?: Partial<IRoom>): Promise<IResponse<ICreateRoomResponse>> {
+  create(payload?: Partial<IRoom>): Promise<IResponse<IRoomResponse>> {
     return axiosClient.post("/rooms", payload);
+  },
+  getMyRooms(): Promise<IResponse<IRoom[]>> {
+    return axiosClient.get("/rooms");
   },
   update(payload: {
     room: Partial<IRoom>;

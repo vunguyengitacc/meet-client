@@ -1,9 +1,10 @@
-import { AppDispatch, RootState } from "app/reduxStore";
+import { AppDispatch } from "app/reduxStore";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setCamStream,
+  setMicStream,
   setScreenStream,
   stopMyCam,
   stopMyMic,
@@ -11,7 +12,6 @@ import {
 } from "./mediaSlice";
 
 const useMedia = () => {
-  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
   const dispatch = useDispatch<AppDispatch>();
   const [params, setParams] = useState<any>({
     encodings: [
@@ -39,11 +39,25 @@ const useMedia = () => {
   const camStreamSuccess = (stream: MediaStream) => {
     dispatch(setCamStream(stream));
     const track = stream.getVideoTracks()[0];
+    track.onended = () => {
+      stopCam();
+    };
     setParams({ track, ...params });
   };
   const screenStreamSuccess = (stream: MediaStream) => {
     dispatch(setScreenStream(stream));
     const track = stream.getVideoTracks()[0];
+    track.onended = () => {
+      stopScreen();
+    };
+    setParams({ track, ...params });
+  };
+  const micStreamSuccess = (stream: MediaStream) => {
+    dispatch(setMicStream(stream));
+    const track = stream.getAudioTracks()[0];
+    track.onended = () => {
+      stopMic();
+    };
     setParams({ track, ...params });
   };
 
@@ -65,12 +79,13 @@ const useMedia = () => {
         console.log(error.message);
       });
   };
+
   const getLocalMicStream = () => {
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
       })
-      .then(camStreamSuccess)
+      .then(micStreamSuccess)
       .catch((error) => {
         toast.error(error.message);
       });

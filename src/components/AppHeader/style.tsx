@@ -10,12 +10,18 @@ const useAppHeaderStyle = makeStyles({
   },
   logoField: {
     paddingLeft: "5%",
-    height: "100%",
+    height: "80%",
     boxSizing: "border-box",
+  },
+  logo: {
+    width: "100%",
+    height: "100%",
+    cursor: "pointer",
   },
   configField: {
     display: "flex",
     alignItems: "center",
+    gap: "20px",
   },
   menuInforField: {
     boxSizing: "border-box",

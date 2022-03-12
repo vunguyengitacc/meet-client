@@ -1,14 +1,21 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { AppDispatch, RootState } from "app/reduxStore";
 import { IRoom } from "model/Room";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateRoom } from "feature/meet/meetSlice";
-import CustomSwitch from "components/CustomSwitch";
+import { setIsOwnerRecorder, updateRoom } from "feature/meet/meetSlice";
+import CustomSwitch from "components/CustomUI/CustomSwitch";
 import useMeetControlFormStyle from "./style";
+import {
+  setRecorder,
+  setRecorderStream,
+  stopRecorder,
+  stopRecorderStream,
+} from "hooks/mediaSlice";
 
 const MeetControlForm = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
+  const { recorder } = useSelector((state: RootState) => state.media);
   const dispatch = useDispatch<AppDispatch>();
   const style = useMeetControlFormStyle();
 
@@ -20,6 +27,62 @@ const MeetControlForm = () => {
       })
     );
   };
+
+  const recordHandler = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+      updateHandler(
+        { _id: room._id, isRecording: true },
+        "The recorder is starting!"
+      );
+      let recordedChunks: BlobPart[] = [];
+
+      const mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = function (e) {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = function () {
+        updateHandler(
+          { _id: room._id, isRecording: false },
+          "The recorder is stopped!"
+        );
+        dispatch(stopRecorderStream());
+        const blob = new Blob(recordedChunks, {
+          type: "video/webm",
+        });
+        let downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = `${
+          room.accessCode
+        }_${new Date().toString()}.webm`;
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        recordedChunks = [];
+        dispatch(setRecorder(undefined));
+      };
+
+      mediaRecorder.start(200);
+      dispatch(setIsOwnerRecorder(true));
+      dispatch(setRecorderStream(stream));
+      dispatch(setRecorder(mediaRecorder));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const stopRecorderHandler = () => {
+    dispatch(stopRecorder());
+  };
+
   return (
     <Box className={style.surface}>
       <Box padding="10px">
@@ -120,9 +183,37 @@ const MeetControlForm = () => {
             }
           />
         </Box>
+        <Box className={style.controlItemField}>
+          <Box>
+            <Typography>Record this meet</Typography>
+            <Typography variant="subtitle1">
+              This meet will be recorded and sent to your mail
+            </Typography>
+          </Box>
+          {room.isRecording ? (
+            !recorder ? (
+              <Button color="error" variant="outlined">
+                You are not recorder
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                disableElevation
+                color="error"
+                onClick={stopRecorderHandler}
+              >
+                STOP
+              </Button>
+            )
+          ) : (
+            <Button variant="outlined" disableElevation onClick={recordHandler}>
+              RECORD
+            </Button>
+          )}
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export default MeetControlForm;
+export default React.memo(MeetControlForm);

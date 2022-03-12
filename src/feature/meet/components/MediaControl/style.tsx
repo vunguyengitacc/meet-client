@@ -16,6 +16,12 @@ const useMediaControlStyle = makeStyles({
     width: "40px",
     height: "40px",
   },
+  phoneOffIcon: {
+    transform: "rotate(180deg)",
+  },
+  menuItem: {
+    padding: "20px 50px !important",
+  },
 });
 
 export default useMediaControlStyle;

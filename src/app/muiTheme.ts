@@ -1,4 +1,4 @@
-import { purple } from "@mui/material/colors";
+import { green, orange, red } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
@@ -13,6 +13,15 @@ declare module "@mui/material/styles" {
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
     disable: true;
+  }
+  interface ButtonPropsVariantOverrides {
+    blur: true;
+  }
+}
+
+declare module "@mui/material/Chip" {
+  interface ChipPropsVariantOverrides {
+    blur: true;
   }
 }
 
@@ -43,6 +52,29 @@ const theme = createTheme({
           borderRadius: "10px",
         },
       },
+      variants: [
+        {
+          props: { variant: "blur", color: "success" },
+          style: {
+            color: green[500],
+            backgroundColor: green[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "error" },
+          style: {
+            color: red[500],
+            backgroundColor: red[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "warning" },
+          style: {
+            color: orange[500],
+            backgroundColor: orange[100],
+          },
+        },
+      ],
     },
     MuiChip: {
       styleOverrides: {
@@ -50,6 +82,29 @@ const theme = createTheme({
           borderRadius: "10px",
         },
       },
+      variants: [
+        {
+          props: { variant: "blur", color: "success" },
+          style: {
+            color: green[500],
+            backgroundColor: green[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "error" },
+          style: {
+            color: red[500],
+            backgroundColor: red[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "warning" },
+          style: {
+            color: orange[500],
+            backgroundColor: orange[100],
+          },
+        },
+      ],
     },
   },
 });

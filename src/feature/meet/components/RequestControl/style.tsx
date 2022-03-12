@@ -14,7 +14,7 @@ const useRequestControlStyle = makeStyles({
     alignItems: "center",
   },
   searchInput: {
-    padding: "10px",
+    padding: "5px 10px",
     border: "2px solid #dddddd",
     borderRadius: "10px",
   },

@@ -10,5 +10,7 @@ export interface IRoom {
   isAllowShareScreen: boolean;
   isAllowShareWebcam: boolean;
   isAllowShareMicro: boolean;
-  joinRequest: string[];
+  startAt?: Date;
+  finishAt?: Date;
+  remindType?: number;
 }
