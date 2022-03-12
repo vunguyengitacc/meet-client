@@ -15,9 +15,7 @@ import {
 
 const MeetControlForm = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
-  const { recorderStream, recorder } = useSelector(
-    (state: RootState) => state.media
-  );
+  const { recorder } = useSelector((state: RootState) => state.media);
   const dispatch = useDispatch<AppDispatch>();
   const style = useMeetControlFormStyle();
 
@@ -59,10 +57,11 @@ const MeetControlForm = () => {
         const blob = new Blob(recordedChunks, {
           type: "video/webm",
         });
-        let filename = window.prompt("Enter file name"),
-          downloadLink = document.createElement("a");
+        let downloadLink = document.createElement("a");
         downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.download = `${filename}.webm`;
+        downloadLink.download = `${
+          room.accessCode
+        }_${new Date().toString()}.webm`;
 
         document.body.appendChild(downloadLink);
         downloadLink.click();

@@ -18,10 +18,10 @@ const MemberItem: React.FC<IProps> = ({ member, isMe, isScreen }) => {
         <Box height="50px" display="flex" alignItems="center" gap="10px">
           <Avatar className={style.avatar} src={member.user?.avatarURI} />
           <Box display="flex" gap="10px" alignItems="center">
-            <Typography variant="h6">
+            <Typography variant="subtitle1" style={{ fontWeight: 400 }}>
               {member.user?.fullname} {isMe && "(Me)"}
             </Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle2">
               {isScreen && "(Screen sharing)"}
             </Typography>
           </Box>

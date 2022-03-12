@@ -85,9 +85,17 @@ export const updateRoom = createAsyncThunk(
 export const exitRoom = createAsyncThunk(
   "room/exit",
   async (payload: IMember) => {
+    let res = await memberApi.delete(payload);
+    return res.data.rs;
+  }
+);
+
+export const finishRoom = createAsyncThunk(
+  "room/finishRoom",
+  async (payload: IMember) => {
     let res;
     if (payload.isAdmin) res = await roomApi.delete(payload.roomId);
-    else res = await memberApi.delete(payload);
+    else throw new Error("Unauthorized");
     return res.data.rs;
   }
 );
@@ -274,6 +282,14 @@ const meetSlice = createSlice({
     builder.addCase(exitRoom.rejected, (state) => {});
     builder.addCase(exitRoom.pending, (state) => {});
     builder.addCase(exitRoom.fulfilled, (state) => {
+      state.me = undefined;
+      state.joinCode = "";
+      state.members = membersAdapter.getInitialState();
+      state.messages = messagesAdapter.getInitialState();
+    });
+    builder.addCase(finishRoom.rejected, (state) => {});
+    builder.addCase(finishRoom.pending, (state) => {});
+    builder.addCase(finishRoom.fulfilled, (state) => {
       state.me = undefined;
       state.joinCode = "";
       state.members = membersAdapter.getInitialState();

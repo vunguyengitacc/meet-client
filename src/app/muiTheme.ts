@@ -19,6 +19,12 @@ declare module "@mui/material/Button" {
   }
 }
 
+declare module "@mui/material/Chip" {
+  interface ChipPropsVariantOverrides {
+    blur: true;
+  }
+}
+
 const theme = createTheme({
   typography: {
     subtitle1: {
@@ -76,6 +82,29 @@ const theme = createTheme({
           borderRadius: "10px",
         },
       },
+      variants: [
+        {
+          props: { variant: "blur", color: "success" },
+          style: {
+            color: green[500],
+            backgroundColor: green[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "error" },
+          style: {
+            color: red[500],
+            backgroundColor: red[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "warning" },
+          style: {
+            color: orange[500],
+            backgroundColor: orange[100],
+          },
+        },
+      ],
     },
   },
 });

@@ -23,10 +23,6 @@ import toast from "react-hot-toast";
 const WaitPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
-  const joinCode = useSelector((state: RootState) => state.meet.joinCode);
-  const myRequest = useSelector(
-    (state: RootState) => state.meet.myRequest
-  ) as IRequest;
   const [isWait, setIsWait] = useState<boolean>(false);
   const myCam = useSelector((state: RootState) => state.media.myCam);
   let style = useWaitPageStyle({ onCam: true, onMic: false });
@@ -54,7 +50,6 @@ const WaitPage = () => {
   const handleJoin = async () => {
     try {
       setIsWait(true);
-      console.log(joinCode);
       const rs = await requestApi.join(room);
       if (rs.data.joinCode !== undefined) {
         dispatch(setJoinCode(rs.data.joinCode));

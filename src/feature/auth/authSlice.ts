@@ -84,6 +84,7 @@ const authSlice = createSlice({
       if (!temp) return;
       temp.notifications?.push(payload);
       state.currentUser = temp;
+      console.log(temp.notifications?.length);
     },
     removeNotification: (state, { payload }: PayloadAction<string>) => {
       let temp = state.currentUser;

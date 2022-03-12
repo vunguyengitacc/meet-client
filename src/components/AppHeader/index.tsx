@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Badge, Box } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { RootState } from "app/reduxStore";
 import React from "react";
@@ -26,7 +26,12 @@ const AppHeader = () => {
       </Box>
       <Box className={style.configField}>
         <IconButton onClick={() => navigator("/user/notification")}>
-          <NotificationsIcon />
+          <Badge
+            color="error"
+            badgeContent={currentUser?.notifications?.length}
+          >
+            <NotificationsIcon />
+          </Badge>
         </IconButton>
         <IconButton onClick={() => navigator("/user/profile")}>
           <Avatar src={currentUser?.avatarURI} />

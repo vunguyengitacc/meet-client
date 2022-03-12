@@ -39,16 +39,25 @@ const useMedia = () => {
   const camStreamSuccess = (stream: MediaStream) => {
     dispatch(setCamStream(stream));
     const track = stream.getVideoTracks()[0];
+    track.onended = () => {
+      stopCam();
+    };
     setParams({ track, ...params });
   };
   const screenStreamSuccess = (stream: MediaStream) => {
     dispatch(setScreenStream(stream));
     const track = stream.getVideoTracks()[0];
+    track.onended = () => {
+      stopScreen();
+    };
     setParams({ track, ...params });
   };
   const micStreamSuccess = (stream: MediaStream) => {
     dispatch(setMicStream(stream));
     const track = stream.getAudioTracks()[0];
+    track.onended = () => {
+      stopMic();
+    };
     setParams({ track, ...params });
   };
 

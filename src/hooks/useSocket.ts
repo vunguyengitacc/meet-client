@@ -15,6 +15,7 @@ import { IRoom } from "model/Room";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { stopRecorder } from "./mediaSlice";
 
 const useSocket = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,6 +30,7 @@ const useSocket = () => {
       });
       socketClient.on("room:finish", () => {
         dispatch(quitRoom());
+        dispatch(stopRecorder());
       });
       socketClient.on("room:member-join", (data: IMember) => {
         dispatch(addMember(data));
@@ -50,7 +52,6 @@ const useSocket = () => {
         "notification:new",
         ({ notification }: { notification: INotification<any> }) => {
           toast(`You have got an invitation`);
-          console.log(notification);
           dispatch(addNotification(notification));
         }
       );
