@@ -73,7 +73,10 @@ const useMedia = () => {
   };
   const getLocalScreenStream = () => {
     navigator.mediaDevices
-      .getDisplayMedia({})
+      .getDisplayMedia({
+        audio: true,
+        video: true,
+      })
       .then(screenStreamSuccess)
       .catch((error) => {
         console.log(error.message);
