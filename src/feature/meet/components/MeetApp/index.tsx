@@ -16,6 +16,7 @@ import InvitationControl from "../InvitationControl";
 import RequestControl from "../RequestControl";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import WhiteBoardControl from "../WhiteBoardControl";
 
 interface IProps {
   typeDisplay: number;
@@ -224,6 +225,11 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
       {typeDisplay === 3 && (
         <Paper className={style.taskField}>
           <AdminControl control={setType} />
+        </Paper>
+      )}
+      {typeDisplay === 4 && (
+        <Paper className={style.taskField}>
+          <WhiteBoardControl control={setType} />
         </Paper>
       )}
     </Box>

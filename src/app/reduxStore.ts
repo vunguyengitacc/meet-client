@@ -1,7 +1,7 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import authRedecer from "feature/auth/authSlice";
 import meetReducer from "feature/meet/meetSlice";
-import mediaReducer from "hooks/mediaSlice";
+import mediaReducer from "hooks/slices/mediaSlice";
 
 const rootReducer = {
   auth: authRedecer,

@@ -9,7 +9,7 @@ import {
   stopMyCam,
   stopMyMic,
   stopMyScreen,
-} from "./mediaSlice";
+} from "./slices/mediaSlice";
 
 const useMedia = () => {
   const dispatch = useDispatch<AppDispatch>();

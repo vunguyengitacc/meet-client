@@ -15,7 +15,7 @@ import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
 import { IRoom } from "model/Room";
 import toast from "react-hot-toast";
-import { stopRecorder } from "hooks/mediaSlice";
+import { stopRecorder } from "hooks/slices/mediaSlice";
 import theme from "app/muiTheme";
 import SquareButton from "components/CustomUI/SquareButton";
 

@@ -1,39 +1,22 @@
 import { makeStyles } from "@mui/styles";
-import { DrawType } from "utilities/drawUtil";
-
-interface IProps {
-  action: DrawType;
-}
-
-const getCursorType = (action: DrawType) => {
-  switch (action) {
-    case DrawType.PEN:
-      return "url( https://ssl.gstatic.com/inputtools/images/pencil.png ), auto";
-    case DrawType.TEXT:
-      return "text";
-    case DrawType.RECTANGLE:
-    case DrawType.CIRCLE:
-    case DrawType.LINE:
-      return "crosshair";
-    default:
-      return "default";
-  }
-};
 
 const useDrawToolStyle = makeStyles({
-  drawBox: {},
-  canvas: (props: IProps) => ({
-    backgroundColor: "white",
-    cursor: getCursorType(props.action),
-  }),
-  floatingTextArea: {
+  surface: {
     position: "fixed",
-    backgroundColor: "transparent",
-    font: "24px sans-serif",
-    border: "none",
-    outline: "none",
-    resize: "none",
-    padding: "0",
+    marginTop: "100px",
+    marginLeft: "20px",
+    display: "flex",
+    gap: 10,
+    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+    padding: "5px",
+    flexDirection: "column",
+    borderRadius: "10px",
+    backgroundColor: "white",
+    opacity: "0.89",
+  },
+  menu: {
+    padding: "10px",
+    backgroundColor: "white",
   },
 });
 

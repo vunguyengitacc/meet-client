@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import DrawTool from "feature/white-board/components/DrawTool";
+import DrawBox from "feature/white-board/components/DrawBox";
 import HeaderDrawTool from "feature/white-board/components/HeaderDrawTool";
 import React from "react";
 import useWhiteBoardPageStyle from "./style";
@@ -12,7 +12,7 @@ const WhiteBoardDetailPage = () => {
         <HeaderDrawTool />
       </Box>
       <Box>
-        <DrawTool />
+        <DrawBox />
       </Box>
     </Box>
   );

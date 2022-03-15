@@ -6,6 +6,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
 import MediaControl from "../MediaControl";
 import useTime from "hooks/useTime";
+import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 
 interface IProps {
   setType: (value: number) => void;
@@ -42,6 +43,9 @@ const TaskBar: React.FC<IProps> = ({ setType, currentType }) => {
         </IconButton>
         <IconButton onClick={() => controlType(2)} className={style.fadeBgBtn}>
           <MessageIcon />
+        </IconButton>
+        <IconButton onClick={() => controlType(4)} className={style.fadeBgBtn}>
+          <DashboardCustomizeIcon />
         </IconButton>
         <IconButton onClick={() => controlType(3)} className={style.fadeBgBtn}>
           <SettingsIcon />
