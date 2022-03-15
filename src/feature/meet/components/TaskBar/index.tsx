@@ -23,16 +23,20 @@ const TaskBar: React.FC<IProps> = ({ setType, currentType }) => {
 
   return (
     <Box className={style.surface}>
-      <Chip
-        label={<Typography>{date.toLocaleDateString()}</Typography>}
-        variant="filled"
-        color="primary"
-      />
-
-      <Box className={style.groupBtn}>
-        <MediaControl />
+      <Box sx={{ display: { xs: "none", md: "block" } }}>
+        <Chip
+          label={<Typography>{date.toLocaleDateString()}</Typography>}
+          variant="filled"
+          color="primary"
+        />
       </Box>
       <Box className={style.groupBtn}>
+        <MediaControl setType={controlType} />
+      </Box>
+      <Box
+        className={style.groupBtn}
+        sx={{ display: { xs: "none", md: "block" } }}
+      >
         <IconButton onClick={() => controlType(1)} className={style.fadeBgBtn}>
           <PersonIcon />
         </IconButton>

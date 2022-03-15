@@ -14,6 +14,7 @@ import messageApi from "api/messageApi";
 import MessageBox from "../MessageBox";
 import { updateRoom } from "feature/meet/meetSlice";
 import CustomSwitch from "components/CustomUI/CustomSwitch";
+import SquareButton from "components/CustomUI/SquareButton";
 
 interface IProps {
   control: (value: number) => void;
@@ -100,9 +101,9 @@ const ChatBox: React.FC<IProps> = ({ control }) => {
             name="content"
             hideError
           />
-          <Button variant="contained" disableElevation type="submit">
+          <SquareButton disableElevation type="submit">
             <SendIcon />
-          </Button>
+          </SquareButton>
         </form>
       )}
     </Box>

@@ -34,7 +34,6 @@ const DrawTool = () => {
       context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);        
       elements.forEach(element => {
         if (onWriting && currentEle?.id === element.id) {
-          console.log('alo');
           return;
         }
         drawElement(roughCanvas, context, element);

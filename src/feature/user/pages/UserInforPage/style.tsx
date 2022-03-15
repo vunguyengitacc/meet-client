@@ -7,7 +7,7 @@ const useUserInforStyle = makeStyles({
     overflowY: "scroll",
   },
   header: {
-    margin: "20px 50px",
+    margin: "20px",
     display: "flex",
     alignItems: "center",
     boxSizing: "border-box",
@@ -46,7 +46,7 @@ const useUserInforStyle = makeStyles({
   },
   content: {
     boxSizing: "border-box",
-    padding: "20px 50px",
+    padding: "20px",
     display: "flex",
     flexDirection: "column",
     gap: "40px",

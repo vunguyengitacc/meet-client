@@ -107,7 +107,7 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
                 />
               </Box>
               {me.isAdmin && (
-                <Box display="flex" gap="10px">
+                <Box sx={{ display: { xs: "none", sm: "flex" } }} gap="10px">
                   {room.isPrivate && (
                     <>
                       <Badge badgeContent={requests.length} color="error">
