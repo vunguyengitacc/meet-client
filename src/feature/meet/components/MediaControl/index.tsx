@@ -230,6 +230,12 @@ const MediaControl: React.FC<IProps> = ({ setType }) => {
         </MenuItem>
         <MenuItem
           className={style.menuItem}
+          onClick={() => openToolBoxHandler(4)}
+        >
+          White board
+        </MenuItem>
+        <MenuItem
+          className={style.menuItem}
           onClick={() => openToolBoxHandler(3)}
         >
           Settings

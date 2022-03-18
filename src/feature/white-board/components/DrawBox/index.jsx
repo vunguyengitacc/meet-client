@@ -2,39 +2,38 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DrawType } from "utilities/drawUtil";
 import rough from "roughjs/bundled/rough.esm";
 import useDrawBoxStyle from "./style";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import DrawTool from "../DrawTool";
 import getStroke from "perfect-freehand";
-import { useParams } from "react-router-dom";
 import whiteBoardApi from "api/whiteBoardApi";
 import DrawControl from "../DrawControl";
 import toast from "react-hot-toast";
 import useHistory from "hooks/useHistory";
+import { DrawControl as DrawControlType } from "utilities/drawUtil";
+import { useSelector } from "react-redux";
 
-const DrawBox = () => {
+const DrawBox = ({ board }) => {
+  const currentUser = useSelector((state) => state.auth.currentUser);
   const [action, setAction] = useState(DrawType.NONE);
   const [mouseDown, setMouseDown] = useState(false);
   const [onWriting, setOnWriting] = useState(false);
-  const [elements, setElements] = useState([]);
-  const [lastSave, setLastSave] = useState([]);
+  const [elements, setElements] = useState(board.data);
+  const [lastSave, setLastSave] = useState(board.data);
   const [currentEle, setCurrentEle] = useState(null);
+  const [color, setColor] = useState("red");
 
-  const { setState, undo, redo, setRepository } = useHistory();
+  useEffect(() => {
+    setElements(board.data);
+  }, [board]);
+
+  useEffect(() => {
+    if (!mouseDown) whiteBoardApi.updateOne({ ...board, data: elements });
+  }, [mouseDown]);
+
+  const { setState, undo, redo } = useHistory([board.data]);
   const canvasRef = useRef(null);
   const textAreaRef = useRef(null);
   const style = useDrawBoxStyle({ action });
-  const { id } = useParams();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await whiteBoardApi.getById(id);
-        setElements(data.whiteBoard.data);
-        setLastSave(data.whiteBoard.data);
-        setRepository([data.whiteBoard.data]);
-      } catch (error) {}
-    })();
-  }, []);
 
   useEffect(() => {
     if (action === DrawType.TEXT && currentEle) {
@@ -65,24 +64,30 @@ const DrawBox = () => {
     switch (action) {
       case DrawType.RECTANGLE:
         generator = rough.generator();
-        roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1);
+        roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, {
+          stroke: color,
+        });
         return { id, x1, y1, x2, y2, roughElement, type: action };
       case DrawType.CIRCLE:
         generator = rough.generator();
         let coreX = (x1 + x2) / 2;
         let coreY = (y1 + y2) / 2;
         let radius = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-        roughElement = generator.circle(coreX, coreY, radius);
+        roughElement = generator.circle(coreX, coreY, radius, {
+          stroke: color,
+        });
         return { id, x1, y1, x2, y2, roughElement, type: action };
       case DrawType.LINE:
         generator = rough.generator();
-        roughElement = generator.line(x1, y1, x2, y2);
+        roughElement = generator.line(x1, y1, x2, y2, {
+          stroke: color,
+        });
         return { id, x1, y1, x2, y2, roughElement, type: action };
       case DrawType.PEN:
-        return { id, type: action, points: [{ x: x1, y: y1 }] };
+        return { id, type: action, color, points: [{ x: x1, y: y1 }] };
       case DrawType.TEXT:
         setOnWriting(true);
-        return { id, x1, y1, x2, y2, text: "", type: action };
+        return { id, x1, y1, x2, y2, text: "", type: action, color };
     }
   };
   const updateElement = (id, x1, y1, x2, y2, options) => {
@@ -204,7 +209,7 @@ const DrawBox = () => {
   const onSave = async () => {
     try {
       const { data } = await whiteBoardApi.updateOne({
-        _id: id,
+        _id: board._id,
         data: elements,
       });
       toast.success("Success");
@@ -216,21 +221,27 @@ const DrawBox = () => {
 
   const onReset = () => {
     setElements(lastSave);
+    whiteBoardApi.updateOne({ ...board, data: lastSave });
   };
 
   const onUndo = () => {
     const newState = undo();
     newState && setElements(newState);
+    whiteBoardApi.updateOne({ ...board, data: newState });
   };
 
   const onRedo = () => {
     const newState = redo();
     newState && setElements(newState);
+    whiteBoardApi.updateOne({ ...board, data: newState });
   };
 
   return (
     <Box className={style.drawBox}>
-      <DrawTool action={action} setAction={setAction} />
+      {(board.type === DrawControlType.EDIT ||
+        currentUser._id === board.userId) && (
+        <DrawTool action={action} setAction={setAction} />
+      )}
       {action === DrawType.TEXT && currentEle && (
         <textarea
           className={style.floatingTextArea}
@@ -251,13 +262,16 @@ const DrawBox = () => {
         onMouseMove={mouseMoveHandler}
         onMouseUp={mouseUpHandler}
       />
-      <DrawControl
-        onClear={onClear}
-        onSave={onSave}
-        onReset={onReset}
-        onUndo={onUndo}
-        onRedo={onRedo}
-      />
+      {(board.type === DrawControlType.EDIT ||
+        currentUser._id === board.userId) && (
+        <DrawControl
+          onClear={onClear}
+          onSave={onSave}
+          onReset={onReset}
+          onUndo={onUndo}
+          onRedo={onRedo}
+        />
+      )}
     </Box>
   );
 };

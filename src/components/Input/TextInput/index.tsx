@@ -18,6 +18,8 @@ interface ITextInputProps {
   blockPaste?: boolean;
   autoComplete?: string;
   hideError?: boolean;
+  spellCheck?: boolean;
+  inputClassName?: string;
 }
 
 const TextInput: React.FC<ITextInputProps> = ({ name, form, ...other }) => {
@@ -57,6 +59,9 @@ const TextInput: React.FC<ITextInputProps> = ({ name, form, ...other }) => {
               className={`${other.className} ${
                 hasError && other.errorClassName
               }`}
+              inputProps={{
+                className: other.inputClassName,
+              }}
             />
             {!other.hideError && (
               <FormHelperText>{errors[name]?.message}</FormHelperText>

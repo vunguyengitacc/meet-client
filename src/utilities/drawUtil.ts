@@ -6,3 +6,9 @@ export enum DrawType {
   RECTANGLE = "RECTANGLE",
   CIRCLE = "CIRCLE",
 }
+
+export enum DrawControl {
+  VIEW = "VIEW",
+  EDIT = "EDIT",
+  PRIVATE = "PRIVATE",
+}

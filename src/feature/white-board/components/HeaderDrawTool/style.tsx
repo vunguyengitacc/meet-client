@@ -15,6 +15,24 @@ const useHeaderDrawToolStyle = makeStyles({
     height: "80%",
     cursor: "pointer",
   },
+  frm: {
+    display: "flex",
+    gap: 10,
+  },
+  nameField: {
+    height: "100%",
+    padding: "20px",
+    border: "2px solid #6c63ff !important",
+    borderRadius: "10px",
+    color: "gray !important",
+    fontWeight: 500,
+  },
+  menu: {
+    padding: "5px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "5px",
+  },
 });
 
 export default useHeaderDrawToolStyle;

@@ -1,3 +1,4 @@
+import { DrawControl } from "utilities/drawUtil";
 import { IUser } from "./User";
 
 export interface IWhiteBoard {
@@ -5,4 +6,6 @@ export interface IWhiteBoard {
   name: string;
   user?: IUser;
   data: any[];
+  userId: string;
+  type: DrawControl;
 }

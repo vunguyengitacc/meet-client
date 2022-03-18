@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-const useHistory = () => {
-  const [repository, setRepository] = useState<any[]>([]);
+const useHistory = (initivalue: any[]) => {
+  const [repository, setRepository] = useState<any[]>(initivalue);
   const [current, setCurrent] = useState<number>(0);
 
   const setState = (value: any) => {
@@ -22,7 +22,7 @@ const useHistory = () => {
     return repository[current - 1];
   };
 
-  return { undo, redo, setState, setRepository };
+  return { undo, redo, setState };
 };
 
 export default useHistory;

@@ -45,8 +45,11 @@ const useWhiteBoardControlStyle = makeStyles({
     padding: "15px",
     marginBottom: "10px",
     alignItems: "center",
-    backgroundColor: "rgb(216 216 216)",
+    backgroundColor: "#f1f1f1",
     borderRadius: "10px",
+    "&:hover": {
+      backgroundColor: "#a5a5a5",
+    },
   },
 });
 
