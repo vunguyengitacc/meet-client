@@ -1,4 +1,4 @@
-import { Box, Button, Menu, MenuItem } from "@mui/material";
+import { Box, Button, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import PresentToAllIcon from "@mui/icons-material/PresentToAll";
@@ -15,9 +15,15 @@ import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
 import { IRoom } from "model/Room";
 import toast from "react-hot-toast";
-import { stopRecorder } from "hooks/mediaSlice";
+import { stopRecorder } from "hooks/slices/mediaSlice";
+import theme from "app/muiTheme";
+import SquareButton from "components/CustomUI/SquareButton";
 
-const MediaControl = () => {
+interface IProps {
+  setType: (value: number) => void;
+}
+
+const MediaControl: React.FC<IProps> = ({ setType }) => {
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const pin = useSelector((state: RootState) => state.meet.pinItem);
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -25,10 +31,13 @@ const MediaControl = () => {
   const isRecorderOwner = useSelector(
     (state: RootState) => state.meet.isRecorderOwner
   );
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [openMenu, setOpenMenu] = React.useState<boolean>(Boolean(anchorEl));
+  const [anchorElOption, setAnchorElOption] =
+    React.useState<null | HTMLElement>(null);
+  const [openMenu, setOpenMenu] = React.useState<boolean>(false);
+  const [openOption, setOpenOption] = React.useState<boolean>(false);
 
+  const matchesMd = useMediaQuery(theme.breakpoints.up("md"));
   const { createSendTransport, closeProducer } = useMeeting();
   const { myCam, myScreen, myMic } = useSelector(
     (state: RootState) => state.media
@@ -68,6 +77,20 @@ const MediaControl = () => {
   const closeMenuHandler = () => {
     setAnchorEl(null);
     setOpenMenu(false);
+  };
+
+  const openOptionHandler = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElOption(event.currentTarget);
+    setOpenOption(true);
+  };
+  const closeOptionHandler = () => {
+    setAnchorElOption(null);
+    setOpenOption(false);
+  };
+
+  const openToolBoxHandler = (value: number) => {
+    setType(value);
+    closeOptionHandler();
   };
 
   useEffect(() => {
@@ -120,7 +143,17 @@ const MediaControl = () => {
   }, [myMic]);
   return (
     <Box className={style.surface}>
-      <Button
+      {!matchesMd && (
+        <SquareButton
+          className={style.roundBtn}
+          color="error"
+          variant="contained"
+          onClick={openMenuHandler}
+        >
+          <PhoneEnabledIcon className={style.phoneOffIcon} />
+        </SquareButton>
+      )}
+      <SquareButton
         onClick={myMic ? stopMic : getLocalMicStream}
         className={style.roundBtn}
         color={`${
@@ -133,8 +166,8 @@ const MediaControl = () => {
         variant="contained"
       >
         <MicIcon />
-      </Button>
-      <Button
+      </SquareButton>
+      <SquareButton
         onClick={myCam ? stopCam : getLocalCamStream}
         className={style.roundBtn}
         color={`${
@@ -147,8 +180,8 @@ const MediaControl = () => {
         variant="contained"
       >
         <VideoCameraFrontIcon />
-      </Button>
-      <Button
+      </SquareButton>
+      <SquareButton
         onClick={myScreen ? stopScreen : getLocalScreenStream}
         className={style.roundBtn}
         color={`${
@@ -161,18 +194,63 @@ const MediaControl = () => {
         variant="contained"
       >
         <PresentToAllIcon />
-      </Button>
-      <Button className={style.roundBtn} color="disable" variant="contained">
-        <MoreVertIcon />
-      </Button>
-      <Button
+      </SquareButton>
+      <SquareButton
         className={style.roundBtn}
-        color="error"
+        color="disable"
         variant="contained"
-        onClick={openMenuHandler}
+        onClick={openOptionHandler}
       >
-        <PhoneEnabledIcon className={style.phoneOffIcon} />
-      </Button>
+        <MoreVertIcon />
+      </SquareButton>
+      <Menu
+        anchorEl={anchorElOption}
+        open={openOption}
+        onClose={closeOptionHandler}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem
+          className={style.menuItem}
+          onClick={() => openToolBoxHandler(1)}
+        >
+          Members
+        </MenuItem>
+        <MenuItem
+          className={style.menuItem}
+          onClick={() => openToolBoxHandler(2)}
+        >
+          Messages
+        </MenuItem>
+        <MenuItem
+          className={style.menuItem}
+          onClick={() => openToolBoxHandler(4)}
+        >
+          White board
+        </MenuItem>
+        <MenuItem
+          className={style.menuItem}
+          onClick={() => openToolBoxHandler(3)}
+        >
+          Settings
+        </MenuItem>
+      </Menu>
+      {matchesMd && (
+        <SquareButton
+          className={style.roundBtn}
+          color="error"
+          variant="contained"
+          onClick={openMenuHandler}
+        >
+          <PhoneEnabledIcon className={style.phoneOffIcon} />
+        </SquareButton>
+      )}
       <Menu
         anchorEl={anchorEl}
         open={openMenu}

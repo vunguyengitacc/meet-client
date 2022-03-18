@@ -9,7 +9,7 @@ import {
   stopMyCam,
   stopMyMic,
   stopMyScreen,
-} from "./mediaSlice";
+} from "./slices/mediaSlice";
 
 const useMedia = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -73,7 +73,10 @@ const useMedia = () => {
   };
   const getLocalScreenStream = () => {
     navigator.mediaDevices
-      .getDisplayMedia({})
+      .getDisplayMedia({
+        audio: true,
+        video: true,
+      })
       .then(screenStreamSuccess)
       .catch((error) => {
         console.log(error.message);

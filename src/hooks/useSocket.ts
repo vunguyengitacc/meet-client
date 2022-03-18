@@ -15,7 +15,7 @@ import { IRoom } from "model/Room";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { stopRecorder } from "./mediaSlice";
+import { stopRecorder } from "./slices/mediaSlice";
 
 const useSocket = () => {
   const dispatch = useDispatch<AppDispatch>();

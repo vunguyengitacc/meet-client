@@ -11,7 +11,7 @@ import {
   setRecorderStream,
   stopRecorder,
   stopRecorderStream,
-} from "hooks/mediaSlice";
+} from "hooks//slices/mediaSlice";
 
 const MeetControlForm = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;

@@ -12,8 +12,7 @@ const useUserFeatureStyle = makeStyles({
     height: "100vh",
     display: "flex",
     flexDirection: "column",
-    boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-    zIndex: 100,
+    // borderRight: "0.01px solid #cbcbcb",
   },
   logo: {
     height: "50px",

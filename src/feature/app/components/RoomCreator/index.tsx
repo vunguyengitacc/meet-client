@@ -63,12 +63,18 @@ const RoomCreator = () => {
         Easy and free service for you to create an meeting online. Create and
         share your room code or link to everyone.
       </Typography>
-      <Box display="flex" gap={3} marginTop="10px">
+      <Box
+        display="flex"
+        gap={3}
+        marginTop="10px"
+        sx={{ flexDirection: { xs: "column", sm: "row" } }}
+      >
         <Button
           startIcon={<AddIcon />}
           onClick={handleClick}
           variant="contained"
           disableElevation
+          sx={{ padding: "16.5px 14px" }}
         >
           Create Room
         </Button>
@@ -112,6 +118,7 @@ const RoomCreator = () => {
             placeholder="Pass a room code here"
             inputRef={inputCodeEl}
             style={{ borderRadius: "10px" }}
+            fullWidth
           />
           <Button color="secondary" disableElevation onClick={handleJoinRoom}>
             Join

@@ -6,7 +6,6 @@ import LandingFeature from "feature/landing";
 import MeetFeature from "feature/meet";
 import NotFoundPage from "feature/not-found";
 import UserFeature from "feature/user";
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthEntry from "./AuthEntry";
 import PrivateEntry from "./PrivateEntry";
@@ -14,6 +13,8 @@ import CalendarPage from "feature/user/pages/CalendarPage";
 import MeetHistoryPage from "feature/user/pages/MeetHistoryPage";
 import UserInforPage from "feature/user/pages/UserInforPage";
 import NotificationPage from "feature/user/pages/NotificationPage";
+import WhiteBoardFeature from "feature/white-board";
+import WhiteBoardDetailPage from "feature/white-board/pages/WhiteBoardPage";
 
 const MasterRoute = () => {
   return (
@@ -38,6 +39,11 @@ const MasterRoute = () => {
             <Route path="calendar" element={<CalendarPage />} />
             <Route path="history" element={<MeetHistoryPage />} />
             <Route path="notification" element={<NotificationPage />} />
+          </Route>
+        </Route>
+        <Route path="/whiteboard" element={<PrivateEntry />}>
+          <Route path="/whiteboard" element={<WhiteBoardFeature />}>
+            <Route path="/whiteboard/:id" element={<WhiteBoardDetailPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />

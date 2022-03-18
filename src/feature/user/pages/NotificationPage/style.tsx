@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 const useNotificationPageStyle = makeStyles({
   content: {
     boxSizing: "border-box",
-    margin: "20px 50px",
+    margin: "20px",
     display: "flex",
     flexDirection: "column",
     borderRadius: "10px",
@@ -11,7 +11,7 @@ const useNotificationPageStyle = makeStyles({
     boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 10px",
   },
   header: {
-    margin: "20px 50px",
+    margin: "20px",
     display: "flex",
     alignItems: "center",
     boxSizing: "border-box",
