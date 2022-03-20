@@ -6,6 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import whiteBoardApi from "api/whiteBoardApi";
 import { IWhiteBoard } from "model/WhiteBoard";
 import ScreenShareOutlinedIcon from "@mui/icons-material/ScreenShareOutlined";
+import { LoadingButton } from "@mui/lab";
 
 interface IProps {
   control: (value: number) => void;
@@ -13,6 +14,7 @@ interface IProps {
 
 const WhiteBoardControl: React.FC<IProps> = ({ control }) => {
   const [boards, setBoards] = useState<IWhiteBoard[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const style = useWhiteBoardControlStyle();
 
@@ -27,9 +29,11 @@ const WhiteBoardControl: React.FC<IProps> = ({ control }) => {
 
   const createBoardHandler = async () => {
     try {
+      setLoading(true);
       const { data } = await whiteBoardApi.createOne({ data: [] });
-      window.open(`http://localhost:3000/whiteboard/${data.whiteboard._id}`);
+      setBoards((prev) => [...prev, data.whiteBoard]);
     } catch (error) {}
+    setLoading(false);
   };
 
   const browseBoardHandler = async (value: IWhiteBoard) => {
@@ -68,7 +72,8 @@ const WhiteBoardControl: React.FC<IProps> = ({ control }) => {
             </Box>
           ))}
         </Box>
-        <Button
+        <LoadingButton
+          loading={loading}
           onClick={createBoardHandler}
           variant="blur"
           sx={{ padding: "15px" }}
@@ -76,7 +81,7 @@ const WhiteBoardControl: React.FC<IProps> = ({ control }) => {
           startIcon={<AddIcon />}
         >
           Create New Board
-        </Button>
+        </LoadingButton>
       </Box>
     </Box>
   );

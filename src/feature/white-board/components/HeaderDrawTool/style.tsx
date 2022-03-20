@@ -10,6 +10,7 @@ const useHeaderDrawToolStyle = makeStyles({
     height: "100%",
     width: "100vw",
     borderBottom: "1.25px solid #e5e5e5",
+    alignItems: "center",
   },
   img: {
     height: "80%",
@@ -18,6 +19,7 @@ const useHeaderDrawToolStyle = makeStyles({
   frm: {
     display: "flex",
     gap: 10,
+    height: "100%",
   },
   nameField: {
     height: "100%",
@@ -27,8 +29,11 @@ const useHeaderDrawToolStyle = makeStyles({
     color: "gray !important",
     fontWeight: 500,
   },
+  menuSurface: {
+    borderRadius: "10px !important",
+  },
   menu: {
-    padding: "5px",
+    padding: "10px",
     display: "flex",
     flexDirection: "column",
     gap: "5px",

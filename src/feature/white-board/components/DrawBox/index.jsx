@@ -20,10 +20,17 @@ const DrawBox = ({ board }) => {
   const [elements, setElements] = useState(board.data);
   const [lastSave, setLastSave] = useState(board.data);
   const [currentEle, setCurrentEle] = useState(null);
-  const [color, setColor] = useState("red");
+  const [color, setColor] = useState("black");
 
   useEffect(() => {
     setElements(board.data);
+    if (
+      board.type !== DrawControlType.EDIT &&
+      currentUser._id !== board.userId
+    ) {
+      setCurrentEle(null);
+      setAction(DrawType.NONE);
+    }
   }, [board]);
 
   useEffect(() => {
@@ -162,19 +169,27 @@ const DrawBox = ({ board }) => {
   };
 
   const mouseDownHandler = (e) => {
-    if (onWriting) return;
-    const { clientX, clientY } = e;
-    const id = elements.length;
-    const ele = createElement(id, clientX, e.clientY, clientX, e.clientY);
-    if (ele) {
-      setElements([...elements, ele]);
-      setCurrentEle(ele);
+    if (
+      currentUser._id === board.userId ||
+      board.type === DrawControlType.EDIT
+    ) {
+      if (onWriting) return;
+      const { clientX, clientY } = e;
+      const id = elements.length;
+      const ele = createElement(id, clientX, e.clientY, clientX, e.clientY);
+      if (ele) {
+        setElements([...elements, ele]);
+        setCurrentEle(ele);
+      }
+      setMouseDown(true);
     }
-    setMouseDown(true);
   };
 
   const mouseMoveHandler = (e) => {
-    if (mouseDown) {
+    if (
+      mouseDown &&
+      (currentUser._id === board.userId || board.type === DrawControlType.EDIT)
+    ) {
       const { clientX, clientY } = e;
       const index = elements.length - 1;
       if (index >= 0 && currentEle && currentEle.type !== DrawType.TEXT) {
@@ -240,7 +255,12 @@ const DrawBox = ({ board }) => {
     <Box className={style.drawBox}>
       {(board.type === DrawControlType.EDIT ||
         currentUser._id === board.userId) && (
-        <DrawTool action={action} setAction={setAction} />
+        <DrawTool
+          action={action}
+          setAction={setAction}
+          color={color}
+          setColor={setColor}
+        />
       )}
       {action === DrawType.TEXT && currentEle && (
         <textarea

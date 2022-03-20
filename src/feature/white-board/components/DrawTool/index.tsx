@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import SquareButton from "components/CustomUI/SquareButton";
 import React from "react";
 import useDrawToolStyle from "./style";
@@ -13,9 +13,11 @@ import CheckBoxOutlineBlankOutlinedIcon from "@mui/icons-material/CheckBoxOutlin
 interface IProps {
   setAction: (input: DrawType) => void;
   action: DrawType;
+  color: string;
+  setColor: (value: string) => void;
 }
 
-const DrawTool: React.FC<IProps> = ({ action, setAction }) => {
+const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
   const style = useDrawToolStyle();
 
   const getBtnType = (condition: DrawType) => {
@@ -76,6 +78,15 @@ const DrawTool: React.FC<IProps> = ({ action, setAction }) => {
         disableElevation
       >
         <TextFormatOutlinedIcon />
+      </SquareButton>
+      <Divider orientation="vertical" flexItem />
+      <SquareButton disableElevation>
+        <Box
+          width="20px"
+          height="20px"
+          bgcolor={color}
+          borderRadius="50%"
+        ></Box>
       </SquareButton>
     </Box>
   );
