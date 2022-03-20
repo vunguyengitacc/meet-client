@@ -8,7 +8,7 @@ import TextInput from "components/Input/TextInput";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "app/reduxStore";
 import toast from "react-hot-toast";
-import { getMe, login } from "feature/auth/authSlice";
+import { getMe, getMyNotification, login } from "feature/auth/authSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Link, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
@@ -36,6 +36,7 @@ const LoginPage = () => {
     try {
       await dispatch(login(data)).then(unwrapResult);
       await dispatch(getMe()).then(unwrapResult);
+      await dispatch(getMyNotification()).then(unwrapResult);
       toast.success("Success");
       navigator("/app");
     } catch (error: any) {

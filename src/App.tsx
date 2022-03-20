@@ -3,7 +3,7 @@ import "./App.css";
 import MasterRoute from "routes";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "app/reduxStore";
-import { getMe } from "feature/auth/authSlice";
+import { getMe, getMyNotification } from "feature/auth/authSlice";
 import theme from "app/muiTheme";
 import { ThemeProvider } from "@mui/material/styles";
 import { Toaster } from "react-hot-toast";
@@ -16,7 +16,10 @@ function App() {
   useSocket();
 
   useEffect(() => {
-    dispatch(getMe()).then(() => setIsTryLoad(true));
+    dispatch(getMe()).then(() => {
+      setIsTryLoad(true);
+      dispatch(getMyNotification());
+    });
   }, []);
 
   return (

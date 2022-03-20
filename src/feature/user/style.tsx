@@ -25,6 +25,7 @@ const useUserFeatureStyle = makeStyles({
     display: "flex",
     flexDirection: "column",
     zIndex: 99,
+    backgroundColor: "#f3f3f3",
   },
 });
 

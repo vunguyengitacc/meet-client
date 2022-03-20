@@ -1,10 +1,9 @@
 import { Box, Divider, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import useNotificationPageStyle from "./style";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "app/reduxStore";
-import { getMyNotification } from "feature/auth/authSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "app/reduxStore";
 import { IUser } from "model/User";
 import NotificationItem from "feature/user/components/NotificationItem";
 
@@ -14,12 +13,8 @@ const NotificationPage = () => {
   ) as IUser;
   const style = useNotificationPageStyle();
 
-  const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(getMyNotification());
-  }, []);
   return (
-    <Box>
+    <Box className={style.surface}>
       <Box className={style.header}>
         <Box className={style.headerIcon}>
           <NotificationsIcon />
@@ -30,6 +25,9 @@ const NotificationPage = () => {
         </Box>
       </Box>
       <Box className={style.content}>
+        {currentUser.notifications?.length === 0 && (
+          <Box className={style.defaultContent}>You have no notification</Box>
+        )}
         {currentUser.notifications?.map((i, index) => (
           <React.Fragment key={index}>
             <NotificationItem notification={i} />
