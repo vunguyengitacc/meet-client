@@ -186,7 +186,7 @@ const MediaControl: React.FC<IProps> = ({ setType }) => {
         className={style.roundBtn}
         color={`${
           myScreen
-            ? !room.isAllowShareWebcam && !me.isAdmin
+            ? !room.isAllowShareScreen && !me.isAdmin
               ? "warning"
               : "error"
             : "disable"

@@ -1,4 +1,4 @@
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Menu } from "@mui/material";
 import SquareButton from "components/CustomUI/SquareButton";
 import React from "react";
 import useDrawToolStyle from "./style";
@@ -9,6 +9,7 @@ import { DrawType } from "utilities/drawUtil";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import CheckBoxOutlineBlankOutlinedIcon from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
+import ColorPicker from "../ColorPicker";
 
 interface IProps {
   setAction: (input: DrawType) => void;
@@ -19,6 +20,16 @@ interface IProps {
 
 const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
   const style = useDrawToolStyle();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const openMenuHandler = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOpen(false);
+  };
 
   const getBtnType = (condition: DrawType) => {
     return action === condition ? "contained" : "text";
@@ -80,7 +91,7 @@ const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
         <TextFormatOutlinedIcon />
       </SquareButton>
       <Divider orientation="vertical" flexItem />
-      <SquareButton disableElevation>
+      <SquareButton disableElevation onClick={openMenuHandler}>
         <Box
           width="20px"
           height="20px"
@@ -88,6 +99,18 @@ const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
           borderRadius="50%"
         ></Box>
       </SquareButton>
+      <Menu
+        MenuListProps={{
+          style: {
+            padding: 0,
+          },
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <ColorPicker color={color} setColor={setColor} />
+      </Menu>
     </Box>
   );
 };

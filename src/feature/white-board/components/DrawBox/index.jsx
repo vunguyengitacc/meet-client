@@ -156,11 +156,13 @@ const DrawBox = ({ board }) => {
         const stroke = getSvgPathFromStroke(
           getStroke(element.points, { size: 3 })
         );
+        context.fillStyle = element.color;
         context.fill(new Path2D(stroke));
         break;
       case DrawType.TEXT:
         context.textBaseline = "top";
         context.font = "24px sans-serif";
+        context.fillStyle = element.color;
         context.fillText(element.text, element.x1, element.y1);
         break;
       default:
@@ -176,7 +178,7 @@ const DrawBox = ({ board }) => {
       if (onWriting) return;
       const { clientX, clientY } = e;
       const id = elements.length;
-      const ele = createElement(id, clientX, e.clientY, clientX, e.clientY);
+      const ele = createElement(id, clientX, clientY, clientX, clientY);
       if (ele) {
         setElements([...elements, ele]);
         setCurrentEle(ele);
@@ -250,7 +252,6 @@ const DrawBox = ({ board }) => {
     newState && setElements(newState);
     whiteBoardApi.updateOne({ ...board, data: newState });
   };
-
   return (
     <Box className={style.drawBox}>
       {(board.type === DrawControlType.EDIT ||
@@ -270,6 +271,7 @@ const DrawBox = ({ board }) => {
           style={{
             top: currentEle?.y1 - 2 || 0,
             left: currentEle?.x1 || 0,
+            color,
           }}
         />
       )}
