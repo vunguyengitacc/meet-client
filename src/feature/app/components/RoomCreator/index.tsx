@@ -6,7 +6,6 @@ import useRoomCreatorStyle from "./style";
 import AddIcon from "@mui/icons-material/Add";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import BoltIcon from "@mui/icons-material/Bolt";
-import roomApi from "api/roomApi";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";

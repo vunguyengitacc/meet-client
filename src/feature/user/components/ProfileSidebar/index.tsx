@@ -5,6 +5,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import useProfileSidebarStyle from "./style";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
 const ProfileSidebar = () => {
   const currentUser = useSelector(
@@ -22,7 +26,7 @@ const ProfileSidebar = () => {
           }
           to="profile"
         >
-          {/* <PersonOutlineIcon /> */}
+          <PersonOutlineOutlinedIcon />
           Profile
         </NavLink>
         <NavLink
@@ -31,7 +35,7 @@ const ProfileSidebar = () => {
           }
           to="calendar"
         >
-          {/* <TodayIcon /> */}
+          <CalendarTodayOutlinedIcon />
           Calendar
         </NavLink>
         <NavLink
@@ -40,7 +44,7 @@ const ProfileSidebar = () => {
           }
           to="history"
         >
-          {/* <HistoryIcon /> */}
+          <HistoryOutlinedIcon />
           History
         </NavLink>
         <NavLink
@@ -49,7 +53,7 @@ const ProfileSidebar = () => {
           }
           to="notification"
         >
-          {/* <HistoryIcon /> */}
+          <NotificationsOutlinedIcon />
           Notification
         </NavLink>
       </Box>

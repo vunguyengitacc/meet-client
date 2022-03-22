@@ -4,13 +4,13 @@ import rough from "roughjs/bundled/rough.esm";
 import useDrawBoxStyle from "./style";
 import { Box } from "@mui/material";
 import DrawTool from "../DrawTool";
-import getStroke from "perfect-freehand";
 import whiteBoardApi from "api/whiteBoardApi";
 import DrawControl from "../DrawControl";
 import toast from "react-hot-toast";
 import useHistory from "hooks/useHistory";
 import { DrawControl as DrawControlType } from "utilities/drawUtil";
 import { useSelector } from "react-redux";
+import useDraw from "hooks/useDraw";
 
 const DrawBox = ({ board }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -21,9 +21,11 @@ const DrawBox = ({ board }) => {
   const [lastSave, setLastSave] = useState(board.data);
   const [currentEle, setCurrentEle] = useState(null);
   const [color, setColor] = useState("black");
+  const { createElement, updateElement, drawElement } = useDraw();
 
   useEffect(() => {
     setElements(board.data);
+    console.log(board.data);
     if (
       board.type !== DrawControlType.EDIT &&
       currentUser._id !== board.userId
@@ -65,125 +67,29 @@ const DrawBox = ({ board }) => {
     }
   }, [elements]);
 
-  const createElement = (id, x1, y1, x2, y2) => {
-    let generator;
-    let roughElement;
-    switch (action) {
-      case DrawType.RECTANGLE:
-        generator = rough.generator();
-        roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, {
-          stroke: color,
-        });
-        return { id, x1, y1, x2, y2, roughElement, type: action };
-      case DrawType.CIRCLE:
-        generator = rough.generator();
-        let coreX = (x1 + x2) / 2;
-        let coreY = (y1 + y2) / 2;
-        let radius = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-        roughElement = generator.circle(coreX, coreY, radius, {
-          stroke: color,
-        });
-        return { id, x1, y1, x2, y2, roughElement, type: action };
-      case DrawType.LINE:
-        generator = rough.generator();
-        roughElement = generator.line(x1, y1, x2, y2, {
-          stroke: color,
-        });
-        return { id, x1, y1, x2, y2, roughElement, type: action };
-      case DrawType.PEN:
-        return { id, type: action, color, points: [{ x: x1, y: y1 }] };
-      case DrawType.TEXT:
-        setOnWriting(true);
-        return { id, x1, y1, x2, y2, text: "", type: action, color };
-    }
-  };
-  const updateElement = (id, x1, y1, x2, y2, options) => {
-    const elementsCopy = [...elements];
-    const elementTarget = elementsCopy[id];
-    switch (elementTarget.type) {
-      case DrawType.LINE:
-      case DrawType.RECTANGLE:
-      case DrawType.CIRCLE:
-        elementsCopy[id] = createElement(id, x1, y1, x2, y2);
-        break;
-      case DrawType.PEN:
-        elementsCopy[id].points = [
-          ...elementsCopy[id].points,
-          { x: x2, y: y2 },
-        ];
-        break;
-      case DrawType.TEXT:
-        if (options?.text) {
-          const textWidth = canvasRef.current
-            .getContext("2d")
-            .measureText(options.text).width;
-          const textHeight = 24;
-          elementsCopy[id] = {
-            ...createElement(id, x1, y1, x1 + textWidth, y1 + textHeight),
-            text: options.text,
-          };
-        }
-        break;
-      default:
-        break;
-    }
-
-    setElements(elementsCopy, true);
-  };
-  const getSvgPathFromStroke = (stroke) => {
-    if (!stroke.length) return "";
-
-    const d = stroke.reduce(
-      (acc, [x0, y0], i, arr) => {
-        const [x1, y1] = arr[(i + 1) % arr.length];
-        acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
-        return acc;
-      },
-      ["M", ...stroke[0], "Q"]
-    );
-
-    d.push("Z");
-    return d.join(" ");
-  };
-  const drawElement = (roughCanvas, context, element) => {
-    switch (element?.type) {
-      case DrawType.LINE:
-      case DrawType.RECTANGLE:
-      case DrawType.CIRCLE:
-        roughCanvas.draw(element.roughElement);
-        break;
-      case DrawType.PEN:
-        const stroke = getSvgPathFromStroke(
-          getStroke(element.points, { size: 3 })
-        );
-        context.fillStyle = element.color;
-        context.fill(new Path2D(stroke));
-        break;
-      case DrawType.TEXT:
-        context.textBaseline = "top";
-        context.font = "24px sans-serif";
-        context.fillStyle = element.color;
-        context.fillText(element.text, element.x1, element.y1);
-        break;
-      default:
-        break;
-    }
-  };
-
   const mouseDownHandler = (e) => {
     if (
       currentUser._id === board.userId ||
       board.type === DrawControlType.EDIT
     ) {
+      setMouseDown(true);
       if (onWriting) return;
       const { clientX, clientY } = e;
       const id = elements.length;
-      const ele = createElement(id, clientX, clientY, clientX, clientY);
+      const ele = createElement(
+        id,
+        clientX,
+        clientY,
+        clientX,
+        clientY,
+        action,
+        color
+      );
       if (ele) {
         setElements([...elements, ele]);
         setCurrentEle(ele);
       }
-      setMouseDown(true);
+      if (ele.type === DrawType.TEXT) setOnWriting(true);
     }
   };
 
@@ -196,7 +102,16 @@ const DrawBox = ({ board }) => {
       const index = elements.length - 1;
       if (index >= 0 && currentEle && currentEle.type !== DrawType.TEXT) {
         const { x1, y1 } = elements[index];
-        updateElement(index, x1, y1, clientX, clientY);
+        let newUpdated = updateElement(
+          index,
+          x1,
+          y1,
+          clientX,
+          clientY,
+          elements,
+          canvasRef.current
+        );
+        setElements(newUpdated);
       }
     }
   };
@@ -214,7 +129,19 @@ const DrawBox = ({ board }) => {
   const appenTextHandler = (e) => {
     const { id, x1, y1, type } = currentEle;
     setCurrentEle(null);
-    updateElement(id, x1, y1, null, null, { text: e.target.value });
+    let updated = updateElement(
+      id,
+      x1,
+      y1,
+      null,
+      null,
+      elements,
+      canvasRef.current,
+      {
+        text: e.target.value,
+      }
+    );
+    setElements(updated);
     e.target.value = "";
     setOnWriting(false);
   };
@@ -252,6 +179,20 @@ const DrawBox = ({ board }) => {
     newState && setElements(newState);
     whiteBoardApi.updateOne({ ...board, data: newState });
   };
+
+  const exportHandler = (type, name) => {
+    const canvas = canvasRef.current;
+    let myImage = canvas.toDataURL(type);
+    let downloadLink = document.createElement("a");
+    downloadLink.download = `${name ?? board.name ?? board._id}.${
+      type.split("/")[1]
+    }`;
+    downloadLink.href = myImage;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+
   return (
     <Box className={style.drawBox}>
       {(board.type === DrawControlType.EDIT ||
@@ -287,6 +228,7 @@ const DrawBox = ({ board }) => {
       {(board.type === DrawControlType.EDIT ||
         currentUser._id === board.userId) && (
         <DrawControl
+          exportHandler={exportHandler}
           onClear={onClear}
           onSave={onSave}
           onReset={onReset}
