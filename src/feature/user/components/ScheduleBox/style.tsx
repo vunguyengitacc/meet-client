@@ -8,6 +8,7 @@ const useScheduleBoxStyle = makeStyles({
   },
   toolbar: {
     width: "100%",
+    overflow: "scroll",
   },
   schedule: {
     boxShadow: "none !important",

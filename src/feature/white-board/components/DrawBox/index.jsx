@@ -25,7 +25,6 @@ const DrawBox = ({ board }) => {
 
   useEffect(() => {
     setElements(board.data);
-    console.log(board.data);
     if (
       board.type !== DrawControlType.EDIT &&
       currentUser._id !== board.userId
@@ -126,7 +125,7 @@ const DrawBox = ({ board }) => {
     action !== DrawType.NONE && setState(elements);
   };
 
-  const appenTextHandler = (e) => {
+  const appendTextHandler = (e) => {
     const { id, x1, y1, type } = currentEle;
     setCurrentEle(null);
     let updated = updateElement(
@@ -208,7 +207,7 @@ const DrawBox = ({ board }) => {
         <textarea
           className={style.floatingTextArea}
           ref={textAreaRef}
-          onBlur={appenTextHandler}
+          onBlur={appendTextHandler}
           style={{
             top: currentEle?.y1 - 2 || 0,
             left: currentEle?.x1 || 0,

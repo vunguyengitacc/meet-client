@@ -22,7 +22,7 @@ const useProfileSidebarStyle = makeStyles({
     color: "#cfcfcf",
     fontWeight: 700,
     alignItems: "center",
-    gap: "10px",
+    gap: "5px",
     borderRadius: "10px",
   },
   activeLink: {
