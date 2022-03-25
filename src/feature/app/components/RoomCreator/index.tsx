@@ -64,7 +64,7 @@ const RoomCreator = () => {
       </Typography>
       <Box
         display="flex"
-        gap={3}
+        gap={4}
         marginTop="10px"
         sx={{ flexDirection: { xs: "column", sm: "row" } }}
       >
@@ -119,7 +119,12 @@ const RoomCreator = () => {
             style={{ borderRadius: "10px" }}
             fullWidth
           />
-          <Button color="secondary" disableElevation onClick={handleJoinRoom}>
+          <Button
+            color="primary"
+            disableElevation
+            onClick={handleJoinRoom}
+            variant="outlined"
+          >
             Join
           </Button>
         </Box>

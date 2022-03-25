@@ -1,8 +1,8 @@
 import { Box, Button, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
-import MicIcon from "@mui/icons-material/Mic";
+import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
 import PresentToAllIcon from "@mui/icons-material/PresentToAll";
-import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
+import VideoCameraFrontOutlinedIcon from "@mui/icons-material/VideoCameraFrontOutlined";
 import PhoneEnabledIcon from "@mui/icons-material/PhoneEnabled";
 import useMediaControlStyle from "./style";
 import useMedia from "hooks/useMedia";
@@ -165,7 +165,7 @@ const MediaControl: React.FC<IProps> = ({ setType }) => {
         }`}
         variant="contained"
       >
-        <MicIcon />
+        <MicNoneOutlinedIcon />
       </SquareButton>
       <SquareButton
         onClick={myCam ? stopCam : getLocalCamStream}
@@ -179,7 +179,7 @@ const MediaControl: React.FC<IProps> = ({ setType }) => {
         }`}
         variant="contained"
       >
-        <VideoCameraFrontIcon />
+        <VideoCameraFrontOutlinedIcon />
       </SquareButton>
       <SquareButton
         onClick={myScreen ? stopScreen : getLocalScreenStream}
