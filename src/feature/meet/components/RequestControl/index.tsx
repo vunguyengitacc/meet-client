@@ -42,6 +42,20 @@ const RequestControl: React.FC<IProps> = ({ control }) => {
     );
   };
 
+  const answerAll = async (result: RequestType) => {
+    requests.forEach((element) => {
+      dispatch(
+        answerRequest({
+          room,
+          request: element,
+          answer: {
+            result,
+          },
+        })
+      );
+    });
+  };
+
   const setFilterHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.currentTarget.value);
   };
@@ -116,10 +130,20 @@ const RequestControl: React.FC<IProps> = ({ control }) => {
         ))}
       </Box>
       <Box display="flex" gap="10px" justifyContent="flex-end">
-        <Button color="success" variant="blur" disableElevation>
+        <Button
+          color="success"
+          variant="blur"
+          disableElevation
+          onClick={() => answerAll(RequestType.accept)}
+        >
           Accept All
         </Button>
-        <Button color="warning" variant="blur" disableElevation>
+        <Button
+          color="warning"
+          variant="blur"
+          disableElevation
+          onClick={() => answerAll(RequestType.reject)}
+        >
           Reject All
         </Button>
       </Box>
