@@ -1,4 +1,4 @@
-import { Box, Divider, Menu } from "@mui/material";
+import { Box, Divider, InputBase } from "@mui/material";
 import SquareButton from "components/CustomUI/SquareButton";
 import React from "react";
 import useDrawToolStyle from "./style";
@@ -9,7 +9,6 @@ import { DrawType } from "utilities/drawUtil";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import CheckBoxOutlineBlankOutlinedIcon from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
-import ColorPicker from "../ColorPicker";
 
 interface IProps {
   setAction: (input: DrawType) => void;
@@ -20,16 +19,6 @@ interface IProps {
 
 const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
   const style = useDrawToolStyle();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [open, setOpen] = React.useState<boolean>(false);
-  const openMenuHandler = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-    setOpen(false);
-  };
 
   const getBtnType = (condition: DrawType) => {
     return action === condition ? "contained" : "text";
@@ -91,26 +80,20 @@ const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
         <TextFormatOutlinedIcon />
       </SquareButton>
       <Divider orientation="vertical" flexItem />
-      <SquareButton disableElevation onClick={openMenuHandler}>
-        <Box
-          width="20px"
-          height="20px"
-          bgcolor={color}
-          borderRadius="50%"
-        ></Box>
-      </SquareButton>
-      <Menu
-        MenuListProps={{
-          style: {
-            padding: 0,
-          },
+      <label
+        htmlFor="color_picker"
+        style={{ backgroundColor: color }}
+        className={style.lblColor}
+      />
+      <input
+        id="color_picker"
+        type="color"
+        style={{ width: "0", height: "0" }}
+        value={color}
+        onChange={(e) => {
+          setColor(e.currentTarget.value);
         }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
-        <ColorPicker color={color} setColor={setColor} />
-      </Menu>
+      />
     </Box>
   );
 };

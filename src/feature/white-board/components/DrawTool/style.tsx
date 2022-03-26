@@ -13,10 +13,16 @@ const useDrawToolStyle = makeStyles({
     borderRadius: "10px",
     backgroundColor: "white",
     opacity: "0.89",
+    alignItems: "center",
   },
   menu: {
     padding: "10px",
     backgroundColor: "white",
+  },
+  lblColor: {
+    width: "25px",
+    height: "25px",
+    borderRadius: "50%",
   },
 });
 

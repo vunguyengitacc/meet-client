@@ -10,11 +10,11 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
-const ProfileSidebar = () => {
-  const currentUser = useSelector(
-    (state: RootState) => state.auth.currentUser
-  ) as IUser;
+interface IProps {
+  onNavigated?: () => void;
+}
 
+const ProfileSidebar: React.FC<IProps> = ({ onNavigated }) => {
   const style = useProfileSidebarStyle();
 
   return (
@@ -25,6 +25,7 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="profile"
+          onClick={onNavigated}
         >
           <PersonOutlineOutlinedIcon />
           Profile
@@ -34,6 +35,7 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="calendar"
+          onClick={onNavigated}
         >
           <CalendarTodayOutlinedIcon />
           Calendar
@@ -43,6 +45,7 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="history"
+          onClick={onNavigated}
         >
           <HistoryOutlinedIcon />
           History
@@ -52,6 +55,7 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="notification"
+          onClick={onNavigated}
         >
           <NotificationsOutlinedIcon />
           Notification

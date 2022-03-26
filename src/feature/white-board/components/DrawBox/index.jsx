@@ -16,11 +16,10 @@ const DrawBox = ({ board }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const [action, setAction] = useState(DrawType.NONE);
   const [mouseDown, setMouseDown] = useState(false);
-  const [onWriting, setOnWriting] = useState(false);
   const [elements, setElements] = useState(board.data);
   const [lastSave, setLastSave] = useState(board.data);
   const [currentEle, setCurrentEle] = useState(null);
-  const [color, setColor] = useState("black");
+  const [color, setColor] = useState("#000000");
   const { createElement, updateElement, drawElement } = useDraw();
 
   useEffect(() => {
@@ -60,7 +59,6 @@ const DrawBox = ({ board }) => {
         canvasRef.current.height
       );
       elements.forEach((element) => {
-        if (onWriting && currentEle?.id === element.id) return;
         drawElement(roughCanvas, context, element);
       });
     }
@@ -72,7 +70,7 @@ const DrawBox = ({ board }) => {
       board.type === DrawControlType.EDIT
     ) {
       setMouseDown(true);
-      if (onWriting) return;
+      if (currentEle && currentEle.type === DrawType.TEXT) return;
       const { clientX, clientY } = e;
       const id = elements.length;
       const ele = createElement(
@@ -88,7 +86,6 @@ const DrawBox = ({ board }) => {
         setElements([...elements, ele]);
         setCurrentEle(ele);
       }
-      if (ele.type === DrawType.TEXT) setOnWriting(true);
     }
   };
 
@@ -117,16 +114,20 @@ const DrawBox = ({ board }) => {
 
   const mouseUpHandler = () => {
     setMouseDown(false);
-    if (currentEle?.type === DrawType.TEXT) {
-      setOnWriting(true);
-    } else {
+    if (currentEle?.type !== DrawType.TEXT) {
       setCurrentEle(null);
     }
     action !== DrawType.NONE && setState(elements);
   };
 
   const appendTextHandler = (e) => {
-    const { id, x1, y1, type } = currentEle;
+    const { id, x1, y1 } = currentEle;
+    if (!e.target.value) {
+      setElements(elements.filter((i) => i.id !== id));
+      setCurrentEle(null);
+      e.target.value = "";
+      return;
+    }
     setCurrentEle(null);
     let updated = updateElement(
       id,
@@ -142,7 +143,6 @@ const DrawBox = ({ board }) => {
     );
     setElements(updated);
     e.target.value = "";
-    setOnWriting(false);
   };
 
   const onClear = () => {

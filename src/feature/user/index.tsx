@@ -49,7 +49,7 @@ const UserFeature = () => {
             justifyContent="space-between"
           >
             <Box padding="20px">
-              <ProfileSidebar />
+              <ProfileSidebar onNavigated={() => setOpenSidebar(false)} />
             </Box>
             <Box padding="20px">
               <Button
