@@ -77,10 +77,6 @@ const useMeeting = () => {
       if (producer[type] && producer[type].data !== undefined) {
         producer[type]?.data?.resume();
       } else {
-        producer[type] = {
-          serverProducerId: "",
-          data: undefined,
-        };
         producer[type].data = await producerTransport.produce({
           track: stream,
           ...params,
@@ -141,7 +137,7 @@ const useMeeting = () => {
                   rtpParameters: parameters.rtpParameters,
                   appData: parameters.appData,
                 },
-                (data: { id: string; producersExist: any; type: string }) => {
+                (data: { id: string; type: string }) => {
                   if (producer[data.type] === undefined)
                     producer[data.type] = {
                       serverProducerId: data.id,
@@ -248,7 +244,6 @@ const useMeeting = () => {
     spec: string,
     type: StreamType
   ) => {
-    console.log(type);
     let consumerTransport: mediasoupClient.types.Transport;
     if (device === undefined) return;
     if (
