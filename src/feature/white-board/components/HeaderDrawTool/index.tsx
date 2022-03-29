@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, Box, IconButton, Menu, Typography } from "@mui/material";
 import { RootState } from "app/reduxStore";
 import { IUser } from "model/User";
 import React from "react";
@@ -59,7 +59,7 @@ const HeaderDrawTool: React.FC<IProps> = ({ board }) => {
   return (
     <Box className={style.surface}>
       <img className={style.img} src={Logo} onClick={() => navigator("/app")} />
-      {currentUser._id === board?.userId && (
+      {currentUser._id === board?.userId ? (
         <form onSubmit={form.handleSubmit(changeHandler)} className={style.frm}>
           <TextInput
             spellCheck={false}
@@ -78,6 +78,8 @@ const HeaderDrawTool: React.FC<IProps> = ({ board }) => {
             <BorderColorOutlinedIcon />
           </SquareButton>
         </form>
+      ) : (
+        <Typography variant="h6">{board?.name}</Typography>
       )}
       <Box display="flex" gap="20px">
         {board?.userId === currentUser._id && (
@@ -87,7 +89,17 @@ const HeaderDrawTool: React.FC<IProps> = ({ board }) => {
             {board?.type === DrawControl.EDIT && <BrushOutlinedIcon />}
           </IconButton>
         )}
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <Menu
+          PaperProps={{ className: style.menuSurface }}
+          MenuListProps={{
+            style: {
+              padding: "0",
+            },
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
           <Box className={style.menu}>
             <MenuSelectItem
               startIcon={<PublicOffIcon />}

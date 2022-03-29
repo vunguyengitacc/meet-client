@@ -15,7 +15,7 @@ import AdminControl from "../AdminControl";
 import InvitationControl from "../InvitationControl";
 import RequestControl from "../RequestControl";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import WhiteBoardControl from "../WhiteBoardControl";
 
 interface IProps {
@@ -134,7 +134,7 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
                     </>
                   )}
                   <Button
-                    startIcon={<AddCircleOutlineIcon />}
+                    startIcon={<AddCircleOutlinedIcon />}
                     variant="contained"
                     disableElevation
                     color="success"
@@ -189,26 +189,28 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
               />
             )}
           </Box>
-          {members.map((i) => (
-            <React.Fragment key={i._id}>
-              <Box
-                className={`${style.item} ${
-                  pin === i._id + "-cam" && style.pinItem
-                }`}
-              >
-                <MeetItem member={i} media={i.webcamStream} type="cam" />
-              </Box>
-              {i.screenStream && (
+          {members.map((i, index) => {
+            return (
+              <React.Fragment key={i._id}>
                 <Box
                   className={`${style.item} ${
-                    pin === i._id + "-screen" && style.pinItem
+                    pin === i._id + "-cam" && style.pinItem
                   }`}
                 >
-                  <MeetItem member={i} media={i.screenStream} type="screen" />
+                  <MeetItem member={i} media={i.webcamStream} type="cam" />
                 </Box>
-              )}
-            </React.Fragment>
-          ))}
+                {i.screenStream && (
+                  <Box
+                    className={`${style.item} ${
+                      pin === i._id + "-screen" && style.pinItem
+                    }`}
+                  >
+                    <MeetItem member={i} media={i.screenStream} type="screen" />
+                  </Box>
+                )}
+              </React.Fragment>
+            );
+          })}
         </Box>
       </Box>
 

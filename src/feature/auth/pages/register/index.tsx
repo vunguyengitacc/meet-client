@@ -5,7 +5,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { AppDispatch } from "app/reduxStore";
 import PasswordInput from "components/Input/PasswordInput";
 import TextInput from "components/Input/TextInput";
-import { getMe, register } from "feature/auth/authSlice";
+import { getMe, getMyNotification, register } from "feature/auth/authSlice";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -36,6 +36,7 @@ const RegisterPage = () => {
     try {
       await dispatch(register(data)).then(unwrapResult);
       await dispatch(getMe()).then(unwrapResult);
+      await dispatch(getMyNotification()).then(unwrapResult);
       toast.success("Success");
       navigator("/app");
     } catch (error: any) {

@@ -5,12 +5,16 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import useProfileSidebarStyle from "./style";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
-const ProfileSidebar = () => {
-  const currentUser = useSelector(
-    (state: RootState) => state.auth.currentUser
-  ) as IUser;
+interface IProps {
+  onNavigated?: () => void;
+}
 
+const ProfileSidebar: React.FC<IProps> = ({ onNavigated }) => {
   const style = useProfileSidebarStyle();
 
   return (
@@ -21,8 +25,9 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="profile"
+          onClick={onNavigated}
         >
-          {/* <PersonOutlineIcon /> */}
+          <PersonOutlineOutlinedIcon />
           Profile
         </NavLink>
         <NavLink
@@ -30,8 +35,9 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="calendar"
+          onClick={onNavigated}
         >
-          {/* <TodayIcon /> */}
+          <CalendarTodayOutlinedIcon />
           Calendar
         </NavLink>
         <NavLink
@@ -39,8 +45,9 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="history"
+          onClick={onNavigated}
         >
-          {/* <HistoryIcon /> */}
+          <HistoryOutlinedIcon />
           History
         </NavLink>
         <NavLink
@@ -48,8 +55,9 @@ const ProfileSidebar = () => {
             `${style.link} ${isActive && style.activeLink}`
           }
           to="notification"
+          onClick={onNavigated}
         >
-          {/* <HistoryIcon /> */}
+          <NotificationsOutlinedIcon />
           Notification
         </NavLink>
       </Box>

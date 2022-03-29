@@ -6,7 +6,6 @@ import useRoomCreatorStyle from "./style";
 import AddIcon from "@mui/icons-material/Add";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import BoltIcon from "@mui/icons-material/Bolt";
-import roomApi from "api/roomApi";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -65,7 +64,7 @@ const RoomCreator = () => {
       </Typography>
       <Box
         display="flex"
-        gap={3}
+        gap={4}
         marginTop="10px"
         sx={{ flexDirection: { xs: "column", sm: "row" } }}
       >
@@ -120,7 +119,12 @@ const RoomCreator = () => {
             style={{ borderRadius: "10px" }}
             fullWidth
           />
-          <Button color="secondary" disableElevation onClick={handleJoinRoom}>
+          <Button
+            color="primary"
+            disableElevation
+            onClick={handleJoinRoom}
+            variant="outlined"
+          >
             Join
           </Button>
         </Box>

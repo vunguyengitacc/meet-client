@@ -7,6 +7,7 @@ const useToolbarSchedularStyle = makeStyles({
     justifyContent: "space-between",
     padding: "10px",
     boxSizing: "border-box",
+    gap: "30px",
   },
 });
 
