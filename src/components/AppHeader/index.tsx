@@ -1,7 +1,6 @@
-import { Avatar, Badge, Box } from "@mui/material";
+import { Avatar, Badge, Box, Button } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { RootState } from "app/reduxStore";
-import React from "react";
 import { useSelector } from "react-redux";
 import useAppHeaderStyle from "./style";
 import logo from "static/Logo.svg";
@@ -18,24 +17,28 @@ const AppHeader = () => {
   return (
     <Box className={style.surface}>
       <Box className={style.logoField}>
-        <img
-          className={style.logo}
-          src={logo}
-          onClick={() => navigator("/app")}
-        />
+        <img className={style.logo} src={logo} onClick={() => navigator("/")} />
       </Box>
       <Box className={style.configField}>
-        <IconButton onClick={() => navigator("/user/notification")}>
-          <Badge
-            color="error"
-            badgeContent={currentUser?.notifications?.length}
-          >
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <IconButton onClick={() => navigator("/user/profile")}>
-          <Avatar src={currentUser?.avatarURI} />
-        </IconButton>
+        {currentUser ? (
+          <>
+            <IconButton onClick={() => navigator("/user/notification")}>
+              <Badge
+                color="error"
+                badgeContent={currentUser.notifications?.length}
+              >
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton onClick={() => navigator("/user/profile")}>
+              <Avatar src={currentUser.avatarURI} />
+            </IconButton>
+          </>
+        ) : (
+          <>
+            <Button onClick={() => navigator("/auth/login")}>Login</Button>
+          </>
+        )}
       </Box>
     </Box>
   );

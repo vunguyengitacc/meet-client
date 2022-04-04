@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 import RoomCreator from "../RoomCreator";
 import useAppContentStyle from "./style";
+import appPage from "static/assets/appPage.png";
 
 const AppContent = () => {
   const style = useAppContentStyle();
@@ -10,7 +11,9 @@ const AppContent = () => {
       <Box className={style.app}>
         <RoomCreator />
       </Box>
-      <Box className={style.desc}></Box>
+      <Box className={style.desc}>
+        <img src={appPage} className={style.image} />
+      </Box>
     </Box>
   );
 };
