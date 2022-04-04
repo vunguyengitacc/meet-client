@@ -58,12 +58,14 @@ const SharingIntroduce = () => {
               variant="contained"
               color={currentImage === 0 ? "primary" : "inherit"}
               onClick={() => setCurrentImage(0)}
+              style={{ position: "static" }}
             >
               {" "}
             </SquareButton>
             <SquareButton
               color={currentImage === 1 ? "primary" : "inherit"}
               variant="contained"
+              style={{ position: "static" }}
               onClick={() => setCurrentImage(1)}
             >
               {" "}
@@ -71,6 +73,7 @@ const SharingIntroduce = () => {
             <SquareButton
               variant="contained"
               color={currentImage === 2 ? "primary" : "inherit"}
+              style={{ position: "static" }}
               onClick={() => setCurrentImage(2)}
             >
               {" "}

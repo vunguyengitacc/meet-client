@@ -46,6 +46,9 @@ const useSharingIntroduceStyle = makeStyles({
     width: "50%",
     height: "100%",
     justifyContent: "center",
+    textAlign: "center",
+    fontSize: "larger",
+    fontWeight: 500,
     alignItems: "center",
   },
 });

@@ -36,7 +36,21 @@ const AppHeader = () => {
           </>
         ) : (
           <>
-            <Button onClick={() => navigator("/auth/login")}>Login</Button>
+            <Button
+              disableElevation
+              variant="blur"
+              color="secondary"
+              onClick={() => navigator("/auth/register")}
+            >
+              Sign up
+            </Button>
+            <Button
+              disableElevation
+              variant="contained"
+              onClick={() => navigator("/auth/login")}
+            >
+              Sign in
+            </Button>
           </>
         )}
       </Box>
