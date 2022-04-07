@@ -18,7 +18,7 @@ const useWhiteBoardIntroduceStyle = makeStyles({
     display: "flex",
     padding: "20px",
     width: "50%",
-    height: "100%",
+    height: "auto",
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",

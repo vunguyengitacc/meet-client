@@ -19,6 +19,7 @@ const useLandingStyle = makeStyles({
     boxSizing: "border-box",
     backgroundColor: props.isBlurNav ? "transparent" : "white",
     boxShadow: props.isBlurNav ? "none" : "0 4px 8px #d7d7d7",
+    transition: "box-shadow 0.3s ease-in-out"
   }),
   startApp: {
     width: "100%",
@@ -41,12 +42,12 @@ const useLandingStyle = makeStyles({
   },
   introduceContained: {
     width: "100%",
-    height: "80vh",
+    height: "auto",
     backgroundColor: "#6c63ffa6",
   },
   introduceTransparent: {
     width: "100%",
-    height: "80vh",
+    height: "auto",
   },
   footer: {
     width: "100%",

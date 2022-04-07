@@ -26,7 +26,7 @@ const useSharingIntroduceStyle = makeStyles({
   },
   sliderBox: {
     width: "100%",
-    height: "80%",
+    height: "60vh",
     overflow: "hidden",
   },
   sliderImage: {
@@ -44,7 +44,7 @@ const useSharingIntroduceStyle = makeStyles({
     display: "flex",
     padding: "20px",
     width: "50%",
-    height: "100%",
+    height: "auto",
     justifyContent: "center",
     textAlign: "center",
     fontSize: "larger",
