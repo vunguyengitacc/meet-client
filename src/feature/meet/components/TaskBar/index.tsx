@@ -7,6 +7,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import MediaControl from "../MediaControl";
 import useTime from "hooks/useTime";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
+import { useSelector } from "react-redux";
+import { RootState } from "app/reduxStore";
 
 interface IProps {
   setType: (value: number) => void;
@@ -14,6 +16,7 @@ interface IProps {
 }
 
 const TaskBar: React.FC<IProps> = ({ setType, currentType }) => {
+  const me = useSelector((state: RootState) => state.meet.me);
   const style = useTaskBarStyle();
   const { date } = useTime();
 
@@ -47,9 +50,14 @@ const TaskBar: React.FC<IProps> = ({ setType, currentType }) => {
         <IconButton onClick={() => controlType(4)} className={style.fadeBgBtn}>
           <DashboardCustomizeIcon />
         </IconButton>
-        <IconButton onClick={() => controlType(3)} className={style.fadeBgBtn}>
-          <SettingsIcon />
-        </IconButton>
+        {me?.isAdmin && (
+          <IconButton
+            onClick={() => controlType(3)}
+            className={style.fadeBgBtn}
+          >
+            <SettingsIcon />
+          </IconButton>
+        )}
       </Box>
     </Box>
   );

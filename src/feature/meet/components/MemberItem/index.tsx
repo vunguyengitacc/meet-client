@@ -4,6 +4,9 @@ import React from "react";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import useMemberItemStyle from "./style";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "app/reduxStore";
+import { kickMember, setPinItem } from "feature/meet/meetSlice";
 
 interface IProps {
   member: IMember;
@@ -12,8 +15,20 @@ interface IProps {
   enableKick?: boolean;
 }
 
-const MemberItem: React.FC<IProps> = ({ member, isMe, isScreen }) => {
+const MemberItem: React.FC<IProps> = ({
+  member,
+  isMe,
+  isScreen,
+  enableKick,
+}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const style = useMemberItemStyle();
+  const handleKick = () => {
+    dispatch(kickMember(member));
+  };
+  const handlePin = () => {
+    dispatch(setPinItem(member._id + "-cam"));
+  };
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -29,12 +44,14 @@ const MemberItem: React.FC<IProps> = ({ member, isMe, isScreen }) => {
           </Box>
         </Box>
         <Box>
-          <IconButton>
+          <IconButton onClick={handlePin}>
             <PushPinIcon />
           </IconButton>
-          <IconButton>
-            <LogoutOutlinedIcon />
-          </IconButton>
+          {enableKick && (
+            <IconButton onClick={handleKick}>
+              <LogoutOutlinedIcon />
+            </IconButton>
+          )}
         </Box>
       </Box>
     </Box>

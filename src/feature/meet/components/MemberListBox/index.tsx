@@ -59,7 +59,7 @@ const MemberListBox: React.FC<IProps> = ({ control }) => {
           .filter((j) => j.user?.fullname.includes(filter))
           .map((i) => (
             <React.Fragment key={i.joinSession}>
-              <MemberItem member={i} />
+              <MemberItem member={i} enableKick={me.isAdmin && !i.isAdmin} />
               {i.screenStream && <MemberItem member={i} isScreen />}
             </React.Fragment>
           ))}
