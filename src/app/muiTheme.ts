@@ -1,4 +1,4 @@
-import { green, indigo, orange, purple, red } from "@mui/material/colors";
+import { green, indigo, orange, grey, red, blue } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
@@ -81,6 +81,13 @@ const theme = createTheme({
             backgroundColor: orange[100],
           },
         },
+        {
+          props: { variant: "blur", color: "secondary" },
+          style: {
+            color: grey[500],
+            backgroundColor: grey[200],
+          },
+        },
       ],
     },
     MuiChip: {
@@ -95,6 +102,13 @@ const theme = createTheme({
           style: {
             color: green[500],
             backgroundColor: green[100],
+          },
+        },
+        {
+          props: { variant: "blur", color: "secondary" },
+          style: {
+            color: grey[500],
+            backgroundColor: grey[200],
           },
         },
         {

@@ -88,7 +88,7 @@ const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
       <input
         id="color_picker"
         type="color"
-        style={{ width: "0", height: "0" }}
+        style={{ display: "none" }}
         value={color}
         onChange={(e) => {
           setColor(e.currentTarget.value);

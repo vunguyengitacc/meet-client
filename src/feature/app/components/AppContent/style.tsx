@@ -18,9 +18,16 @@ const useAppContentStyle = makeStyles((theme: Theme) =>
     desc: {
       width: "50%",
       height: "100%",
+      display: "flex",
+      alignItems: "center",
+      padding: "20px",
+      boxSizing: "border-box",
       [theme.breakpoints.down("md")]: {
         width: "0%",
       },
+    },
+    image: {
+      width: "100%",
     },
   })
 );
