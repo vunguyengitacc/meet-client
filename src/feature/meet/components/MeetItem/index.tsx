@@ -1,12 +1,13 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { AppDispatch } from "app/reduxStore";
 import Video from "components/Video";
-import { setPinItem } from "feature/meet/meetSlice";
+import { kickMember, setPinItem } from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import useMeetItemStyle from "./style";
 import PushPinIcon from "@mui/icons-material/PushPin";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Audio from "components/Audio";
 
 interface IProps {
@@ -15,6 +16,7 @@ interface IProps {
   audio?: MediaStreamTrack;
   isMe?: boolean;
   type?: string;
+  enableKick?: boolean;
 }
 
 const MeetItem: React.FC<IProps> = (props) => {
@@ -36,6 +38,10 @@ const MeetItem: React.FC<IProps> = (props) => {
     setIsHover(current.contains(next));
   };
 
+  const handleClick = () => {
+    dispatch(kickMember(props.member));
+  };
+
   return (
     <Box
       className={style.surface}
@@ -55,6 +61,11 @@ const MeetItem: React.FC<IProps> = (props) => {
               >
                 <PushPinIcon />
               </Button>
+              {props.enableKick && (
+                <Button variant="outlined" color="error" onClick={handleClick}>
+                  <LogoutOutlinedIcon />
+                </Button>
+              )}
             </Box>
           )}
         </Box>
@@ -70,6 +81,11 @@ const MeetItem: React.FC<IProps> = (props) => {
               >
                 <PushPinIcon />
               </Button>
+              {props.enableKick && (
+                <Button variant="outlined" color="error" onClick={handleClick}>
+                  <LogoutOutlinedIcon />
+                </Button>
+              )}
             </Box>
           )}
         </Box>

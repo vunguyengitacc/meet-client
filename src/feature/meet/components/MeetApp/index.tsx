@@ -1,11 +1,15 @@
 import { Badge, Box, Button, Chip } from "@mui/material";
 import { Modal, Paper, Typography } from "@mui/material";
-import { RootState } from "app/reduxStore";
-import { membersSelector, requestsSelector } from "feature/meet/meetSlice";
+import { AppDispatch, RootState } from "app/reduxStore";
+import {
+  membersSelector,
+  quitRoom,
+  requestsSelector,
+} from "feature/meet/meetSlice";
 import { IMember } from "model/Member";
 import { IRoom } from "model/Room";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ChatBox from "../ChatBox";
 import MeetItem from "../MeetItem";
 import MemberListBox from "../MemberListBox";
@@ -17,6 +21,7 @@ import RequestControl from "../RequestControl";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import WhiteBoardControl from "../WhiteBoardControl";
+import { socketClient } from "app/socketClient";
 
 interface IProps {
   typeDisplay: number;
@@ -27,6 +32,7 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
   const { myCam, myScreen } = useSelector((state: RootState) => state.media);
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const pin = useSelector((state: RootState) => state.meet.pinItem);
+  const dispatch = useDispatch<AppDispatch>();
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
   const requests = useSelector((state: RootState) =>
     requestsSelector.selectAll(state)
@@ -69,6 +75,15 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
       ).length > 0;
     setIsPin(flag);
   }, [pin]);
+
+  useEffect(() => {
+    socketClient.on("room:be-kicked", (member: IMember) => {
+      if (me._id === member._id) dispatch(quitRoom());
+    });
+    return () => {
+      socketClient.off("room:be-kicked");
+    };
+  }, [me]);
 
   return (
     <Box className={style.surface}>
@@ -197,7 +212,12 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
                     pin === i._id + "-cam" && style.pinItem
                   }`}
                 >
-                  <MeetItem member={i} media={i.webcamStream} type="cam" />
+                  <MeetItem
+                    member={i}
+                    media={i.webcamStream}
+                    type="cam"
+                    enableKick={me.isAdmin && !i.isAdmin}
+                  />
                 </Box>
                 {i.screenStream && (
                   <Box

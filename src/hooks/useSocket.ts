@@ -14,12 +14,11 @@ import { INotification } from "model/Notification";
 import { IRoom } from "model/Room";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { stopRecorder } from "./slices/mediaSlice";
 
 const useSocket = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   useEffect(() => {
     (async () => {
       socketClient.on("connect", () => {
@@ -36,7 +35,7 @@ const useSocket = () => {
         dispatch(addMember(data));
       });
       socketClient.on("room:member-quit", (data: IMember) => {
-        dispatch(removeMember(data));
+         dispatch(removeMember(data));
       });
       socketClient.on(
         "room:update",

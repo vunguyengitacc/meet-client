@@ -38,6 +38,14 @@ export const getMember = createAsyncThunk(
   }
 );
 
+export const kickMember = createAsyncThunk(
+  "meet/kickMember",
+  async (payload: IMember) => {
+    await memberApi.delete(payload);
+    return payload;
+  }
+);
+
 export const answerRequest = createAsyncThunk(
   "meet/answerRequest",
   async (payload: {
@@ -309,6 +317,14 @@ const meetSlice = createSlice({
       answerRequest.fulfilled,
       (state, { payload }: PayloadAction<IRequest>) => {
         requestsAdapter.removeOne(state.requests, payload._id);
+      }
+    );
+    builder.addCase(kickMember.rejected, (state) => {});
+    builder.addCase(kickMember.pending, (state) => {});
+    builder.addCase(
+      kickMember.fulfilled,
+      (state, { payload }: PayloadAction<IMember>) => {
+        membersAdapter.removeOne(state.members, payload._id);
       }
     );
   },

@@ -20,6 +20,7 @@ import * as mediasoupClient from "mediasoup-client";
 import useMeeting from "hooks/useMeeting";
 import { StreamType } from "utilities/streamTypeUtil";
 import { IRequest } from "model/Request";
+import { IMember } from "model/Member";
 
 const MeetPage = () => {
   const room = useSelector((state: RootState) => state.meet.room) as IRoom;
@@ -90,6 +91,10 @@ const MeetPage = () => {
         );
       }
     );
+    return () => {
+      socketClient.off("new-producer");
+      socketClient.off("producer-closed");
+    };
   }, []);
 
   useEffect(() => {

@@ -47,6 +47,8 @@ const useMeetItemStyle = makeStyles((theme: Theme) =>
       padding: "10px",
       position: "absolute",
       borderRadius: "20px",
+      display: "flex",
+      gap: "10px",
     },
   })
 );

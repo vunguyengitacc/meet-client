@@ -2,12 +2,14 @@ import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { IMember } from "model/Member";
 import React from "react";
 import PushPinIcon from "@mui/icons-material/PushPin";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import useMemberItemStyle from "./style";
 
 interface IProps {
   member: IMember;
   isMe?: boolean;
   isScreen?: boolean;
+  enableKick?: boolean;
 }
 
 const MemberItem: React.FC<IProps> = ({ member, isMe, isScreen }) => {
@@ -29,6 +31,9 @@ const MemberItem: React.FC<IProps> = ({ member, isMe, isScreen }) => {
         <Box>
           <IconButton>
             <PushPinIcon />
+          </IconButton>
+          <IconButton>
+            <LogoutOutlinedIcon />
           </IconButton>
         </Box>
       </Box>
