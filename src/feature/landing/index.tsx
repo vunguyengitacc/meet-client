@@ -8,6 +8,7 @@ import useLandingStyle from "./style";
 import appImage from "static/assets/landing/app.png";
 import SharingIntroduce from "./components/SharingIntroduce";
 import WhiteBoardIntroduce from "./components/WhiteBoardIntroduce";
+import Footer from "./components/Footer";
 
 const LandingFeature = () => {
   const [blurNav, setBlurNav] = useState<boolean>(true);
@@ -33,7 +34,7 @@ const LandingFeature = () => {
         <AppHeader />
       </Box>
       <Box className={style.startApp}>
-        <Box className={style.sideBody}>
+        <Box className={style.startApp__sideBody}>
           <Typography variant="h2">Create your meeting</Typography>
           <Typography sx={{ fontWeight: 100 }} variant="h5" color="secondary">
             Easy and free service for you to create an meeting online. Create
@@ -42,6 +43,7 @@ const LandingFeature = () => {
           <Button
             disableElevation
             variant="contained"
+            fullWidth
             style={{
               position: "static",
               padding: "20px ",
@@ -51,17 +53,19 @@ const LandingFeature = () => {
             Getting started
           </Button>
         </Box>
-        <Box width="50%" display="flex" alignItems="center">
+        <Box className={style.startApp__image}>
           <img src={appImage} width="100%" />
         </Box>
       </Box>
-      <Box className={style.introduceContained}>
+      <Box className={style.introduceContained} id="media">
         <SharingIntroduce />
       </Box>
-      <Box className={style.introduceTransparent}>
+      <Box className={style.introduceTransparent} id="whiteboard">
         <WhiteBoardIntroduce />
       </Box>
-      <Box className={style.footer}></Box>
+      <Box className={style.footer}>
+        <Footer />
+      </Box>
     </Box>
   );
 };
