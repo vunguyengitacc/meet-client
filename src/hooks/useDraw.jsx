@@ -31,8 +31,6 @@ const useDraw = () => {
         return { id, x1, y1, x2, y2, roughElement, type: action, color };
       case DrawType.PEN:
         return { id, type: action, color, points: [{ x: x1, y: y1 }] };
-      case DrawType.TEXT:
-        return { id, x1, y1, x2, y2, text: "", type: action, color };
     }
   };
 
@@ -58,26 +56,6 @@ const useDraw = () => {
           ...elementsCopy[id].points,
           { x: x2, y: y2 },
         ];
-        break;
-      case DrawType.TEXT:
-        if (options?.text) {
-          const textWidth = canvas
-            .getContext("2d")
-            .measureText(options.text).width;
-          const textHeight = 24;
-          elementsCopy[id] = {
-            ...createElement(
-              id,
-              x1,
-              y1,
-              x1 + textWidth,
-              y1 + textHeight,
-              elementTarget.type,
-              elementTarget.color
-            ),
-            text: options.text,
-          };
-        }
         break;
       default:
         break;

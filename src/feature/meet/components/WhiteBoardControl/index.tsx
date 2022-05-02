@@ -57,7 +57,7 @@ const WhiteBoardControl: React.FC<IProps> = ({ control }) => {
         </Typography>
       </Box>
       <Box className={style.frmBox}>
-        <Box>
+        <Box padding="0 10px">
           <Typography variant="subtitle1">Your current white boards</Typography>
           {boards.map((i, index) => (
             <Box key={index} className={style.boardItem}>
@@ -72,16 +72,18 @@ const WhiteBoardControl: React.FC<IProps> = ({ control }) => {
             </Box>
           ))}
         </Box>
-        <LoadingButton
-          loading={loading}
-          onClick={createBoardHandler}
-          variant="blur"
-          sx={{ padding: "15px" }}
-          fullWidth
-          startIcon={<AddIcon />}
-        >
-          Create New Board
-        </LoadingButton>
+        <Box padding="0 10px 10px 10px">
+          <LoadingButton
+            loading={loading}
+            onClick={createBoardHandler}
+            variant="blur"
+            sx={{ padding: "15px" }}
+            fullWidth
+            startIcon={<AddIcon />}
+          >
+            Create New Board
+          </LoadingButton>
+        </Box>
       </Box>
     </Box>
   );

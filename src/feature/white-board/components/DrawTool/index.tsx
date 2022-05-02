@@ -2,7 +2,6 @@ import { Box, Divider, InputBase } from "@mui/material";
 import SquareButton from "components/CustomUI/SquareButton";
 import React from "react";
 import useDrawToolStyle from "./style";
-import TextFormatOutlinedIcon from "@mui/icons-material/TextFormatOutlined";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { DrawType } from "utilities/drawUtil";
@@ -70,14 +69,6 @@ const DrawTool: React.FC<IProps> = ({ action, setAction, color, setColor }) => {
         disableElevation
       >
         <CircleOutlinedIcon />
-      </SquareButton>
-      <SquareButton
-        value={DrawType.TEXT}
-        variant={getBtnType(DrawType.TEXT)}
-        onClick={switchActionHandler}
-        disableElevation
-      >
-        <TextFormatOutlinedIcon />
       </SquareButton>
       <Divider orientation="vertical" flexItem />
       <label

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Modal } from "@mui/material";
+import { Box, Divider, Modal } from "@mui/material";
 import SquareButton from "components/CustomUI/SquareButton";
 import React from "react";
 import useDrawControlStyle from "./style";

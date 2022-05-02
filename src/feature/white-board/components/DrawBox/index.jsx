@@ -42,12 +42,6 @@ const DrawBox = ({ board }) => {
   const textAreaRef = useRef(null);
   const style = useDrawBoxStyle({ action });
 
-  useEffect(() => {
-    if (action === DrawType.TEXT && currentEle) {
-      textAreaRef.current.focus();
-    }
-  }, [currentEle]);
-
   useLayoutEffect(() => {
     if (canvasRef.current) {
       const context = canvasRef.current.getContext("2d");
@@ -69,8 +63,7 @@ const DrawBox = ({ board }) => {
       currentUser._id === board.userId ||
       board.type === DrawControlType.EDIT
     ) {
-      setMouseDown(true);
-      if (currentEle && currentEle.type === DrawType.TEXT) return;
+      setMouseDown(true);    
       const { clientX, clientY } = e;
       const id = elements.length;
       const ele = createElement(
@@ -96,7 +89,7 @@ const DrawBox = ({ board }) => {
     ) {
       const { clientX, clientY } = e;
       const index = elements.length - 1;
-      if (index >= 0 && currentEle && currentEle.type !== DrawType.TEXT) {
+      if (index >= 0 && currentEle ) {
         const { x1, y1 } = elements[index];
         let newUpdated = updateElement(
           index,
@@ -114,35 +107,8 @@ const DrawBox = ({ board }) => {
 
   const mouseUpHandler = () => {
     setMouseDown(false);
-    if (currentEle?.type !== DrawType.TEXT) {
-      setCurrentEle(null);
-    }
-    action !== DrawType.NONE && setState(elements);
-  };
-
-  const appendTextHandler = (e) => {
-    const { id, x1, y1 } = currentEle;
-    if (!e.target.value) {
-      setElements(elements.filter((i) => i.id !== id));
-      setCurrentEle(null);
-      e.target.value = "";
-      return;
-    }
     setCurrentEle(null);
-    let updated = updateElement(
-      id,
-      x1,
-      y1,
-      null,
-      null,
-      elements,
-      canvasRef.current,
-      {
-        text: e.target.value,
-      }
-    );
-    setElements(updated);
-    e.target.value = "";
+    action !== DrawType.NONE && setState(elements);
   };
 
   const onClear = () => {
@@ -201,18 +167,6 @@ const DrawBox = ({ board }) => {
           setAction={setAction}
           color={color}
           setColor={setColor}
-        />
-      )}
-      {action === DrawType.TEXT && currentEle && (
-        <textarea
-          className={style.floatingTextArea}
-          ref={textAreaRef}
-          onBlur={appendTextHandler}
-          style={{
-            top: currentEle?.y1 - 2 || 0,
-            left: currentEle?.x1 || 0,
-            color,
-          }}
         />
       )}
       <canvas

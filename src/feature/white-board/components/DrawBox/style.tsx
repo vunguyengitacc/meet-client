@@ -9,8 +9,6 @@ const getCursorType = (action: DrawType) => {
   switch (action) {
     case DrawType.PEN:
       return "url( https://ssl.gstatic.com/inputtools/images/pencil.png ), auto";
-    case DrawType.TEXT:
-      return "text";
     case DrawType.RECTANGLE:
     case DrawType.CIRCLE:
     case DrawType.LINE:
