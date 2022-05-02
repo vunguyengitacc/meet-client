@@ -49,6 +49,7 @@ const MeetItem: React.FC<IProps> = (props) => {
       onMouseOver={mouseInHandler}
       onMouseOut={mouseOutHandler}
     >
+      {props.audio && <Audio srcObject={props.audio} />}
       {props.media ? (
         <Box className={style.member}>
           <Video className={style.video} srcObject={props.media} />
@@ -90,7 +91,6 @@ const MeetItem: React.FC<IProps> = (props) => {
           )}
         </Box>
       )}
-      {props.audio && <Audio srcObject={props.audio} />}
       <Typography
         variant="h6"
         color="secondary"

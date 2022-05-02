@@ -29,7 +29,9 @@ interface IProps {
 }
 
 const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
-  const { myCam, myScreen } = useSelector((state: RootState) => state.media);
+  const { myCam, myScreen, myMic } = useSelector(
+    (state: RootState) => state.media
+  );
   const me = useSelector((state: RootState) => state.meet.me) as IMember;
   const pin = useSelector((state: RootState) => state.meet.pinItem);
   const dispatch = useDispatch<AppDispatch>();
@@ -215,6 +217,7 @@ const MeetApp: React.FC<IProps> = ({ typeDisplay, setType }) => {
                   <MeetItem
                     member={i}
                     media={i.webcamStream}
+                    audio={i.microStream}
                     type="cam"
                     enableKick={me.isAdmin && !i.isAdmin}
                   />

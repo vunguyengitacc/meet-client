@@ -10,7 +10,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthEntry from "./AuthEntry";
 import PrivateEntry from "./PrivateEntry";
 import CalendarPage from "feature/user/pages/CalendarPage";
-import MeetHistoryPage from "feature/user/pages/MeetHistoryPage";
 import UserInforPage from "feature/user/pages/UserInforPage";
 import NotificationPage from "feature/user/pages/NotificationPage";
 import WhiteBoardFeature from "feature/white-board";
@@ -37,7 +36,6 @@ const MasterRoute = () => {
           <Route path="/user" element={<UserFeature />}>
             <Route path="profile" element={<UserInforPage />} />
             <Route path="calendar" element={<CalendarPage />} />
-            <Route path="history" element={<MeetHistoryPage />} />
             <Route path="notification" element={<NotificationPage />} />
           </Route>
         </Route>

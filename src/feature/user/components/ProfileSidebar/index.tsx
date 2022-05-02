@@ -44,16 +44,6 @@ const ProfileSidebar: React.FC<IProps> = ({ onNavigated }) => {
           className={({ isActive }) =>
             `${style.link} ${isActive && style.activeLink}`
           }
-          to="history"
-          onClick={onNavigated}
-        >
-          <HistoryOutlinedIcon />
-          History
-        </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            `${style.link} ${isActive && style.activeLink}`
-          }
           to="notification"
           onClick={onNavigated}
         >
