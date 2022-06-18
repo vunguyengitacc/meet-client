@@ -7,6 +7,8 @@ export interface IUser {
   password: string;
   fullname: string;
   email: string;
+  isVerifyEmail: boolean;
+  oldEmail: string;
   address: string;
   phone: string;
   avatarURI: string;

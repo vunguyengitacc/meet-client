@@ -16,7 +16,7 @@ const userApi = {
       params: payload,
     });
   },
-  update(payload: Partial<IUser>): Promise<IResponse<IUser>> {
+  update(payload: Partial<IUser>): Promise<IResponse<any>> {
     return axiosClient.put("/users/me", payload);
   },
   changePassword(payload: IChangePasswordParams): Promise<IResponse<IUser>> {

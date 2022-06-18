@@ -21,7 +21,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async (payload: Partial<IUser>) => {
     const res = await authApi.register(payload);
-    return res.data.access_token;
+    return res.data.newUser;
   }
 );
 
@@ -55,7 +55,7 @@ export const updateInfor = createAsyncThunk(
   "auth/updateInfor",
   async (payload: Partial<IUser>) => {
     const res = await userApi.update(payload);
-    return res.data.userUpdated;
+    return res.data;
   }
 );
 
@@ -116,8 +116,7 @@ const authSlice = createSlice({
     });
     builder.addCase(
       register.fulfilled,
-      (state, { payload }: PayloadAction<string>) => {
-        localStorage.setItem("access_token", payload);
+      (state, { payload }: PayloadAction<IUser>) => {        
       }
     );
     builder.addCase(getMe.rejected, (state) => {
@@ -166,8 +165,8 @@ const authSlice = createSlice({
     builder.addCase(updateInfor.pending, (state) => {});
     builder.addCase(
       updateInfor.fulfilled,
-      (state, { payload }: PayloadAction<IUser>) => {
-        state.currentUser = payload;
+      (state, { payload }: PayloadAction<any>) => {
+        state.currentUser = payload.userUpdated;
       }
     );
   },

@@ -4,7 +4,7 @@ import { IUser } from "model/User";
 import axiosClient from "./axiosClient";
 
 const authApi = {
-  register(payload: Partial<IUser>): Promise<IResponse<string>> {
+  register(payload: Partial<IUser>): Promise<IResponse<IUser>> {
     return axiosClient.post("/auth/register", payload);
   },
   login(payload: ILoginParams): Promise<IResponse<string>> {

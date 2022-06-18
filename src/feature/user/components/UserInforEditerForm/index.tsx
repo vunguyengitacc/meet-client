@@ -22,7 +22,12 @@ const UserInforEditerForm = () => {
   const form = useForm<Partial<IUser>>({
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: currentUser,
+    defaultValues: {
+      ...currentUser,
+      email: !currentUser.isVerifyEmail
+        ? currentUser.oldEmail
+        : currentUser.email,
+    },
     resolver: yupResolver(updateMeScheme),
   });
   const style = useUserInforEditerFormStyle();
@@ -30,8 +35,13 @@ const UserInforEditerForm = () => {
   const updateInforHandler = async (data: Partial<IUser>) => {
     try {
       setIsLoading(true);
-      await dispatch(updateInfor(data)).then(unwrapResult);
-      toast.success("Success");
+      const result = await dispatch(updateInfor(data)).then(unwrapResult);
+      console.log(result);
+      if (result?.isUpdateEmail)
+        toast.success(
+          "Successfully updating infor! Please verify your new email address"
+        );
+      else toast.success("Success");
     } catch (error: any) {
       toast.error(error.message);
     }

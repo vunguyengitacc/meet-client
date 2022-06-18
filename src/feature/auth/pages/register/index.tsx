@@ -35,10 +35,10 @@ const RegisterPage = () => {
     setIsLoading(true);
     try {
       await dispatch(register(data)).then(unwrapResult);
-      await dispatch(getMe()).then(unwrapResult);
-      await dispatch(getMyNotification()).then(unwrapResult);
-      toast.success("Success");
-      navigator("/app");
+      toast.success(
+        "Successfully create account! Please verify your account in your email"
+      );
+      navigator("/auth/login");
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);
